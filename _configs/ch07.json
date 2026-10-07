@@ -13,178 +13,389 @@
    "slides": [
     [
      "第一节 非编码RNA概述",
-     "非编码RNA的概念、特征、识别与功能预测",
-     "非编码RNA（ncRNA）是指除mRNA以外不编码蛋白质、直接在RNA水平发挥作用的RNA。细胞中含量最高的是tRNA和rRNA，广义ncRNA包括它们，狭义则不包括，本章主要讨论狭义ncRNA。人类基因组约75%序列可转录为RNA，其中ncRNA占总RNA的74%，蛋白质编码序列仅约1.5%。ncRNA并非“垃圾RNA”，其核心作用是调控，RNA干扰（RNAi）的发现获2006年诺贝尔奖。按长度可分为短链ncRNA（<200nt，如miRNA、piRNA、siRNA、snRNA、snoRNA）和长链ncRNA（>200nt，如lncRNA、circRNA）。miRNA在转录后负调控靶基因，lncRNA参与表观遗传调控、转录及转录后调控，与细胞分化、发育和疾病密切相关。ncRNA鉴定有理论预测（如snoScan、RNAz）和实验方法（cDNA文库、测序、tiling array）。功能预测常用共表达/共定位富集、编码-非编码网络模块划分、序列互作预测等，常用平台有ncFANs、ChIPBase、starBase、LncRNADisease等。",
+     "非编码RNA概述与基本特征",
+     "本页引入非编码RNA（non-coding RNA, ncRNA）的概念：除mRNA外，生物体内还存在大量不编码蛋白质、直接在RNA水平发挥作用的RNA。细胞中含量最高的是rRNA和tRNA，广义ncRNA包括这两类，狭义ncRNA通常不包括。人类基因组约30亿碱基对中，蛋白质编码序列仅占1.5%，约75%的基因组序列可被转录为RNA，其中非编码RNA占总RNA的74%。这些ncRNA并非垃圾RNA，其突出和核心作用是调控。2006年诺贝尔生理学或医学奖授予Andrew Fire和Craig Mello，表彰他们发现RNA干扰（RNA interference, RNAi）现象。按碱基长度，ncRNA一般分为两类：短链非编码RNA（small ncRNA, sncRNA），长度一般小于200 nt，包括miRNA、piRNA、siRNA、snRNA、snoRNA等；长链非编码RNA（long non-coding RNA, lncRNA），长度一般大于200 nt，环状RNA（circular RNA, circRNA）也是一类特殊的长链非编码RNA。图7-1示意细胞内RNA的组成与分类关系。",
      134,
      "掌握"
     ],
     [
-     "第二节 非编码RNA的分类",
-     "非编码RNA的多种分类方法",
-     "非编码RNA可根据不同侧重点分类。按细胞内分布可分为：核仁小RNA（snoRNA），大小60~400nt，富集于核仁，与蛋白质形成snoRNP，指导rRNA、tRNA、snRNA的甲基化和假尿嘧啶化修饰；细胞核小分子RNA（snRNA），长100~300nt，是剪接体主要成分，参与pre-mRNA剪接，分为U1~U7，除U6由RNA聚合酶Ⅲ转录外其余由RNA聚合酶Ⅱ转录，具有保守序列和修饰碱基；细胞质小分子RNA（scRNA），主要在蛋白质合成中起作用；Cajal小体特异性小RNA，参与snRNA修饰。按长度分为短链非编码RNA（<40nt或<200nt，如miRNA、piRNA、siRNA、snoRNA、snRNA等）和长链非编码RNA（>200nt，如lincRNA、反义RNA、假基因等），短链参与细胞增殖、分化、凋亡、代谢和免疫等几乎所有生命活动调节，长链可在表观遗传、转录及转录后多层面调控基因表达。按功能和表达特征可分为看家ncRNA、调节或调控ncRNA以及兼具看家与调节功能的ncRNA（如snoRNA）。",
+     "第一节 非编码RNA概述",
+     "miRNA、lncRNA特征及非编码RNA识别",
+     "本页重点介绍两类重要ncRNA。miRNA主要在转录后负调控目标基因表达，是最重要的一类调控小RNA；miRBase release 21已报道人类miRNA为2588个，预期总数还会增加，且癌症发展与miRNA相关，可用于人类癌症分类。lncRNA是当前研究热点，与许多染色质重塑复合物相关，通过定位这些复合物到特定基因位点改变DNA甲基化和组蛋白状态，在表观遗传调控中起重要作用；它不仅在转录水平，也在转录后水平调节蛋白质编码基因表达，参与细胞分化、个体发育等生命过程，异常表达与多种重大疾病相关。lncRNA存在带PolyA尾和不带PolyA尾两种形式，具有跨物种低保守性、组织特异性表达和丰度低等特点。保守估计哺乳动物基因组4%~9%的序列产生lncRNA转录本，而蛋白质编码RNA比例仅1%~5%。RNA调控网络可能决定复杂特性并在疾病中发挥作用。非编码RNA大规模鉴定主要有理论预测和实验方法；理论预测借助计算机从已知ncRNA提取特征信息，再全基因组搜索，较成功的软件包括snoScan、snoGPS、tRNAScan、mirScan、RNAz和RNAmotif等。",
+     135,
+     "掌握"
+    ],
+    [
+     "第一节 非编码RNA概述",
+     "lncRNA相关常用资源数据库",
+     "本页以表7-1形式列出lncRNA相关常用资源。NONCODE是目前最全面的lncRNA资源，提供17个物种（截至2017年11月）的非编码RNA数据，并支持序列比对等多种功能，网址http://www.noncode.org。LNCipedia包含人类超过14万条lncRNA注释信息，包括二级结构、编码潜能、miRNA结合位点等，网址https://lncipedia.org/。LncRNASNP2收集整理了超过14万人类lncRNA和超过11万小鼠lncRNA上的数百万条SNP信息，提供lncRNA突变功能、相关疾病、癌症样本表达等信息，网址http://bioinfo.life.hust.edu.cn/lncRNASNP2/。CANTATAdb提供10种模式植物lncRNA的表达信息等，网址http://yeti.amu.edu.pl/CANTATA/。HUGO-lncRNA提供已经官方定名的lncRNA Symbol，网址http://www.genenames.org/rna/LNCRNA。NPInter收集了22个物种非编码RNA之间以及非编码RNA与生物分子（DNA、RNA、蛋白质等）的互作关系，网址http://www.bioinfo.org/NPInter/。EVLncRNAs收录实验证实的lncRNA，覆盖414个物种，网址http://biophy.dzu.edu.cn/EVLncRNAs/。学习时应掌握各数据库的物种范围、核心数据类型和典型用途。",
+     136,
+     "掌握"
+    ],
+    [
+     "第一节 非编码RNA概述",
+     "非编码RNA的编码潜能与注释",
+     "本页讨论非编码RNA可能具有编码潜能的现象。有研究发现某些lncRNA可翻译蛋白质或多肽，例如果蝇大脑中发现大量环状RNA翻译蛋白质或多肽。这种编码能力被忽视的原因包括：对circRNA等新RNA了解太少，可能存在不同翻译机制；现有预测手段未很好预测其编码潜能。可读框（ORF）可能存在于任何mRNA序列中，但很多ORF不翻译蛋白质；ORF越长翻译概率越大，传统ORF预测软件通常限制ORF发现长度，如不少于300 nt（可翻译为100 aa），导致长度小于100 aa的微肽无法被预测。标准实验手段也常漏过微小翻译产物：电泳中微肽早早跑到凝胶底部，质谱分析的清洗步骤会把分子质量不足的微肽清洗掉。目前通过对核糖体测序（Ribo-seq）等数据全面分析，越来越多非编码RNA被证实有编码潜能。这一发现使mRNA与非编码RNA界限变得模糊，ncRNA可能需要重新定义，实验手段也需革新。非编码RNA注释方面，基于计算方法可发现一些ncRNA基因，但主要集中在序列特征已很好表征的ncRNA；此后出现用户可定制的RNA基序搜索程序，并进一步完善了基于相关物种基因组序列比较、碱基组成特征、新的RNA序列比对和二级结构预测等方法。NONCODE是专用于非编码RNA（不包括tRNA和rRNA）的集成知识数据库。",
+     137,
+     "掌握"
+    ],
+    [
+     "第一节 非编码RNA概述",
+     "非编码RNA按细胞内分布分类：snoRNA与snRNA",
+     "本页进入第二节非编码RNA的分类，指出ncRNA因来源、性质和功能不同，可根据侧重点采用不同分类方法。按细胞内分布不同分类，首先介绍核仁小RNA（small nucleolar RNA, snoRNA）：20世纪60年代末Weinberg等在哺乳动物中发现第一个snoRNA U3。snoRNA是一类小分子非编码RNA，多富集于核仁，代谢稳定。典型snoRNA特征包括：分子大小60~400 nt；具有类似核仁提取物的性质（抗盐性）；需要与特定蛋白质结合形成核糖核蛋白体（snoRNP），并以此形式存在和行使功能；分子具有多种与蛋白质相互作用的保守序列元件。其次介绍细胞核小分子RNA（small nuclear RNA, snRNA）：它是真核生物转录后加工过程中RNA剪接体（spliceosome）的主要成分，哺乳动物中长度100~300个核苷酸。snRNA一直存在于细胞核中，与核内蛋白质共同组成RNA剪接体，在RNA转录后加工中起重要作用。snRNA和许多蛋白质结合形成小核核糖核蛋白（small nuclear ribonucleoproteins, snRNP），参与信使RNA前体（pre-mRNA）的剪接，使后者成为成熟mRNA。snRNA共分为7类，因含U丰富，编号为U1~U7。snRNA只存在于细胞核中。",
      138,
-     "理解"
+     "掌握"
+    ],
+    [
+     "第一节 非编码RNA概述",
+     "人类非编码RNA种类表",
+     "本页以表7-2列出人类非编码RNA种类（Gibb et al., 2001）。短链非编码RNA包括：microRNAs（miRNAs）、piwi interacting RNAs（piRNAs）、tiny transcription initiation RNAs（tiRNAs）、small interfering RNAs（siRNAs）、promoter-associated short RNAs（PASRs）、termini-associated short RNAs（TASRs）、antisense termini associated RNAs（aTASRs）、small nucleolar RNAs（snoRNAs）、transcription start site antisense RNAs（TSSa-RNAs）、small nuclear RNAs（snRNAs）、retrotransposon-derived RNAs（RE-RNAs）、3'UTR-derived RNA（UaRNAs）、x-ncRNA（x-ncRNAs）、human Y RNA（hYRNAs）、unusually small RNAs（usRNAs）、small NF90-associated RNAs（snaRNAs）、vault RNAs（vtRNAs）。长链非编码RNA包括：long or large intergenic ncRNAs（lincRNAs）、transcribed ultraconserved regions（T-UCRs）、pseudogenes、GAA-repeat containing RNAs（GRC-RNAs）、long intronic ncRNA、antisense RNAs（aRNAs）、promoter-associated RNAs等。该表说明ncRNA种类繁多，分类维度包括长度、来源、基因组位置和功能机制。学习时应能区分短链与长链ncRNA的典型代表，并理解同一ncRNA可能按不同标准归入不同类别。",
+     139,
+     "掌握"
     ],
     [
      "第三节 microRNA",
-     "microRNA的生物合成与生物信息学分析",
-     "microRNA（miRNA）是一类内源性、长度21~25个核苷酸的单链小RNA，在细胞内具有重要调节作用。每个miRNA可有多个靶基因，同一靶基因也可被多个miRNA共同调节，形成复杂网络，据推测调节人类约三分之一基因。约70%哺乳动物miRNA基因位于转录单位区，大部分位于内含子区，且在不同物种中高度保守。miRNA由发夹状初始转录产物加工形成，序列位于茎上，茎部形成不完全互补双链，可与靶基因3'UTR配对，促进mRNA降解或抑制翻译。动物中，pri-miRNA在核内被Drosha加工为pre-miRNA，经exportin-5运至胞浆，再由Dicer加工为成熟miRNA并加载到Argonaute蛋白形成RISC。植物中无Drosha同系物，由DCL-1负责加工，HASTY介导核质运输。生物信息学分析首先从miRBase等权威数据库获取序列信息，再进行基因组定位、靶基因预测和功能分析，常用靶标数据库如starBase整合CLIP-Seq和降解组数据，降低假阳性。",
+     "非编码RNA的分类与snoRNA功能",
+     "本页主要介绍非编码RNA（ncRNA）的功能分类，并重点阐述兼具看家与调节功能的snoRNA。首先，看家ncRNA表达水平受环境变化影响不明显，具有对细胞存活至关重要的功能，如snRNA、SRP RNA等。其次，调节或调控ncRNA可分为转录调控子、RNA分布调控因子、转录后调控因子、蛋白质功能调节因子等，一般在组织发育或细胞分化的特定阶段表达，或响应外界环境应激，随后调控一系列生物过程。第三类为兼具看家功能和调节功能的ncRNA，主要是核仁小分子RNA（snoRNA），广泛分布于真核生物细胞核仁，具有保守结构元件。snoRNA主要修饰rRNA、tRNA和snRNA，近期研究表明snoRNA可形成sdaRNA，一些sdRNA类似于miRNA，与Argonaute蛋白相关，影响翻译过程；另一些较长片段与hnRNP形成复合物并影响基因表达，显示snoRNA既具有看家RNA稳定表达特性，又具有调节RNA的调节作用。snoRNA依据结构单元可分为三大类：box C/D snoRNA、box H/ACA snoRNA和MRP RNA。其中box C/D和box H/ACA是已知主要类型，以碱基配对方式分别指导核糖体RNA的甲基化和假尿嘧啶化修饰。研究发现，snoRNA除在核糖体RNA生物合成中发挥作用外，还能指导snRNA、tRNA和mRNA的转录后修饰。此外，还有相当数量的snoRNA功能不明，被称为孤儿snoRNA（orphan snoRNA）。",
      140,
      "掌握"
     ],
     [
-     "第四节 circRNA",
-     "环状RNA的生物合成、特性、分类与数据库",
-     "环状RNA（circRNA）是一类以共价键形成闭环结构的新型内源性RNA，无5'端和3'端终点，也无PolyA尾巴，因此经典PolyA分离方法常忽略它。随着高通量测序和生物信息学发展，发现circRNA广泛多样存在于真核细胞中，调控复杂且在疾病中作用重要。circRNA通常由反向剪切产生，主要有4种形成途径：剪接体依赖的环化、内含子配对驱动的环化、套索驱动的环化、蛋白因子结合环化。circRNA含量丰富，人类细胞中可达25000~100000种，数量远超线性RNA；不同物种间有一定进化保守性；一般不翻译成蛋白质；不易被RNase降解，结构稳定，半衰期长，某些表达丰度可超对应mRNA10倍以上，神经细胞中浓度更高。按来源和构成序列可分为外显子来源（ecircRNA）、内含子来源（ciRNA）等5类。常用在线数据库和分析软件包括deepBase v2.0、circBase、CircNet、CircPro、miARma-Seq等，用于表达图谱、鉴定、互作网络和编码潜能预测。",
+     "第三节 microRNA",
+     "miRNA的加工与RISC组装",
+     "本页以图7-3展示动物和植物miRNA生物合成途径的异同。动物miRNA基因转录生成miRNA初始转录物（pri-miRNA），在细胞核内由Drosha及其辅因子DGCR8/Pasha加工成miRNA前体（pre-miRNA），随后由Exportin-5-RanGTP运输至细胞质。在细胞质中，Dicer蛋白与TRBP或PACT蛋白协同作用，将pre-miRNA加工为成熟miRNA，并加载到Argonaute（AGO1-4）蛋白，生成效应物RNA诱导的沉默复合体（RISC）。植物miRNA合成有所不同：植物中未发现Drosha及其辅因子DGCR8/Pasha的同系物，表明植物细胞中没有依赖于Drosha的加工过程。基因研究显示，Dicer-like 1（DCL-1）专一负责MIRNA的加工。Exportin-5的同系物HASTY（HST）介导miRNA从细胞核到细胞质。miRNA在细胞核或细胞质中加载Argonaute家族蛋白质（AGO）。图中还显示miRNA:miRNA*二聚体解旋后，成熟miRNA加载至AGO蛋白形成RISC。该页强调动物与植物miRNA加工途径的关键差异，是理解miRNA功能机制的基础。",
+     141,
+     "掌握"
+    ],
+    [
+     "第三节 microRNA",
+     "miRNA序列信息获取与miRBase数据库",
+     "本页介绍miRNA生物信息学分析策略的第一步：获取microRNA的序列信息。当前最常用的miRNA权威数据库是miRBase（http://www.mirbase.org/），该数据库提供miRNA注册、序列查询、基因组定位、相关文献查询和靶基因预测等功能。目前已更新到21.0版，涵盖223个物种，包含28,645条miRNA发夹前体，35,828条成熟miRNA。图7-4展示miRBase网站主页，页面显示数据库提供的服务：可通过名称、关键词、参考文献和注释检索；所有序列和注释数据均可下载；miRBase Registry为miRNA基因发现者提供在发表结果前获取新miRNA基因唯一名称的服务。此外，页面还提示已发布4个新的人类基因组组装版本GRCh38，并重新映射了人类数据。该页还提到microRNA新基因的预测和鉴定，指出生物信息学预测利用miRNA在不同物种间的保守性、miRNA前体等特征。掌握miRBase的使用是进行miRNA研究的基础，包括查询已知miRNA、下载序列、提交新miRNA等。",
+     142,
+     "掌握"
+    ],
+    [
+     "第三节 microRNA",
+     "基于降解组与miRNA前体加工信号的miRNA挖掘流程",
+     "本页展示利用降解组数据集和miRNA前体加工信号挖掘miRNA新基因的生物信息学流程。首先，对降解组数据集进行预处理和归一化（RPM标准化），匹配到转录物并保留精确匹配的序列，分析降解组信号在转录物范围内的分布。基本识别规则包括：对于一个数据集，“切割位点平均读数”应是“周围平均读数”的5倍甚至更多；在切割位点有最高读数的标记应映射在某个转录物种前12个最大量标记之间；切割位点不应出现在转录物中开始或最后的1个核苷酸中。然后计算潜在切割位点，并利用21个核苷酸“诱饵”序列收集诱饵序列，匹配“诱饵”序列到AGO1富集的sRNA数据集，获得第一个5000反向互补结果，保留读数≥1 RPM的19-24个核苷酸的sRNAs，得到一组潜在mRNA调控者。用默认参数进行miRNA预测，去除没有靶基因预测的sRNAs，去除有预测结合位点而没有潜在切割位点的sRNAs，进行多次筛选。将2个核苷酸悬挂的sRNA归为一类，在一类中只有最大丰度sRNA包含在后续分析中，把包含一个或多个错配且位于长链区域的sRNA作为一个独立子群进一步分析。最后将筛选后的sRNAs Blast到基因组上，对于没有精确匹配基因座的sRNA，保留不超过两个错配的相似基因座，识别基因座，收集1400个核苷酸基因序列，进行聚类。该流程是miRNA Digger软件的核心算法基础。",
+     143,
+     "理解"
+    ],
+    [
+     "第三节 microRNA",
+     "miRNA Digger软件与miRNA靶基因预测",
+     "本页首先说明动物miRNA对靶基因主要通过翻译抑制而不是切割进行调控，降解组无法发现靶基因上的切割位点，因此该逆向挖掘技术只适合植物miRNA基因的大规模挖掘。但研究发现，miRNA前体上由Dicer（动物）/DCL（植物）介导产生的切割信号可被降解组测序探测到，且切割信号的位置与miRNA(5p)/miRNA*(-3p)的边界高度相关，可作为寻找miRNA新基因的标记。利用降解组对全基因组进行切割位点扫描，从基因组上截取包含切割位点的候选miRNA前体，通过发卡二级结构筛选后将sRNA高通量测序数据匹配到前体上，利用切割位点与miRNA(-5p)/miRNA*(-3p)边界的高度相关性，可获得候选miRNA。基于这一思路，建立了大规模挖掘miRNA新基因的新算法（Lan et al., 2016），并编写了免费共享软件miRNA Digger（http://www.bioinfolab.cn/miRNA_Digger/index.html）。图7-6展示该软件界面，包含Help、Data_Process、miRNA等模块。与前期建立的miRNA逆向挖掘技术相比，该方法不仅可用于植物，也能用于动物miRNA新基因的大规模挖掘。随后介绍miRNA靶基因的预测和鉴定：RISC复合体在miRNA指导下识别靶基因，如果miRNA与靶基因几乎完全互补，则切割靶基因；如果互补程度较低，则抑制靶基因翻译。由于miRNA与其靶基因并非完全匹配，给确定miRNA靶基因带来一定难度。",
+     144,
+     "掌握"
+    ],
+    [
+     "第三节 microRNA",
+     "psRNATarget靶基因预测网站及实例",
+     "本页以具体miRNA（UUCGCUUGCAGAGAGAAAUCAC）的靶基因鉴定为例，介绍psRNATarget靶基因预测网站的使用。图7-7展示psRNATarget网站主页，该网站提供Analysis、About、Citation、Analysis、Download、Location等功能模块。分析页面允许用户提交小RNA序列或预加载转录本，支持上传FASTA格式的小RNA序列，或直接粘贴序列，无效小RNA将在分析中被忽略。用户可选择预加载的转录本库或自定义靶基因序列。图7-8展示预测结果：用psRNATarget预测到该miRNA有5个靶基因，记录靶基因名称和结合位置信息。结果页面显示Batch Download、Prev Page、Next Page，共1页5条记录。表格中包含miRNA序列、靶基因名称、结合位置、期望值等信息。该页通过实例演示了如何利用psRNATarget进行miRNA靶基因预测，是miRNA功能研究的重要步骤。掌握该工具的使用有助于理解miRNA与靶基因的相互作用机制。",
+     145,
+     "掌握"
+    ],
+    [
+     "第三节 microRNA",
+     "降解组测序鉴定miRNA靶基因及切割位点",
+     "本页展示利用降解组测序（degradome sequencing）验证miRNA靶基因的实例。图7-9为拟南芥AT2G27400.1的降解组匹配结果表，列出各降解片段序列、匹配位置及测序计数。表中‘Perfect_match’表示降解片段与靶基因完全匹配，‘Degradome_sequence_count’为支持该切割位点的读段数，‘5’_match_position’为切割位点位置。若miRNA结合位点位于降解片段中间附近，则该靶基因预测较可靠；若偏离结合位点中间较远，则可能为假阳性。图7-10为切割位点分布图，横轴为靶基因位置，纵轴为降解片段计数，峰值379处提示主要切割位点。通过降解组数据可实验性验证miRNA靶标，弥补纯计算预测假阳性高的不足。",
+     146,
+     "理解"
+    ],
+    [
+     "第三节 microRNA",
+     "miRNA靶标预测软件与circRNA概述及生物合成",
+     "本页首先列出miRNA靶标预测软件starBase，其整合CLIP-Seq（如HITS-CLIP）和mRNA降解组数据，构建多个预测软件的交集，降低假阳性。随后进入第四节circRNA。circRNA是一类以共价键形成闭环结构的内源性RNA，无5′端、3′端及polyA尾，因此经典polyA富集方法难以检测，长期被忽视。高通量测序和生物信息学发展揭示其在真核细胞中广泛多样存在，并参与疾病发生。circRNA通常由反向剪接（back splicing）产生。图7-11示意四种形成途径：套索驱动、内含子配对驱动、外显子跳跃套索驱动及蛋白因子结合驱动。本页为circRNA生物合成机制的总览。",
      147,
+     "掌握"
+    ],
+    [
+     "第三节 microRNA",
+     "circRNA生物合成途径与特性",
+     "本页详述circRNA四种生物合成途径。1）剪接体依赖途径：snRNP装配后，下游外显子5′供体位点与上游3′受体位点结合，促进环化。2）内含子配对驱动：反向互补motif促进环化，5′剪接位点附近为7nt GU富集片段，分支位点附近为11nt C富集片段，供体-受体空间靠近推动成环。3）套索驱动：外显子跳跃剪接产生套索副产物，被跳过区域经套索剪接形成外显子环状RNA；侧翼内含子中Alu元件重复和反向互补序列富集是该途径特征。4）蛋白因子结合：RBP结合内含子靶序列，使供体-受体靠近促进环化，也可妨碍线性剪接或抑制环化。circRNA特性包括无polyA尾、闭环结构、广泛存在等，其发现解释了基因序列‘混乱’现象。",
+     148,
+     "掌握"
+    ],
+    [
+     "第三节 microRNA",
+     "circRNA分类与主要生物学功能",
+     "本页介绍circRNA分类：外显子环状RNA（ecircRNA）、内含子环状RNA（ciRNA）、外显子-内含子环状RNA（EIciRNA）、反义链来源及基因间区来源环状RNA。ecircRNA主要定位细胞质，参与转录后调控；ciRNA和EIciRNA定位细胞核，调节亲本线性mRNA转录。图7-12展示circRNA五种功能：1）作为竞争性内源RNA（ceRNA）海绵吸附miRNA，如CDR1来源的ciRS-7吸附miR-7，降低其活性，间接上调miR-7靶基因；2）调控亲本基因表达；3）翻译蛋白质；4）产生假基因；5）影响选择性剪接。circRNA在疾病发生发展中起重要作用，可作为潜在治疗生物标志物。",
+     149,
+     "掌握"
+    ],
+    [
+     "第三节 microRNA",
+     "circRNA在线数据库与分析软件及其他小分子RNA",
+     "本页列举circRNA常用数据库和软件：1）deepBase v2.0，含约15万circRNA基因，覆盖人、鼠、果蝇、线虫等，构建全面表达图谱；2）circBase，收集整合已发布circRNA数据；3）CircNet，提供新circRNA鉴定、circRNA-miRNA-mRNA互作网络、亚型表达水平、基因组注释和序列；4）CircPro，整合Ribo-seq和RNA-seq预测circRNA及其编码潜能；5）miARma-Seq，综合分析mRNA、miRNA和circRNA，可区分表达量、预测靶基因和功能分析。随后进入第五节其他小分子RNA，定义小分子RNA为20~40个核苷酸的非编码RNA，广泛存在于真核生物，在转录或转录后调节基因表达。",
+     150,
+     "理解"
+    ],
+    [
+     "第三节 microRNA",
+     "siRNA与RNA干扰机制",
+     "本页详述siRNA与RNA干扰（RNAi）机制。RNAi是实验室强大工具，利用同源双链RNA诱导序列特异的目标基因沉默。siRNA在RNA沉默通道中起中心作用，是RNAi途径的中间产物和效应必需因子。siRNA形成主要由Dicer和Rde-1调控：外源dsRNA被Rde-1识别，引导dsRNA与Dicer结合形成酶-dsRNA复合体；Dicer作用下，dsRNA正义链被靶mRNA替换并释放，在ATP参与下RISC利用核酸内切酶活性切割靶mRNA与反义链互补区域，形成21~23nt的siRNA。RNAi关键步骤是组装RISC和合成介导特异性反应的siRNA蛋白。siRNA并入RISC后，与靶标基因编码区或UTR完全配对，降解靶标基因。siRNA只降解序列互补的mRNA，通过互补配对沉默相应等位基因，是典型负调控机制，识别靶序列高度特异，降解首先发生在相对于siRNA的中央位置。",
+     151,
+     "掌握"
+    ],
+    [
+     "第五节 其他小分子RNA",
+     "ta-siRNA生成模型与piRNA概述",
+     "本页承接ta-siRNA生物合成，重点介绍其生成模型与piRNA基本概念。ta-siRNA（trans-acting siRNA）的生成依赖miRNA或siRNA对TAS基因初级转录本的切割。第一种模型要求激发miRNA长度为22nt，目前绝大多数激发ta-siRNA合成的miRNA或siRNA符合此模型；第二种模型认为不对称的miRNA/miRNA*二聚体也可激发ta-siRNA合成。TAS初级转录本被切割后并不降解，而是在SGS3和RDR6作用下复制形成dsRNA，随后DCL4从miRNA剪切位点开始以21nt为单位进行连续相位切割，产生3'端具有2个悬挂碱基的双链siRNA。双链ta-siRNA中的一条链与AGO蛋白形成复合物，介导其他基因的切割降解。ta-siRNA参与植物生长期转换、环境适应、花叶等侧生器官背腹性发育等重要过程，是miRNA调控机制的重要组成部分。部分蛋白质编码基因也可生成ta-siRNA，且某些ta-siRNA可激发靶基因形成下一级ta-siRNA。piRNA（Piwi-interacting RNA）是与Piwi蛋白相互作用的RNA，在基因组中成簇分布，簇长20~90kb，主要来源于单链。piRNA在人类和小鼠中均有发现，大部分基因簇出现在同一染色体位置。生殖细胞中piRNA富集，Piwi突变导致男性不育，表明piRNA在配子形成中起作用。piRNA生物合成有初级合成和次级合成两个主要途径。",
+     152,
+     "掌握"
+    ],
+    [
+     "第五节 其他小分子RNA",
+     "piRNA的初级合成与乒乓循环",
+     "本页详细阐述piRNA的两条生物合成途径。初级合成：在果蝇卵巢中，初级合成路径存在于生殖细胞和周围体细胞，而乒乓循环只存在于生殖细胞。在体细胞初级路径中，PIWI亚家族仅Piwi表达，piRNA前体从piRNA簇转录，如flamenco(flam)基因座的长单链经过多步转录。长初级转录产物进入细胞质被加工成中等长度，详细步骤仍未知。加工需要位于线粒体表面的Zucchini(Zuc)核酸内切酶，常生成5'端为U的前体RNA。转运和成熟步骤可能发生在细胞核周围，形成于线粒体表面的颗粒称为Yb体。前体加工过程中，Minotaur(Mino)和GasZ聚集于线粒体表面发挥作用。在未知的3'-5'核酸外切酶作用下，前体进一步剪切加工成成熟piRNA大小。DmHen1/Pimet甲基转移酶和2'-O-甲基转移酶进一步作用生成成熟Piwi-piRNA复合物或Piwi-piRISC。Piwi-piRNA复合物进入细胞核调节目标基因，无Piwi蛋白的piRNA留在细胞质中。在果蝇生殖系细胞中，初级piRNA也来源于如42AB座双链piRNA，并加载到Aub和Piwi蛋白形成piRISC。次级合成：Aub-piRISC复合体启动细胞质中的乒乓循环，与AGO3一起生成次级piRNA。乒乓循环发生在细胞核周围一个电子致密的称为nuage的非膜结构，Piwi蛋白和许多piRNA产生因子在此聚集。在乒乓路径中，AGO3和Aub以互补方式在剪切活性作用下切开正反转位子转录物，piRNA以前馈方式放大。",
+     153,
+     "掌握"
+    ],
+    [
+     "第五节 其他小分子RNA",
+     "snoRNA与snRNA的特征及功能",
+     "本页介绍snoRNA和snRNA两类小分子非编码RNA。snoRNA（核仁小分子RNA）是一类小分子非编码RNA，多富集于核仁，代谢稳定。典型snoRNA特征：分子大小60~400nt；具有类似核仁提取物的性质（抗盐性）；需要与特定蛋白质结合形成核糖核蛋白体（snoRNP）并以此形式存在和行使功能；具有多种与蛋白质相互作用的保守序列元件。box C/D snoRNA能形成“发夹-单链-发夹-尾部”状二级结构，其分子两端的boxC、boxD以及末端配对序列能形成保守的“茎-内环-茎”状二级结构，称为“K-turn”结构。大多数box C/D snoRNA和box H/ACA snoRNA分别具有指导rRNA、snRNA和tRNA前体中特定核苷2'-O-核糖甲基化修饰与假尿嘧啶化修饰的功能；少部分snoRNA参与rRNA前体的加工剪切，与rRNA的正确折叠和组装相关。MRP RNA是极为特殊的snoRNA，在数量和功能上均异于其他snoRNA。MRP RNA只有一种分子存在于细胞中，并与9种蛋白质结合形成MRP RNA复合物，参与5.8S rRNA的加工和线粒体DNA的复制；还作为RNase P的RNA成分，参与tRNA的5'端成熟过程。snRNA（小核RNA）是剪接体的主要成分，参与mRNA前体的加工过程。此外还有端粒酶RNA，与染色体末端的复制有关；以及反义RNA等。",
+     154,
      "理解"
     ],
     [
      "第五节 其他小分子RNA",
-     "siRNA、ta-siRNA及其他小分子RNA",
-     "小分子RNA是20~40个核苷酸的非编码RNA，出现在大多数真核生物中，在转录或转录后调节基因表达，主要包括miRNA和siRNA等。小干扰RNA（siRNA）是21~25个核苷酸的小RNA，由Dicer加工双链RNA（dsRNA）而成，是RNA诱导沉默复合体（RISC）的主要成员，激发与靶mRNA互补的沉默。dsRNA来源包括内源双向表达、发夹RNA、转基因异常聚合、转座子转录、病毒RNA等。siRNA主要参与RNA干扰，以专一性方式调节基因表达，也参与抗病毒和染色质结构改变，其生理意义在于抗御机制、调控细胞分化与胚胎发育、维持基因组稳定。siRNA识别靶序列高度特异，中央碱基错配会严重抑制RNAi效应，3'端不要求完全匹配。RNAi可用于基因沉默和功能分析，植物中可用稳定转化或瞬时表达递送dsRNA。ta-siRNA是植物特有的内源性小RNA，长21nt，由miRNA介导切割TAS基因转录本后经siRNA途径产生，miRNA引导的切割不可或缺。",
-     150,
+     "非编码RNA参考文献列表",
+     "本页为第七章非编码RNA的参考文献列表，列出了多篇相关研究文献。包括：Iadevaia V和Gerber AP于2015年在Biomolecules上发表的关于RNA结合蛋白和非编码RNA组合控制mRNA命运的文章；Iwasaki YW等2015年在Annual Review of Biochemistry上关于PIWI相互作用RNA生物合成与功能的综述；Jing L等2017年在Molecular Cancer上关于环状RNA重塑RNA世界的文章；Jouannet V和Maizel A 2012年关于反式作用小干扰RNA生物合成、作用模式及在植物发育中作用的专著；Lan Y等2016年在Scientific Reports上关于miRNA Digger——全基因组新miRNA挖掘综合流程的文章；Li X等2017年关于NONCODE数据库的文章。本页为整页参考文献，无具体概念或方法讲解，阅读时注意文献作者、年份、期刊和主题，可用于追溯本章知识点的原始出处和深入阅读。",
+     155,
      "了解"
     ]
    ],
    "quiz": [
     {
-     "q": "下列关于非编码RNA的叙述，错误的是：",
+     "q": "下列关于非编码RNA（ncRNA）的描述，正确的是：",
      "o": [
-      "A. 广义非编码RNA包括tRNA和rRNA",
-      "B. 人类基因组中蛋白质编码序列约占1.5%",
-      "C. 非编码RNA都是“垃圾RNA”，没有生物学功能",
-      "D. miRNA主要在转录后负调控目标基因的表达"
+      "A. 广义ncRNA不包括tRNA和rRNA",
+      "B. 狭义ncRNA通常包括tRNA和rRNA",
+      "C. 非编码RNA不编码蛋白质，直接在RNA水平发挥作用",
+      "D. 非编码RNA在人类基因组转录产物中占比不足10%"
      ],
      "a": "C",
-     "e": "非编码RNA并非垃圾RNA，许多具有重要调控功能，如miRNA、lncRNA等。A、B、D均正确。"
+     "e": "非编码RNA指不编码蛋白质、直接在RNA水平发挥作用的RNA。广义ncRNA包括tRNA和rRNA，狭义通常不包括；人类基因组约75%可转录，非编码RNA占总RNA约74%，远高于10%。"
     },
     {
-     "q": "根据长度分类，长链非编码RNA（lncRNA）的长度一般：",
-     "o": [
-      "A. 小于40nt",
-      "B. 小于200nt",
-      "C. 大于200nt",
-      "D. 大于1000nt"
-     ],
-     "a": "C",
-     "e": "非编码RNA按长度一般分为短链（<200nt）和长链（>200nt），lncRNA属于长链非编码RNA。"
-    },
-    {
-     "q": "动物细胞中，miRNA初级转录产物pri-miRNA在核内被哪种酶加工为pre-miRNA？",
+     "q": "动物miRNA生物合成过程中，将pri-miRNA加工为pre-miRNA的酶是：",
      "o": [
       "A. Dicer",
       "B. Drosha",
-      "C. RNA聚合酶Ⅱ",
-      "D. Argonaute"
+      "C. Argonaute",
+      "D. Exportin-5"
      ],
      "a": "B",
-     "e": "动物中pri-miRNA在核内被Drosha（2类RNaseⅢ酶）加工为pre-miRNA，随后由exportin-5运至胞浆，再由Dicer加工为成熟miRNA。"
+     "e": "动物中pri-miRNA在核内被Drosha（RNaseⅢ类酶）及其辅因子DGCR8/Pasha加工为pre-miRNA；Dicer在胞浆中进一步加工为成熟miRNA；Exportin-5负责核输出；Argonaute是RISC组分。"
     },
     {
-     "q": "关于circRNA的特性，下列叙述错误的是：",
+     "q": "植物miRNA合成与动物的主要区别之一是：",
+     "o": [
+      "A. 植物中存在Drosha同系物",
+      "B. 植物中由DCL-1专一负责MIRNA加工",
+      "C. 植物miRNA不加载Argonaute蛋白",
+      "D. 植物miRNA不经过Dicer加工"
+     ],
+     "a": "B",
+     "e": "植物中未发现Drosha及其辅因子DGCR8/Pasha的同系物，基因研究显示Dicer like 1（DCL-1）专一负责MIRNA加工；植物miRNA仍加载Argonaute家族蛋白，也经过Dicer类酶加工。"
+    },
+    {
+     "q": "关于circRNA的特性，下列描述错误的是：",
      "o": [
       "A. circRNA以共价键形成闭环结构，无PolyA尾巴",
-      "B. circRNA通常由反向剪切产生",
-      "C. circRNA极易被RNase降解，稳定性差",
-      "D. 某些circRNA表达丰度可超过对应mRNA 10倍以上"
+      "B. circRNA在人类细胞中种类可达25000~100000种",
+      "C. circRNA一般不易被RNase降解，且完全不能被siRNA降解",
+      "D. circRNA由DNA转录而来，一般不翻译成蛋白质"
      ],
      "a": "C",
-     "e": "circRNA由于封闭环状结构，对核酸外切酶免疫，稳定性远远超过线性RNA，不易被RNase降解。"
+     "e": "circRNA不易被RNase降解，但若siRNA对应的靶序列存在于circRNA中，circRNA仍可被siRNA降解，因此“完全不能”错误。其余选项均正确。"
     },
     {
-     "q": "关于siRNA的叙述，正确的是：",
+     "q": "circRNA形成途径中，依赖反向互补motif（两端分别为GU富集片段和C富集片段）的是：",
      "o": [
-      "A. siRNA是单链RNA，长度约100nt",
-      "B. siRNA由Dicer加工双链RNA而成，是RISC的主要成员",
-      "C. siRNA识别靶序列特异性低，中央碱基错配不影响RNAi效应",
-      "D. siRNA只存在于植物中"
+      "A. 剪接体依赖的环化途径",
+      "B. 内含子配对驱动的环化途径",
+      "C. 套索驱动的环化途径",
+      "D. 蛋白因子结合环化途径"
      ],
      "a": "B",
-     "e": "siRNA是21~25nt的双链小RNA，由Dicer加工dsRNA而成，是RISC主要成员；其识别靶序列高度特异，中央碱基错配会严重抑制RNAi效应；siRNA在动植物中均存在。"
+     "e": "内含子配对驱动的环化途径依赖反向互补motif，motif两端分别是靠近5'端剪接位点的7nt GU富集片段和靠近分支位点的C富集片段，推动环状RNA生成。"
+    },
+    {
+     "q": "siRNA生物合成中，负责将双链RNA加工为siRNA的酶是：",
+     "o": [
+      "A. Drosha",
+      "B. Dicer",
+      "C. RISC",
+      "D. RNA聚合酶Ⅱ"
+     ],
+     "a": "B",
+     "e": "siRNA由Dicer（对双链RNA具有特异性的RNaseⅢ类酶）加工双链RNA（dsRNA）而成。Drosha主要参与miRNA的核内加工；RISC是沉默复合体；RNA聚合酶Ⅱ参与转录。"
+    },
+    {
+     "q": "关于RNAi机制，下列描述正确的是：",
+     "o": [
+      "A. siRNA与靶mRNA的3'端必须完全匹配才能降解",
+      "B. siRNA识别靶序列高度特异，中央碱基错配会严重抑制RNAi效应",
+      "C. RISC切割靶mRNA不需要ATP参与",
+      "D. siRNA是RNAi途径的最终产物，不参与RISC组装"
+     ],
+     "a": "B",
+     "e": "siRNA识别靶序列具有高度特异性，降解首先发生在相对于siRNA的中央位置，中央碱基错配会严重抑制RNAi效应；3'端核苷酸序列并不要求与靶mRNA完全匹配；RISC切割需要ATP参与；siRNA并入RISC中发挥作用。"
+    },
+    {
+     "q": "下列哪项不是非编码RNA功能预测的常见方法？",
+     "o": [
+      "A. 通过互作、共表达、共定位信息进行功能富集",
+      "B. 建立编码-非编码网络，划分功能模块并赋功能",
+      "C. 通过序列预测ncRNA与RNA或蛋白质的结合情况",
+      "D. 通过翻译产物进行质谱鉴定并推断功能"
+     ],
+     "a": "D",
+     "e": "非编码RNA缺乏翻译产物，因此不能通过翻译产物进行质谱鉴定来推断功能。其余三项均为ncRNA功能预测的常见理论方法。"
+    },
+    {
+     "q": "关于snRNA的描述，正确的是：",
+     "o": [
+      "A. snRNA只存在于细胞质中",
+      "B. snRNA是剪接体的主要成分，参与pre-mRNA剪接",
+      "C. 所有snRNA均由RNA聚合酶Ⅲ转录",
+      "D. snRNA不参与RNA加工，只参与蛋白质合成"
+     ],
+     "a": "B",
+     "e": "snRNA是真核生物转录后加工过程中剪接体的主要成分，与蛋白形成snRNP参与pre-mRNA剪接。snRNA主要存在于细胞核中；除U6由RNA聚合酶Ⅲ转录外，其余由RNA聚合酶Ⅱ转录；snRNA不参与蛋白质合成活动。"
+    },
+    {
+     "q": "下列数据库中，专门整合Ribo-seq和RNA-seq数据来预测circRNA及其编码潜能的是：",
+     "o": [
+      "A. circBase",
+      "B. CircNet",
+      "C. CircPro",
+      "D. deepBase v2.0"
+     ],
+     "a": "C",
+     "e": "CircPro提供一个pipeline，整合Ribo-seq和RNA-seq数据来预测circRNA及其编码潜能。circBase收集整合已发布circRNA数据；CircNet提供circRNA-miRNA-mRNA互作网络等；deepBase v2.0构建circRNA表达图谱。"
     }
    ]
   }
  ],
  "fill": [
   {
-   "q": "非编码RNA是指除mRNA以外不编码蛋白质、直接在________水平发挥作用的RNA。",
-   "a": "RNA"
+   "q": "非编码RNA按长度分为短链ncRNA（<200 nt）和长链ncRNA（>200 nt），其中短链ncRNA包括miRNA、piRNA、siRNA、snRNA、snoRNA等，长链ncRNA包括lncRNA、circRNA等。人类基因组约________%可转录，非编码RNA占总RNA约________%。",
+   "a": "75,74"
   },
   {
-   "q": "按长度，非编码RNA可分为短链ncRNA（<200nt，如miRNA、piRNA、siRNA、snRNA、snoRNA）和长链ncRNA（>200nt，如________、________）。",
-   "a": "lncRNA,circRNA"
+   "q": "动物miRNA生物合成中，pri-miRNA在核内被________及其辅因子DGCR8/Pasha加工为pre-miRNA；pre-miRNA在________介导下转运至胞浆；在胞浆中由________加工为成熟miRNA，并加载到Argonaute蛋白生成RISC。",
+   "a": "Drosha,exportin-5 (EXP-5),Dicer"
   },
   {
-   "q": "动物中，pri-miRNA在核内被________加工为pre-miRNA，经exportin-5运至胞浆，再由________加工为成熟miRNA并加载到Argonaute蛋白形成RISC。",
-   "a": "Drosha,Dicer"
+   "q": "植物miRNA合成与动物不同：植物中未发现Drosha及其辅因子DGCR8/Pasha的同系物，表明植物不存在依赖Drosha的加工过程。基因研究显示________专一负责MIRNA加工；exportin-5由________介导miRNA从细胞核到细胞质；miRNA在细胞核或细胞质中加载Argonaute家族蛋白（AGO）。",
+   "a": "Dicer like 1 (DCL-1),HASTY (HST)"
   },
   {
-   "q": "环状RNA通常由反向剪切产生，主要有4种形成途径：剪接体依赖的环化、________驱动的环化、套索驱动的环化、________结合环化。",
-   "a": "内含子配对,蛋白因子"
+   "q": "circRNA通常由非经典可变剪接（反向剪接，back splicing）产生，主要有4种途径：①________依赖的环化途径；②________驱动的环化途径；③________驱动的环化途径；④________结合环化途径。",
+   "a": "剪接体,内含子配对,套索,蛋白因子"
   },
   {
-   "q": "siRNA是21~25个核苷酸的小RNA，由Dicer加工双链RNA（dsRNA）而成，是________的主要成员，激发与靶mRNA互补的沉默。",
-   "a": "RNA诱导沉默复合体（RISC）"
+   "q": "siRNA是21~25 nt的小RNA，由________（对双链RNA特异的RNaseⅢ类酶）加工双链RNA（dsRNA）而成。siRNA是________的主要成员，激发与之互补的目标mRNA沉默。",
+   "a": "Dicer,RISC"
   },
   {
-   "q": "ta-siRNA是植物特有的内源性小RNA，长________nt，由miRNA介导切割TAS基因转录本后经siRNA途径产生，________引导的切割不可或缺。",
-   "a": "21,miRNA"
+   "q": "RNAi机制：Rde-1识别外源dsRNA，引导其与Dicer结合形成酶-dsRNA复合体；Dicer作用下，dsRNA正义链被mRNA替换释放，在________参与下RISC利用核酸内切酶活性切割靶mRNA与反义链互补区域，形成21~23 nt siRNA。",
+   "a": "ATP"
+  },
+  {
+   "q": "ncRNA大规模鉴定分为理论预测和实验方法。理论预测常用工具包括snoScan、snoGPS、tRNAScan、mirScan、RNAz和RNAmotif等，简便快捷但最终需________验证。实验方法包括构建ncRNA的cDNA文库、克隆测序、直接分离纯化后测序，以及全基因组________芯片技术。",
+   "a": "实验,tiling array"
+  },
+  {
+   "q": "circRNA常用数据库和分析软件：①________，包含约15万circRNA基因（人、鼠、果蝇、线虫等），构建了较全面的circRNA表达图谱；②________，收集整合已发布circRNA数据；③CircNet，提供新circRNA鉴定、circRNA-miRNA-mRNA互作网络、亚型表达水平、基因组注释和序列；④CircPro，整合Ribo-seq和RNA-seq数据预测circRNA及其编码潜能；⑤miARma-Seq，综合分析软件。",
+   "a": "deepBase v2.0,circBase"
   }
  ],
  "short": [
   {
-   "q": "简述非编码RNA的概念、分类及主要功能。",
-   "a": "概念：非编码RNA（ncRNA）是指除mRNA以外不编码蛋白质、直接在RNA水平发挥作用的RNA。分类：按长度可分为短链ncRNA（<200nt，如miRNA、piRNA、siRNA、snRNA、snoRNA）和长链ncRNA（>200nt，如lncRNA、circRNA）；按细胞内分布可分为snoRNA、snRNA、scRNA、Cajal小体特异性小RNA等；按功能和表达特征可分为看家ncRNA、调节或调控ncRNA以及兼具看家与调节功能的ncRNA。功能：核心作用是调控；miRNA在转录后负调控靶基因；lncRNA参与表观遗传调控、转录及转录后调控，与细胞分化、发育和疾病密切相关；siRNA参与RNA干扰、抗病毒和染色质结构改变等。"
+   "q": "简述非编码RNA的定义与分类。",
+   "a": "定义：非编码RNA（ncRNA）指不编码蛋白质、直接在RNA水平发挥作用的RNA。分类：①广义ncRNA包括tRNA和rRNA；狭义ncRNA通常不包括这两种。②按长度分为短链ncRNA（<200 nt，如miRNA、piRNA、siRNA、snRNA、snoRNA）和长链ncRNA（>200 nt，如lncRNA、circRNA）。③按细胞内分布可分为snoRNA、snRNA、scRNA、Cajal小体特异性小RNA等。人类基因组约75%可转录，非编码RNA占总RNA约74%，蛋白质编码序列仅约1.5%。ncRNA并非“垃圾RNA”，其核心功能是调控。"
   },
   {
-   "q": "简述microRNA的生物合成过程及其生物信息学分析流程。",
-   "a": "生物合成：miRNA由发夹状初始转录产物加工形成，序列位于茎上，茎部形成不完全互补双链。动物中，pri-miRNA在核内被Drosha加工为pre-miRNA，经exportin-5运至胞浆，再由Dicer加工为成熟miRNA并加载到Argonaute蛋白形成RISC；植物中无Drosha同系物，由DCL-1负责加工，HASTY介导核质运输。生物信息学分析：首先从miRBase等权威数据库获取序列信息，再进行基因组定位、靶基因预测和功能分析，常用靶标数据库如starBase整合CLIP-Seq和降解组数据，降低假阳性。"
+   "q": "简述动物miRNA的生物合成过程及其负调控靶基因表达的机制。",
+   "a": "动物miRNA基因多位于转录单元区，尤其内含子区，序列高度保守。miRNA为21~25 nt单链RNA，由发夹状初始转录产物加工而成。动物中：pri-miRNA在核内被Drosha（RNaseⅢ类酶）及其辅因子DGCR8/Pasha加工为pre-miRNA；pre-miRNA在exportin-5（EXP-5）介导下转运至胞浆；在胞浆中由Dicer（RNaseⅢ型蛋白）加工为成熟miRNA，并加载到Argonaute蛋白生成RISC。miRNA通过与靶基因3'UTR配对，促进mRNA降解或抑制翻译，从而负调控靶基因表达。"
   },
   {
-   "q": "简述环状RNA的特性、分类及常用数据库。",
-   "a": "特性：以共价键形成闭环结构，无5'端和3'端终点，也无PolyA尾巴；含量丰富，人类细胞中可达25000~100000种，数量远超线性RNA；不同物种间有一定进化保守性；一般不翻译成蛋白质；不易被RNase降解，结构稳定，半衰期长，某些表达丰度可超对应mRNA10倍以上，神经细胞中浓度更高。分类：按来源和构成序列可分为外显子来源（ecircRNA）、内含子来源（ciRNA）等5类。常用数据库和分析软件：deepBase v2.0、circBase、CircNet、CircPro、miARma-Seq等，用于表达图谱、鉴定、互作网络和编码潜能预测。"
+   "q": "简述circRNA的生物合成途径。",
+   "a": "circRNA通常由非经典可变剪接（反向剪接，back splicing）产生，主要有4种途径：①剪接体依赖的环化途径，snRNP装配后下游外显子5'供体位点与上游3'受体位点结合促进成环；②内含子配对驱动的环化途径，依赖反向互补motif，两端分别为GU富集片段和C富集片段；③套索驱动的环化途径，经典外显子跳跃产生套索副产物，被跳过区域经套索剪接形成外显子环状RNA；④蛋白因子结合环化途径，RBP结合内含子靶序列使供体-受体靠近促进环化，部分RBP可抑制环化。"
+  },
+  {
+   "q": "简述siRNA的功能与RNAi机制。",
+   "a": "siRNA为双股RNA，主要参与RNA干扰（RNAi），以专一性方式调节基因表达，也参与抗病毒、染色质结构改变等。其生理意义包括生物抗御机制、调控细胞分化与胚胎发育、维持基因组稳定及RNA水平调控。RNAi机制：Rde-1识别外源dsRNA，引导其与Dicer结合形成酶-dsRNA复合体；Dicer作用下，dsRNA正义链被mRNA替换释放，在ATP参与下RISC利用核酸内切酶活性切割靶mRNA与反义链互补区域，形成21~23 nt siRNA。siRNA并入RISC后与靶标基因编码区或UTR完全配对，降解靶标基因，是典型负调控。"
+  },
+  {
+   "q": "简述非编码RNA功能预测的常见方法。",
+   "a": "由于ncRNA缺乏翻译产物且数量庞大，功能预测主要依赖理论手段。常见方法：①通过互作、共表达、共定位等信息获得相关基因及互作因子，进行功能富集，需结合多种因素并注意统计检验；②收集功能注释与相关性数据，建立编码-非编码网络，划分功能模块并为模块内ncRNA赋功能；③通过序列预测ncRNA与RNA或蛋白质的结合情况，再推测功能，常用于预测lncRNA与miRNA的匹配关系（ceRNA角色）。常用平台包括ncFANs、ChIPBase、starBase、LncRNADisease、DIANA-LncBase等。"
   }
  ],
  "calc": [
   {
-   "q": "论述非编码RNA的识别与功能预测的主要策略，并举例说明常用平台或数据库。",
-   "a": "非编码RNA的识别包括理论预测和实验方法。理论预测如snoScan、RNAz；实验方法如cDNA文库、测序、tiling array。功能预测常用共表达/共定位富集、编码-非编码网络模块划分、序列互作预测等。常用平台有ncFANs、ChIPBase、starBase、LncRNADisease等。对于miRNA，生物信息学分析首先从miRBase等权威数据库获取序列信息，再进行基因组定位、靶基因预测和功能分析，常用靶标数据库如starBase整合CLIP-Seq和降解组数据，降低假阳性。对于circRNA，常用在线数据库和分析软件包括deepBase v2.0、circBase、CircNet、CircPro、miARma-Seq等，用于表达图谱、鉴定、互作网络和编码潜能预测。",
-   "steps": "1. 识别策略：理论预测（snoScan、RNAz）与实验方法（cDNA文库、测序、tiling array）。2. 功能预测：共表达/共定位富集、编码-非编码网络模块划分、序列互作预测。3. 常用平台：ncFANs、ChIPBase、starBase、LncRNADisease。4. miRNA分析：miRBase获取序列，基因组定位、靶基因预测、功能分析，starBase整合CLIP-Seq和降解组数据。5. circRNA分析：deepBase v2.0、circBase、CircNet、CircPro、miARma-Seq等用于表达图谱、鉴定、互作网络和编码潜能预测。"
+   "q": "论述非编码RNA的识别方法及其优缺点。",
+   "a": "ncRNA大规模鉴定分为理论预测和实验方法。理论预测从已知ncRNA提取特征，进行全基因组搜索，常用工具包括snoScan、snoGPS、tRNAScan、mirScan、RNAz和RNAmotif等，简便快捷但最终需实验验证。实验方法包括构建ncRNA的cDNA文库、克隆测序、直接分离纯化后测序，以及全基因组tiling array芯片技术。在长非编码RNA专用芯片推出前，可对已有芯片探针重注释以识别lncRNA表达。理论预测可快速全基因组筛选，但假阳性较高；实验方法更可靠，但通量低、成本高。两者结合可提高鉴定准确性。",
+   "steps": "1. 理论预测：从已知ncRNA提取特征，全基因组搜索，常用工具snoScan、snoGPS、tRNAScan、mirScan、RNAz、RNAmotif等；简便快捷但需实验验证。2. 实验方法：构建cDNA文库、克隆测序、直接分离纯化后测序、全基因组tiling array芯片技术。3. 长非编码RNA专用芯片推出前，可对已有芯片探针重注释以识别lncRNA表达。4. 优缺点：理论预测快速全基因组筛选但假阳性较高；实验方法可靠但通量低、成本高；两者结合提高准确性。"
+  },
+  {
+   "q": "论述circRNA的特性及其生物学意义。",
+   "a": "circRNA含量丰富，人类细胞中可达25000~100000种，数量远超线性RNA；不同物种间通常具有一定进化保守性，但也有一些不保守。circRNA由DNA转录而来，一般不翻译成蛋白质；不易被RNase降解，但若siRNA靶序列存在于circRNA中，仍可被siRNA降解；当siRNA作用于线性RNA末端时，拥有共同靶序列的circRNA可能不受影响。circRNA的发现解释了以往基因序列“混乱”现象，如外显子顺序打乱、无内含子基因也能生成circRNA等。其调控复杂性及在疾病发生中的重要作用日益受到重视。",
+   "steps": "1. 含量丰富：人类细胞中可达25000~100000种，数量远超线性RNA。2. 进化保守性：不同物种间通常具有一定进化保守性，但也有一些不保守。3. 不翻译：由DNA转录而来，一般不翻译成蛋白质。4. 稳定性：不易被RNase降解；但若siRNA靶序列存在于circRNA中，仍可被siRNA降解；当siRNA作用于线性RNA末端时，拥有共同靶序列的circRNA可能不受影响。5. 生物学意义：解释以往基因序列“混乱”现象，如外显子顺序打乱、无内含子基因也能生成circRNA等；调控复杂性及在疾病发生中的重要作用日益受到重视。"
   }
  ],
  "term": [
   {
-   "term": "非编码RNA (non-coding RNA, ncRNA)",
-   "def": "指除mRNA以外不编码蛋白质、直接在RNA水平发挥作用的RNA。广义包括tRNA和rRNA，狭义不包括；本章主要讨论狭义ncRNA。人类基因组约75%序列可转录为RNA，其中ncRNA占总RNA的74%，蛋白质编码序列仅约1.5%。核心作用是调控，并非“垃圾RNA”。"
+   "term": "non-coding RNA (ncRNA)",
+   "def": "不编码蛋白质、直接在RNA水平发挥作用的RNA。广义包括tRNA和rRNA；狭义通常不包括tRNA和rRNA。按长度分为短链ncRNA（<200 nt，如miRNA、piRNA、siRNA、snRNA、snoRNA）和长链ncRNA（>200 nt，如lncRNA、circRNA）。人类基因组约75%可转录，非编码RNA占总RNA约74%，蛋白质编码序列仅约1.5%。核心功能是调控，RNAi现象获2006年诺贝尔奖。"
   },
   {
-   "term": "microRNA (miRNA)",
-   "def": "一类内源性、长度21~25个核苷酸的单链小RNA，在细胞内具有重要调节作用。每个miRNA可有多个靶基因，同一靶基因也可被多个miRNA共同调节，形成复杂网络，据推测调节人类约三分之一基因。约70%哺乳动物miRNA基因位于转录单位区，大部分位于内含子区，且在不同物种中高度保守。由发夹状初始转录产物加工形成，序列位于茎上，茎部形成不完全互补双链，可与靶基因3'UTR配对，促进mRNA降解或抑制翻译。"
+   "term": "miRNA",
+   "def": "微小RNA，21~25 nt单链RNA，由发夹状初始转录产物加工而成。动物中pri-miRNA在核内被Drosha/DGCR8加工为pre-miRNA，经exportin-5转运至胞浆，由Dicer加工为成熟miRNA并加载到Argonaute蛋白生成RISC。通过与靶基因3'UTR配对，促进mRNA降解或抑制翻译，负调控靶基因表达。miRBase release 21收录人类miRNA约2588个，异常与癌症相关。"
   },
   {
-   "term": "长链非编码RNA (long non-coding RNA, lncRNA)",
-   "def": "长度大于200nt的非编码RNA，如lincRNA、反义RNA、假基因等。可在表观遗传、转录及转录后多层面调控基因表达，参与细胞分化、发育和疾病密切相关。"
+   "term": "lncRNA",
+   "def": "长链非编码RNA，长度>200 nt。可与染色质重塑复合物结合，定位到特定基因位点，改变DNA甲基化和组蛋白状态，参与表观遗传调控；也能在转录及转录后水平调节蛋白编码基因表达。有带PolyA尾和不带PolyA尾两种形式，具有跨物种低保守性、组织特异性表达和低丰度等特点。"
   },
   {
-   "term": "环状RNA (circular RNA, circRNA)",
-   "def": "一类以共价键形成闭环结构的新型内源性RNA，无5'端和3'端终点，也无PolyA尾巴，因此经典PolyA分离方法常忽略它。通常由反向剪切产生，主要有4种形成途径：剪接体依赖的环化、内含子配对驱动的环化、套索驱动的环化、蛋白因子结合环化。含量丰富，人类细胞中可达25000~100000种，数量远超线性RNA；不同物种间有一定进化保守性；一般不翻译成蛋白质；不易被RNase降解，结构稳定，半衰期长，某些表达丰度可超对应mRNA10倍以上，神经细胞中浓度更高。按来源和构成序列可分为外显子来源（ecircRNA）、内含子来源（ciRNA）等5类。"
+   "term": "circRNA",
+   "def": "环状RNA，以共价键形成闭环结构，无5'端和3'端终点，也无PolyA尾巴。通常由非经典可变剪接（反向剪接）产生，主要有剪接体依赖、内含子配对驱动、套索驱动和蛋白因子结合4种途径。含量丰富，人类细胞中可达25000~100000种；不同物种间通常具有一定进化保守性；一般不翻译成蛋白质；不易被RNase降解，但若siRNA靶序列存在于circRNA中仍可被siRNA降解。"
   },
   {
-   "term": "小干扰RNA (small interfering RNA, siRNA)",
-   "def": "21~25个核苷酸的小RNA，由Dicer加工双链RNA（dsRNA）而成，是RNA诱导沉默复合体（RISC）的主要成员，激发与靶mRNA互补的沉默。dsRNA来源包括内源双向表达、发夹RNA、转基因异常聚合、转座子转录、病毒RNA等。主要参与RNA干扰，以专一性方式调节基因表达，也参与抗病毒和染色质结构改变，其生理意义在于抗御机制、调控细胞分化与胚胎发育、维持基因组稳定。识别靶序列高度特异，中央碱基错配会严重抑制RNAi效应，3'端不要求完全匹配。"
+   "term": "siRNA",
+   "def": "小干扰RNA，21~25 nt的小RNA，由Dicer（对双链RNA特异的RNaseⅢ类酶）加工双链RNA而成。是RISC的主要成员，激发与之互补的目标mRNA沉默。主要参与RNA干扰，以专一性方式调节基因表达，也参与抗病毒、染色质结构改变等。siRNA并入RISC后与靶标基因编码区或UTR完全配对，降解靶标基因，是典型负调控。"
   },
   {
-   "term": "核仁小RNA (small nucleolar RNA, snoRNA)",
-   "def": "大小60~400nt，富集于核仁，与蛋白质形成snoRNP，指导rRNA、tRNA、snRNA的甲基化和假尿嘧啶化修饰。按功能和表达特征可分为看家ncRNA、调节或调控ncRNA以及兼具看家与调节功能的ncRNA（如snoRNA）。"
+   "term": "piRNA",
+   "def": "PIWI相互作用RNA，属于短链非编码RNA（<200 nt）。与PIWI蛋白家族结合，主要在生殖细胞中表达，参与转座子沉默、基因组稳定维持和生殖发育调控。"
   },
   {
-   "term": "细胞核小分子RNA (small nuclear RNA, snRNA)",
-   "def": "长100~300nt，是剪接体主要成分，参与pre-mRNA剪接，分为U1~U7，除U6由RNA聚合酶Ⅲ转录外其余由RNA聚合酶Ⅱ转录，具有保守序列和修饰碱基。"
+   "term": "snoRNA",
+   "def": "核仁小RNA，多富集于核仁，大小60~400 nt，需与特定蛋白结合成snoRNP行使功能，具有保守序列元件。参与rRNA前体的加工、修饰（如2'-O-核糖甲基化和假尿嘧啶形成）及核糖体组装。"
   },
   {
-   "term": "RNA干扰 (RNA interference, RNAi)",
-   "def": "由小干扰RNA（siRNA）等介导的、以专一性方式调节基因表达或沉默靶基因的机制。siRNA是RISC的主要成员，激发与靶mRNA互补的沉默。RNAi可用于基因沉默和功能分析，植物中可用稳定转化或瞬时表达递送dsRNA。其发现获2006年诺贝尔奖。"
+   "term": "snRNA",
+   "def": "细胞核小分子RNA，长度100~300 nt，是剪接体主要成分，与蛋白形成snRNP参与pre-mRNA剪接。分为U1~U7，除U6由RNA聚合酶Ⅲ转录外其余由RNA聚合酶Ⅱ转录，5'端有TMG帽，3'端有Sm结合位点。"
+  },
+  {
+   "term": "scRNA",
+   "def": "细胞质小分子RNA，分布在细胞质，主要在蛋白质合成中起作用。"
+  },
+  {
+   "term": "Cajal body-specific small RNA",
+   "def": "Cajal小体（CBs）特异性小RNA，参与snRNA位点特异性2'-O-核糖甲基化及假尿嘧啶形成。"
+  },
+  {
+   "term": "RNA interference (RNAi)",
+   "def": "RNA干扰，由双链RNA引发的转录后基因沉默现象。机制：Rde-1识别外源dsRNA，引导其与Dicer结合形成酶-dsRNA复合体；Dicer作用下，dsRNA正义链被mRNA替换释放，在ATP参与下RISC利用核酸内切酶活性切割靶mRNA与反义链互补区域，形成21~23 nt siRNA。siRNA并入RISC后与靶标基因编码区或UTR完全配对，降解靶标基因，是典型负调控。"
+  },
+  {
+   "term": "ceRNA",
+   "def": "竞争性内源RNA，通过序列预测ncRNA与RNA或蛋白质的结合情况，再推测功能，常用于预测lncRNA与miRNA的匹配关系。lncRNA可作为ceRNA吸附miRNA，从而间接调控miRNA靶基因表达。"
   }
  ]
 }
