@@ -1,0 +1,1499 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark"><link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1f5c8b"><title>算法流程图总览 · 生物信息学</title>
+<link rel="stylesheet" href="assets/style.css?v=20261008g"><script src="assets/theme.js?v=20261008g"></script>
+<style>
+.fid2{background:#eef7f0;border:1px solid #b7e3c9;border-radius:10px;padding:8px 12px;font-size:13px;line-height:2;margin-bottom:12px}
+.fid2 a{color:#1b7f3b;text-decoration:none;margin-right:4px}
+.fch2{background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px 18px;margin:14px 0}
+.fch2 h2{font-size:17px;color:#1b7f3b;border-left:5px solid #2f9e5f;padding-left:8px;margin:.4em 0 .6em}
+.fch2 .fc-n{font-size:12px;color:var(--sub);font-weight:400}
+.fc{margin:10px 0;padding:8px 10px;border:1px solid #d9ece0;border-radius:9px;background:#fbfefc;overflow:auto}
+.fc-h{font-size:13.4px;font-weight:700;color:#1b7f3b}
+.fc-h .fc-p{font-size:11.5px;color:var(--sub);font-weight:400;margin-left:6px}
+.fc-h .fc-lang{display:inline-block;margin-left:8px;font-size:11px;background:#2f6f4f;color:#fff;border-radius:999px;padding:1px 8px}
+.fc .mermaid{text-align:center;margin:8px 0 0}
+.fc-lk{font-size:12px}
+.fc-lk a{color:var(--blue);text-decoration:none}
+html[data-theme="dark"] .fch2{background:#1b2531;border-color:#2c3a4a}
+html[data-theme="dark"] .fc{background:#16211a;border-color:#2c4a38}
+html[data-theme="dark"] .fid2{background:#16221b;border-color:#2c4a38}
+</style></head>
+<body data-page="flow"><div class="wrap" style="max-width:1000px">
+<header class="top"><h1>🧭 算法流程图总览</h1><p>全书算法流程图（共 106 张）｜ 滚动到附近自动渲染 ｜ 按章浏览</p></header>
+<p><a href="index.html">← 返回首页</a> ｜ <a href="alg-summary.html">📚 算法原理速查表</a> ｜ <a href="formula.html">∑ 公式速查表</a> ｜ <a href="flow.html">🧭 流程图总览</a> ｜ <a href="scripts.html">💾 示例脚本合集</a></p>
+<div class="fid2"><a href="#fl_ch03">第三章 序列比对原理</a> ｜ <a href="#fl_ch12">第十二章 统计学习与推理</a> ｜ <a href="#fl_ch13">第十三章 生物信息学编程基础</a> ｜ <a href="#fl_ch14">第十四章 新一代测序技术及其应用</a></div>
+<section class="fch2" id="fl_ch03"><h2>第三章 序列比对原理 <span class="fc-n">20 张</span></h2><div class="fc"><div class="fc-h">序列比对的意义与类型概述<span class="fc-p">p40</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[比较是科学研究的重要方法]
+  B --&gt; C[生物信息学中比对是最常用研究手段之一]
+  C --&gt; D{选择比对类型}
+  D --&gt;|双序列比对| E[比较两条蛋白质或核酸序列]
+  E --&gt; F[识别相似区域和保守位点]
+  F --&gt; G[推断可能的分子进化关系]
+  D --&gt;|多序列比对| H[同时比较多个序列]
+  H --&gt; I[寻找共同保守区域、位点和模式]
+  I --&gt; J[探索导致共同功能的序列模式]
+  D --&gt;|蛋白质与核酸比较| K[探索核酸序列可能的表达框架]
+  D --&gt;|蛋白质与已知结构蛋白质比较| L[获得结构和折叠类型信息]
+  G --&gt; M[比对也是数据库搜索基础]
+  J --&gt; M
+  K --&gt; M
+  L --&gt; M
+  M --&gt; N([结束])</pre><div class="fc-lk"><a href="ch03.html#s_ch03_s0_0">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">字符编辑操作与双序列比对<span class="fc-p">p41</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[引入字符编辑操作概念]
+  B --&gt; C[定义空位字符-代表gap]
+  C --&gt; D{选择编辑操作}
+  D --&gt;|Match| E[Match(a,a)表示字符匹配]
+  D --&gt;|Delete| F[Delete(a,-)从第一条序列删除字符a或在第二条序列相应位置插入空位]
+  D --&gt;|Replace| G[Replace(a,b)以第二条序列中的字符b替换第一条序列中的字符a]
+  D --&gt;|Insert| H[Insert(-,b)在第一条序列插入空位或删除第二条序列中对应字符b]
+  E --&gt; I[通过编辑操作将一个序列转化为另一个序列]
+  F --&gt; I
+  G --&gt; I
+  H --&gt; I
+  I --&gt; J[比较两条序列]
+  J --&gt; K([结束])</pre><div class="fc-lk"><a href="ch03.html#s_ch03_s0_1">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">全局比对与局部比对递归算法<span class="fc-p">p42</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[设定初值]
+  B --&gt; C[全局比对递归关系]
+  C --&gt; D["S(i,j) = max{ S(i-1,j-1)+p(a_i,b_j), S(i-1,j)+p(a_i,-), S(i,j-1)+p(-,b_j) }"]
+  D --&gt; E[全局比对优势在于对高度同源序列进行优化]
+  E --&gt; F[用于以已知三维结构的同源序列为基础预测未知序列三维结构]
+  F --&gt; G[介绍局部序列比对]
+  G --&gt; H[局部比对仅获得特定序列在数据库中配对最好的亚区]
+  H --&gt; I([结束])</pre><div class="fc-lk"><a href="ch03.html#s_ch03_s0_2">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">相似、同一与同源及直系/旁系同源<span class="fc-p">p43</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[强调相似性不等于同源性]
+  B --&gt; C[不可说成具有41%的同源性]
+  C --&gt; D{相似性很高?}
+  D --&gt;|是| E[大多数情况下可表明两序列间同源性]
+  D --&gt;|否| F[不能判断同源性]
+  E --&gt; G[推测具有共同进化历程]
+  G --&gt; H[判断具有相似生物学功能]
+  H --&gt; I[该推断在成为结论前必须经过实验验证]
+  F --&gt; J[区分直系同源和旁系同源]
+  I --&gt; J
+  J --&gt; K[分子进化不仅使不同物种发生差异]
+  K --&gt; L[某个物种基因组内部也可能发生进化事件]
+  L --&gt; M[来自共同祖先的基因称为同源基因]
+  M --&gt; N([结束])</pre><div class="fc-lk"><a href="ch03.html#s_ch03_s0_3">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">序列比对打分目的与打分矩阵概念<span class="fc-p">p44</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[序列分析的目的是揭示核苷酸或氨基酸序列中的信息]
+  B --&gt; C[简单代价模型没有考虑同类字符与非同类字符替换的差别]
+  C --&gt; D[不同类型字符替换的代价和得分差别很大]
+  D --&gt; E[尤其对于蛋白质序列]
+  E --&gt; F[某些氨基酸可以很容易相互取代而不改变其理化性质]
+  F --&gt; G[保守替换比随机替换更可能维持蛋白质功能]
+  G --&gt; H[理化性质相近的氨基酸残基之间替换应比理化性质相距甚远的氨基酸残基替换得分高]
+  H --&gt; I[保守氨基酸替换得分应高于非保守氨基酸替换]
+  I --&gt; J[引入打分矩阵概念]
+  J --&gt; K([结束])</pre><div class="fc-lk"><a href="ch03.html#s_ch03_s0_4">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">DNA打分矩阵与氨基酸打分矩阵<span class="fc-p">p45</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[构建DNA打分矩阵]
+  B --&gt; C["对角线设为0.99 (相同碱基匹配得分高)"]
+  C --&gt; D["非对角线设为0.006、0.002等 (不同碱基替换得分低)"]
+  D --&gt; E[区分转换与颠换得分]
+  E --&gt; F[构建氨基酸打分矩阵]
+  F --&gt; G[考虑20种氨基酸彼此替换]
+  G --&gt; H[不同残基相似性差别很大]
+  H --&gt; I[不同残基替换概率截然不同]
+  I --&gt; J[根据氨基酸R基团极性等性质打分]
+  J --&gt; K([结束])</pre><div class="fc-lk"><a href="ch03.html#s_ch03_s0_5">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">PAM打分矩阵与PAM值选择<span class="fc-p">p46</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[基于突变数据构建PAM矩阵]
+  B --&gt; C[反映氨基酸替换接受概率]
+  C --&gt; D[PAM1表示每100个残基发生1次可接受突变]
+  D --&gt; E[PAM250表示每100个残基发生250次突变]
+  E --&gt; F{序列亲缘关系远近?}
+  F --&gt;|近| G[选用较低PAM值矩阵 如PAM100~PAM150]
+  F --&gt;|远| H[选用较高PAM值矩阵 如PAM250]
+  G --&gt; I([结束])
+  H --&gt; I</pre><div class="fc-lk"><a href="ch03.html#s_ch03_s0_6">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">BLOSUM打分矩阵的构建与特点<span class="fc-p">p47</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[基于BLOCKS数据库保守序列模块]
+  B --&gt; C[设置最小相同残基百分比]
+  C --&gt; D[整合序列片段]
+  D --&gt; E[避免同一残基对被重复计数]
+  E --&gt; F[生成BLOSUM矩阵]
+  F --&gt; G[BLOSUM80由相同残基≥80%的模块产生]
+  G --&gt; H[BLOSUM62由相同残基≥62%的聚合序列产生]
+  H --&gt; I[BLOSUM编号数字越大 序列间进化关系越近]
+  I --&gt; J([结束])</pre><div class="fc-lk"><a href="ch03.html#s_ch03_s0_7">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">不同打分矩阵的双序列比对示例<span class="fc-p">p48</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[准备Query检测序列与Sbjct目标序列]
+  B --&gt; C{选择打分矩阵}
+  C --&gt;|PAM250| D[进行双序列比对]
+  C --&gt;|BLOSUM62| E[进行双序列比对]
+  D --&gt; F[统计Identities相同残基数目及百分比]
+  E --&gt; F
+  F --&gt; G[统计Positives相同和相似残基总和及百分比]
+  G --&gt; H[比较两种矩阵比对结果差异]
+  H --&gt; I([结束])</pre><div class="fc-lk"><a href="ch03.html#s_ch03_s0_8">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">仿射空位罚分与dotplot算法<span class="fc-p">p49</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[介绍仿射空位罚分]
+  B --&gt; C["公式 g(k)=a+b×k"]
+  C --&gt; D[a为起始空位罚分]
+  D --&gt; E[b为空位延伸罚分]
+  E --&gt; F[k为空位数量]
+  F --&gt; G[打开空位代价较高 延伸空位代价较低]
+  G --&gt; H[进入序列比对算法]
+  H --&gt; I[dotplot算法]
+  H --&gt; J[动态规划算法]
+  H --&gt; K[BLAST算法]
+  I --&gt; L[dotplot是最古老的序列比对算法]
+  J --&gt; M([结束])
+  K --&gt; M
+  L --&gt; M</pre><div class="fc-lk"><a href="ch03.html#s_ch03_s0_9">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">dotplot算法特点与动态规划算法<span class="fc-p">p50</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[回顾dotplot算法]
+  B --&gt; C[相似性片段实为相同片段]
+  C --&gt; D[不能提供统计学意义上的相似性]
+  D --&gt; E[引入动态规划算法]
+  E --&gt; F{比对范围?}
+  F --&gt;|全局| G[Needleman-Wunsch算法 1970]
+  G --&gt; H[发现两条序列全局水平相似性]
+  F --&gt;|局部| I[Smith-Waterman算法 1981]
+  I --&gt; J[发现两条序列局部水平相似性]
+  H --&gt; K([结束])
+  J --&gt; K</pre><div class="fc-lk"><a href="ch03.html#s_ch03_s0_10">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">动态规划算法计算示例<span class="fc-p">p51</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[给定序列s等于acgctg]
+  B --&gt; C[给定序列t等于catgt]
+  C --&gt; D[设定记分函数 相同加2 不同减1 空位减1]
+  D --&gt; E[初始化M00等于0]
+  E --&gt; F[按公式迭代计算得分矩阵各元素]
+  F --&gt; G[计算M11 取M00加D11 M01加D01 M10加D10中的最大值]
+  G --&gt; H[继续填充其余矩阵元素]
+  H --&gt; I[回溯得到全局比对结果]
+  I --&gt; J([结束])</pre><div class="fc-lk"><a href="ch03.html#s_ch03_s0_11">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">BLAST算法原理与特点<span class="fc-p">p52</span><span class="fc-lang">伪代码/自然语言</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[动态规划算法精确但耗时]
+  B --&gt; C[不适合大规模数据库搜索]
+  C --&gt; D[引入BLAST算法 1990年Altschul等提出]
+  D --&gt; E[采用短片段匹配seed与有效统计模型]
+  E --&gt; F[寻找查询序列与数据库的最佳局部比对]
+  F --&gt; G[产生数量更少但质量更高的增强词以提高速度]
+  G --&gt; H[步骤1 编译查询序列生成固定长度词列表]
+  H --&gt; I[步骤2 扫描数据库获得与词匹配的序列记录]
+  I --&gt; J[步骤3 以匹配词为中心向两端延伸]
+  J --&gt; K([结束])</pre><div class="fc-lk"><a href="ch03.html#s_ch03_s0_12">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">FASTA程序功能与BLAST工具分类<span class="fc-p">p53</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[列出FASTA程序功能]
+  B --&gt; C[FASTA DNA对DNA或蛋白质对蛋白质库搜索]
+  C --&gt; D[FASTX/Y DNA正向翻译3种蛋白质后搜索蛋白质库]
+  D --&gt; E[FASTF 混合无序多肽片段搜索蛋白质库]
+  E --&gt; F[FASTS 有序多肽片段搜索蛋白质库]
+  F --&gt; G[TFASTX/Y DNA库翻译6种蛋白质后与蛋白质序列比较]
+  G --&gt; H[序列数据快速增长]
+  H --&gt; I[FASTA速度不足]
+  I --&gt; J[逐渐被更快的BLAST取代]
+  J --&gt; K[介绍BLAST工具分类]
+  K --&gt; L([结束])</pre><div class="fc-lk"><a href="ch03.html#s_ch03_s0_13">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">BLAST结果解析与图形化显示<span class="fc-p">p54</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[解析BLAST比对结果]
+  B --&gt; C[Gap costs采用线性空位罚分]
+  C --&gt; D[默认开放罚分11 延伸罚分1]
+  D --&gt; E[结果第一部分 搜索详细情况]
+  E --&gt; F[包括BLAST类型 数据库描述 查询内容 分类报告]
+  F --&gt; G[结果第二部分 图形化显示匹配项简明图]
+  G --&gt; H[每条彩色带表示匹配区域]
+  H --&gt; I[颜色表示得分高低 越红得分越高]
+  I --&gt; J[横轴为查询位置 展示命中分布]
+  J --&gt; K[结果第三部分 匹配序列]
+  K --&gt; L([结束])</pre><div class="fc-lk"><a href="ch03.html#s_ch03_s0_14">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">PSI-BLAST阈值与PHI-BLAST模式识别<span class="fc-p">p55</span><span class="fc-lang">Shell/Linux + 伪代码/自然语言</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[选择高级BLAST工具]
+  B --&gt; C{选择哪种工具?}
+  C --&gt;|PSI-BLAST| D[输入查询序列]
+  D --&gt; E[运行初始BLAST搜索]
+  E --&gt; F[构建多序列比对]
+  F --&gt; G[设定PSI-BLAST阈值]
+  G --&gt; H[筛选小于期望值的序列]
+  H --&gt; I[构建PSSM位置特异性打分矩阵]
+  I --&gt; J[用PSSM迭代搜索]
+  J --&gt; K{是否收敛?}
+  K --&gt;|否| F
+  K --&gt;|是| L[输出结果]
+  C --&gt;|PHI-BLAST| M[输入查询序列与模式pattern]
+  M --&gt; N[搜索符合模式的序列]
+  N --&gt; O[筛选与查询相似的蛋白质序列]
+  O --&gt; L
+  L --&gt; P([结束])</pre><div class="fc-lk"><a href="ch03.html#s_ch03_s0_15">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">多序列比对概念、应用与算法<span class="fc-p">p56</span><span class="fc-lang">伪代码/自然语言</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[输入多条序列]
+  B --&gt; C[选择多序列比对算法]
+  C --&gt; D{算法类型?}
+  D --&gt;|动态规划| E[构建多维打分矩阵]
+  E --&gt; F[回溯寻找最优路径]
+  D --&gt;|渐进式| G[两两比对构建指导树]
+  G --&gt; H[按树顺序逐步加入序列]
+  D --&gt;|迭代式| I[初始比对后反复优化]
+  F --&gt; J[生成多序列比对结果]
+  H --&gt; J
+  I --&gt; J
+  J --&gt; K{比对是否有效?}
+  K --&gt;|存在全空位列| L[判定为无效比对]
+  K --&gt;|无全空位列| M[判定为有效比对]
+  L --&gt; N[调整参数重新比对]
+  N --&gt; C
+  M --&gt; O[应用分析]
+  O --&gt; P[发现同源性]
+  O --&gt; Q[预测二级三级结构]
+  O --&gt; R[发现系统发生关系]
+  O --&gt; S[获取功能相似片段]
+  P --&gt; T([结束])
+  Q --&gt; T
+  R --&gt; T
+  S --&gt; T</pre><div class="fc-lk"><a href="ch03.html#s_ch03_s0_16">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">ClustalX/W多序列比对工具及操作步骤<span class="fc-p">p57</span><span class="fc-lang">Shell/Linux + 伪代码/自然语言</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[选择ClustalX或ClustalW]
+  B --&gt; C{界面类型?}
+  C --&gt;|图形界面| D[启动ClustalX]
+  C --&gt;|文本界面| E[启动ClustalW]
+  D --&gt; F[File菜单选择Load Sequences]
+  E --&gt; F
+  F --&gt; G[加载序列文件]
+  G --&gt; H{文件格式是否支持?}
+  H --&gt;|NBRF/PIR| I[读取序列]
+  H --&gt;|EMBL/Swiss-Prot| I
+  H --&gt;|FASTA| I
+  H --&gt;|NCBI| I
+  H --&gt;|GDE| I
+  H --&gt;|否| J[转换格式]
+  J --&gt; F
+  I --&gt; K[设置比对参数]
+  K --&gt; L[执行渐进式多序列比对]
+  L --&gt; M[生成比对结果]
+  M --&gt; N[保存或导出结果]
+  N --&gt; O([结束])</pre><div class="fc-lk"><a href="ch03.html#s_ch03_s0_17">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">ClustalX 结果界面与 MultAlin 多序列比对工具<span class="fc-p">p58</span><span class="fc-lang">Shell/Linux</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[运行ClustalX]
+  B --&gt; C[加载序列并完成比对]
+  C --&gt; D[查看图形化结果界面]
+  D --&gt; E[设置显示选项]
+  E --&gt; F[选择比对模式Multiple Alignment Mode]
+  E --&gt; G[调整字体大小]
+  E --&gt; H[选择输出格式如GDE]
+  E --&gt; I[设置大小写]
+  E --&gt; J[设置序列编号]
+  E --&gt; K[设置保存范围]
+  F --&gt; L[查看输出界面]
+  G --&gt; L
+  H --&gt; L
+  I --&gt; L
+  J --&gt; L
+  K --&gt; L
+  L --&gt; M{是否需要其他工具?}
+  M --&gt;|是| N[启动MultAlin]
+  N --&gt; O[输入序列]
+  O --&gt; P[采用层次聚类迭代策略比对]
+  P --&gt; Q[输出比对结果]
+  M --&gt;|否| Q
+  Q --&gt; R([结束])</pre><div class="fc-lk"><a href="ch03.html#s_ch03_s0_18">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">多序列比对工具练习与本章参考文献<span class="fc-p">p59</span><span class="fc-lang">Shell/Linux + Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[选择多序列比对工具]
+  B --&gt; C{选择哪个工具?}
+  C --&gt;|Clustal| D[使用渐进比对算法]
+  C --&gt;|T-Coffee| E[结合一致性与结构信息]
+  C --&gt;|MultAlin| F[采用层次聚类迭代策略]
+  D --&gt; G[对同一组序列进行比对]
+  E --&gt; G
+  F --&gt; G
+  G --&gt; H[获取各工具比对结果]
+  H --&gt; I[比较结果异同]
+  I --&gt; J[关注保守区]
+  I --&gt; K[关注空位分布]
+  I --&gt; L[关注比对差异]
+  J --&gt; M[分析算法差异原因]
+  K --&gt; M
+  L --&gt; M
+  M --&gt; N[总结不同算法特点]
+  N --&gt; O([结束])</pre><div class="fc-lk"><a href="ch03.html#s_ch03_s0_19">在章节页查看 →</a></div></div></section><section class="fch2" id="fl_ch12"><h2>第十二章 统计学习与推理 <span class="fc-n">33 张</span></h2><div class="fc"><div class="fc-h">统计学习与推理概述及统计学习基础<span class="fc-p">p258</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[第十二章开篇]
+  B --&gt; C[给出本章提要]
+  C --&gt; D[参数模型参数估计]
+  C --&gt; E[无监督学习中的聚类分析]
+  C --&gt; F[主成分分析]
+  D --&gt; G[从Fisher线性分类器出发]
+  E --&gt; G
+  F --&gt; G
+  G --&gt; H[重点介绍非线性非参数模型]
+  H --&gt; I[贝叶斯推理]
+  H --&gt; J[隐马尔可夫模型]
+  H --&gt; K[动态神经网络]
+  H --&gt; L[支持向量机]
+  I --&gt; M[介绍基本原理与应用]
+  J --&gt; M
+  K --&gt; M
+  L --&gt; M
+  M --&gt; N[简介Matlab在生物信息学中的应用]
+  N --&gt; O[进入第一节统计学习与推理基础]
+  O --&gt; P[考虑单因变量、多自变量数据集]
+  P --&gt; Q[样本顺序不能变动]
+  Q --&gt; R([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_0">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">损失函数、经验风险最小化与Fisher经典参数统计理论<span class="fc-p">p259</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[继续统计学习基础]
+  B --&gt; C[回归问题损失函数]
+  C --&gt; D["L(y,f(x,w))=(y-f(x,w))^2"]
+  B --&gt; E[密度估计问题损失函数]
+  E --&gt; F["L(p(x,w))=-ln p(x,w)"]
+  D --&gt; G[学习目标使期望风险最小]
+  F --&gt; G
+  G --&gt; H{期望风险能否直接计算?}
+  H --&gt;|否| I[传统方法采用经验风险最小化原则]
+  I --&gt; J["R_emp(w)=1/n Σ L(y_i,f(x_i,w))"]
+  H --&gt;|是| K[直接最小化期望风险]
+  J --&gt; L[两类判别经验风险即训练样本错误率]
+  L --&gt; M[对平方损失继续分析]
+  K --&gt; M
+  M --&gt; N([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_1">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">经验非线性方法与过拟合问题<span class="fc-p">p260</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[介绍第二种手段]
+  B --&gt; C[经验非线性方法]
+  C --&gt; D[典型代表人工神经网络ANN]
+  D --&gt; E[模仿动物神经网络行为特征]
+  E --&gt; F[进行分布式并行信息处理]
+  F --&gt; G[具有自学习和自适应能力]
+  G --&gt; H[对输入-输出数据]
+  H --&gt; I[依靠系统复杂性]
+  I --&gt; J[调整内部大量节点之间相互连接的权重]
+  J --&gt; K[完成学习训练]
+  K --&gt; L[中间过程是一个黑箱]
+  L --&gt; M[ANN具有很好的非线性逼近能力]
+  M --&gt; N[克服经典参数统计理论中参数估计方法的困难]
+  N --&gt; O{是否存在问题?}
+  O --&gt;|是| P[模型结构难以确定]
+  P --&gt; Q[缺乏统一数学理论]
+  O --&gt;|否| R[继续应用]
+  Q --&gt; S([结束])
+  R --&gt; S</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_2">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">结构风险最小化（SRM）原则<span class="fc-p">p261</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[给出统计学习理论重要结论]
+  B --&gt; C["实际风险R(w) &lt; R_emp(w) + Φ(h/n)"]
+  C --&gt; D[n为样本数]
+  C --&gt; E[h为VC维]
+  D --&gt; F[说明学习机器实际风险由两部分组成]
+  E --&gt; F
+  F --&gt; G[一部分是经验风险]
+  G --&gt; H[即训练误差]
+  F --&gt; I[另一部分是置信范围]
+  I --&gt; J[与VC维h及训练样本数n有关]
+  J --&gt; K["可简单表示为R(w) &lt; R_emp(w) + Φ(h/n)"]
+  K --&gt; L[表明有限训练样本下]
+  L --&gt; M[VC维越高复杂性越高]
+  M --&gt; N[置信范围越大]
+  N --&gt; O([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_3">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">统计学习理论总结、支持向量机与基于概率的方法；参数估计量的评选标准<span class="fc-p">p262</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[总结统计学习理论]
+  B --&gt; C[基于结构风险最小原则]
+  C --&gt; D[建立有限样本下机器学习理论框架和通用方法]
+  D --&gt; E[较好解决小样本、高维数和局部极小点等实际问题]
+  E --&gt; F[成为20世纪90年代末发展最快的研究方向之一]
+  F --&gt; G[支持向量机SVM]
+  G --&gt; H[统计学习理论的具体成果与实现]
+  H --&gt; I[第四种手段是基于概率的方法]
+  I --&gt; J[主要包括贝叶斯推理]
+  I --&gt; K[隐马尔可夫模型]
+  J --&gt; L[参数估计量的评选标准]
+  K --&gt; L
+  L --&gt; M([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_4">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">最小二乘估计与最大似然估计<span class="fc-p">p263</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[从总体抽取样本 y1 到 yn]
+  B --&gt; C[将观察值剖分为总体平均数与误差之和]
+  C --&gt; D["定义最小二乘目标 Q=Σ(y_i-μ)^2"]
+  D --&gt; E[对 μ 求导并令导数为 0]
+  E --&gt; F[得到 Σ(y_i-μ)=0]
+  F --&gt; G["解得 μ̂=1/n Σ y_i"]
+  G --&gt; H[算术平均数是总体平均数的最小二乘估计]
+  H --&gt; I([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_5">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">最大似然估计与对数似然函数<span class="fc-p">p264</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[获取离散型总体复置抽样计数]
+  B --&gt; C["构造多项分布似然 L(p1,p2,p3)"]
+  C --&gt; D[获取连续型独立样本观测值]
+  D --&gt; E["构造似然 L(θ)=∏ f(yi;θ)"]
+  E --&gt; F[若 y 服从正态分布 N(μ,σ²)]
+  F --&gt; G[写出含指数项的正态似然函数]
+  G --&gt; H[对似然函数取对数]
+  H --&gt; I[得到对数似然函数]
+  I --&gt; J[求使对数似然最大的参数估计]
+  J --&gt; K([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_6">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">聚类分析概述与数据变换<span class="fc-p">p265</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[进入聚类分析]
+  B --&gt; C{按对象类型分类?}
+  C --&gt;|样本| D[Q 型聚类]
+  C --&gt;|变量| E[R 型聚类]
+  D --&gt; F{是否事先指定类数?}
+  E --&gt; F
+  F --&gt;|否| G[系统聚类或层次聚类]
+  G --&gt; H[每个样品自成一类]
+  H --&gt; I[定义样品间距离和类间距离]
+  I --&gt; J[合并距离最近的两类]
+  J --&gt; K[重新计算类间距离]
+  K --&gt; L{是否全部归为一类?}
+  L --&gt;|否| J
+  L --&gt;|是| M[得到聚类结果]
+  F --&gt;|是| N[K 均值或动态聚类或快速聚类]
+  N --&gt; O[确定类数或初步分类]
+  O --&gt; P[按分类函数尽可能小的原则调整]
+  P --&gt; M
+  M --&gt; Q[考虑有序样本最优分割或模糊聚类]
+  Q --&gt; R[对不同指标进行量纲和数量级处理]
+  R --&gt; S([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_7">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">常用距离与相似系数<span class="fc-p">p266</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[选择样品间距离或相似性度量]
+  B --&gt; C{选择度量类型?}
+  C --&gt;|马氏距离| D["计算 d²(M)=(xi-xj)'Σ⁻¹(xi-xj)"]
+  D --&gt; E[排除指标间相关性干扰]
+  C --&gt;|兰氏距离| F["计算 d(L)=∑|xia-xja|/(xia+xja)"]
+  F --&gt; G[要求 xij&gt;0 且未考虑指标相关性]
+  C --&gt;|夹角余弦| H[将样品视为 p 维向量]
+  H --&gt; I[计算两向量夹角余弦]
+  E --&gt; J[计算两两样品距离得到距离矩阵 D]
+  G --&gt; J
+  I --&gt; J
+  J --&gt; K[距离矩阵对称且对角元为 0]
+  K --&gt; L[距离越小表示样品越接近]
+  L --&gt; M[将距离近的归为一类]
+  M --&gt; N([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_8">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">系统聚类步骤与类间距离<span class="fc-p">p267</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[以 dij 表示样品 xi 与 xj 的距离]
+  B --&gt; C[以 Dij 表示类 Gi 与 Gj 的距离]
+  C --&gt; D[采用最短距离法定义类间距离]
+  D --&gt; E["Dij=min{dab | a∈Gi,b∈Gj}"]
+  E --&gt; F[从距离矩阵 D(0) 开始]
+  F --&gt; G[每个样品自成一类]
+  G --&gt; H[此时 Dij=dij]
+  H --&gt; I[寻找距离最近的两类]
+  I --&gt; J[合并 Gi 与 Gj 为新类 Gr]
+  J --&gt; K["计算任一类 Gk 与 Gr 的距离 Dkr=min{Dki,Dkj}"]
+  K --&gt; L{是否全部样品归为一类?}
+  L --&gt;|否| I
+  L --&gt;|是| M[得到系统聚类结果]
+  M --&gt; N([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_9">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">主成分分析步骤与Fisher判别引入<span class="fc-p">p268</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[输入观测样本矩阵 X]
+  B --&gt; C["标准化: (xij)'=(xij-x̄j)/sj"]
+  C --&gt; D[计算样本相关系数矩阵 R]
+  D --&gt; E["解特征方程 |R-λI|=0"]
+  E --&gt; F["得到特征根 λ1≥λ2≥…≥λp≥0"]
+  F --&gt; G[求对应特征向量 Cj]
+  G --&gt; H["满足 Cj'Cj=1 且不同特征向量正交"]
+  H --&gt; I[选择 m&lt;p 个主分量]
+  I --&gt; J[使前m个主分量累计贡献率足够大]
+  J --&gt; K([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_10">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">Fisher两类线性判别函数推导<span class="fc-p">p269</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[输入A组样本 nA 和B组样本 nB]
+  B --&gt; C["计算A组各判别指标均值 X̄(A)"]
+  C --&gt; D["计算B组各判别指标均值 X̄(B)"]
+  D --&gt; E["计算A组重心 ȳ(A)=∑ci X̄i(A)"]
+  E --&gt; F["计算B组重心 ȳ(B)=∑ci X̄i(B)"]
+  F --&gt; G["计算两组间离差 [ȳ(A)-ȳ(B)]²"]
+  G --&gt; H[计算A组内部离散程度]
+  H --&gt; I[计算B组内部离散程度]
+  I --&gt; J[构造Fisher准则函数]
+  J --&gt; K[求使准则函数最大的判别系数 c]
+  K --&gt; L[得到Fisher两类线性判别函数]
+  L --&gt; M([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_11">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">判别函数的F检验与贝叶斯推理引论<span class="fc-p">p270</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[计算组间差异与组内差异之比]
+  B --&gt; C[构造F统计量]
+  C --&gt; D["F服从自由度为(n_A+n_B-p-1)的F分布"]
+  D --&gt; E{"F值是否超过临界值?"}
+  E --&gt;|是| F[判别函数显著，可用于实际判别]
+  E --&gt;|否| G[判别函数不显著，不宜用于实际判别]
+  F --&gt; H[引入贝叶斯推理]
+  G --&gt; H
+  H --&gt; I[托马斯·贝叶斯创立贝叶斯统计理论]
+  I --&gt; J[贝叶斯决策核心：在信息不完备下进行概率推理]
+  J --&gt; K([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_12">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">朴素贝叶斯分类器与气候训练集示例<span class="fc-p">p271</span><span class="fc-lang">伪代码/自然语言</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[输入训练集与待分类样本X]
+  B --&gt; C[由于P(X)对所有类别相同]
+  C --&gt; D[分类时只需比较P(c)P(X|c)或P(X|c)]
+  D --&gt; E{"类先验P(c)是否已知?"}
+  E --&gt;|是| F[使用已知类先验]
+  E --&gt;|否| G[假设各类等概率或用类样本比例近似P(c)]
+  F --&gt; H[引入属性条件独立假设]
+  G --&gt; H
+  H --&gt; I["P(X|c)=∏P(x_i|c)"]
+  I --&gt; J[对每个类别c_i计算P(c_i)P(X|c_i)]
+  J --&gt; K[选择使P(c_i)P(X|c_i)最大的类]
+  K --&gt; L[输出最佳分类结果]
+  L --&gt; M([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_13">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">朴素贝叶斯分类计算与隐马尔可夫模型引入<span class="fc-p">p272</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B["输入测试样本 X=(Sunny,Hot,High,Weak)"]
+  B --&gt; C[计算类别N的后验概率]
+  C --&gt; D["P(N|X)=P(N)P(Sunny|N)P(Hot|N)P(High|N)P(Weak|N)/P(X)"]
+  D --&gt; E["=5/14×3/5×2/5×4/5×2/5/P(X)=0.0274/P(X)"]
+  E --&gt; F[计算类别P的后验概率]
+  F --&gt; G["P(P|X)=P(P)P(Sunny|P)P(Hot|P)P(High|P)P(Weak|P)/P(X)"]
+  G --&gt; H["=9/14×2/9×2/9×3/9×6/9/P(X)=0.007039/P(X)"]
+  H --&gt; I[比较P(N|X)与P(P|X)]
+  I --&gt; J[选择后验概率较大的类别]
+  J --&gt; K[引入隐马尔可夫模型]
+  K --&gt; L([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_14">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">HMM生成观察序列、模型参数与三个基本问题<span class="fc-p">p273</span><span class="fc-lang">伪代码/自然语言</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[根据初始状态概率分布π选择初始状态q1=i]
+  B --&gt; C[置观察时间t=1]
+  C --&gt; D[根据当前状态i的观察符号概率分布bi选择ot=v]
+  D --&gt; E[根据状态转移概率分布A从当前状态qt=i转移到下一状态q(t+1)=j]
+  E --&gt; F[置t=t+1]
+  F --&gt; G{t&lt;T?}
+  G --&gt;|是| D
+  G --&gt;|否| H([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_15">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">海草湿度HMM示例与穷举法评估<span class="fc-p">p274</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[定义HMM模型]
+  B --&gt; C[状态集合: Sunny, Cloudy, Rainy]
+  C --&gt; D[观察集合: Dry, Dryish, Damp, Soggy]
+  D --&gt; E[给定状态转移矩阵A]
+  E --&gt; F[给定观察概率矩阵B]
+  F --&gt; G[给定初始状态概率π]
+  G --&gt; H[用穷举法评估观察序列概率]
+  H --&gt; I[枚举所有可能状态序列]
+  I --&gt; J[计算每个状态序列产生观察序列的概率]
+  J --&gt; K[对所有概率求和]
+  K --&gt; L([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_16">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">前向算法计算示例与后向算法定义<span class="fc-p">p275</span><span class="fc-lang">伪代码/自然语言</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[分析穷举法计算量]
+  B --&gt; C[乘法次数约N^T(T-1)]
+  C --&gt; D[加法次数约N(N-1)(T-1)]
+  D --&gt; E[引入后向算法]
+  E --&gt; F[定义后向概率βt(i)=P(o(t+1),...,oT|qt=Si,λ)]
+  F --&gt; G[初始化βT(i)=1, 1≤i≤N]
+  G --&gt; H[递推计算βt(i)]
+  H --&gt; I[利用后向概率计算观察序列概率]
+  I --&gt; J([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_17">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">HMM解码问题与Viterbi算法<span class="fc-p">p276</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[给定HMM模型λ=(A,B,π)]
+  B --&gt; C[给定观测序列O=(o1,o2,...,oT)]
+  C --&gt; D[定义解码问题: 求最佳状态序列Q=(q1,q2,...,qT)]
+  D --&gt; E[定义整体最优准则]
+  E --&gt; F[定义δt(i)=max P(q1,...,qt-1, qt=Si, o1,...,ot|λ)]
+  F --&gt; G[初始化δ1(i)=πi bi(o1), ψ1(i)=0]
+  G --&gt; H[递推计算δt(j)和ψt(j)]
+  H --&gt; I[终止: 选择最大δT(i)作为最优路径概率]
+  I --&gt; J[回溯得到最优状态序列]
+  J --&gt; K([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_18">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">Viterbi算法递推计算示例<span class="fc-p">p277</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[输入天气-海草湿度HMM模型]
+  B --&gt; C[输入观察序列]
+  C --&gt; D[第一天: 初始化各状态δ1和ψ1]
+  D --&gt; E[第二天: 递推计算各状态δ2和ψ2]
+  E --&gt; F[第三天: 递推计算各状态δ3和ψ3]
+  F --&gt; G[计算Sunny状态: 取前一天转移概率与发射概率乘积最大值]
+  G --&gt; H[得到约7.088×10^-4, 路径来自第二天Sunny]
+  H --&gt; I[计算Cloudy状态: 得到约5.581×10^-3, 路径来自第二天Rainy]
+  I --&gt; J[计算Rainy状态: 得到对应概率并记录路径]
+  J --&gt; K[继续逐日递推直至最后一天]
+  K --&gt; L[终止并回溯最优路径]
+  L --&gt; M([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_19">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">HMM基因识别程序及HMM优缺点<span class="fc-p">p278</span><span class="fc-lang">Shell/Linux</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[选择HMM基因识别程序]
+  B --&gt; C{程序类型?}
+  C --&gt;|人类基因寻找| D[VEIL]
+  C --&gt;|通用HMM基因识别| E[HMMgene]
+  C --&gt;|结合神经网络| F[Geneie]
+  C --&gt;|拼接位点不同模型| G[GENSCAN]
+  C --&gt;|融入HMM框架| H[GeneMark.hmm]
+  D --&gt; I[分析HMM优缺点]
+  E --&gt; I
+  F --&gt; I
+  G --&gt; I
+  H --&gt; I
+  I --&gt; J{优点?}
+  J --&gt;|是| K[能处理序列概率模型]
+  J --&gt;|否| L[缺点: 假设事件独立]
+  K --&gt; M([结束])
+  L --&gt; M</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_20">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">动态神经网络概述与Elman网络<span class="fc-p">p279</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[指出HMM局限]
+  B --&gt; C[事件独立假设不成立]
+  C --&gt; D[相邻序列相关性明显]
+  D --&gt; E[例: 疏水性氨基酸连续出现]
+  E --&gt; F[引入动态神经网络]
+  F --&gt; G[人工神经网络ANN]
+  G --&gt; H[模仿动物神经网络行为]
+  H --&gt; I[分布式并行信息处理]
+  I --&gt; J[调整节点连接关系处理信息]
+  J --&gt; K([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_21">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">Elman网络MATLAB函数：newelm、traingdx、learngdm<span class="fc-p">p280</span><span class="fc-lang">MATLAB</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[建立Elman神经网络]
+  B --&gt; C[使用newelm函数]
+  C --&gt; D[设置参数PR输入范围]
+  D --&gt; E[设置各层神经元个数]
+  E --&gt; F[设置传输函数默认tansig]
+  F --&gt; G[设置训练函数默认traingdx]
+  G --&gt; H[设置学习函数默认learngdm]
+  H --&gt; I[训练网络]
+  I --&gt; J[使用traingdx训练]
+  J --&gt; K[使用learngdm学习]
+  K --&gt; L([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_22">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">神经网络训练与仿真函数：train、sim、tansig<span class="fc-p">p281</span><span class="fc-lang">MATLAB</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[神经网络训练与仿真]
+  B --&gt; C[使用train函数训练]
+  C --&gt; D[格式: net,tr,Y,E,Pf,Af=train...]
+  D --&gt; E[net训练后网络]
+  E --&gt; F[tr训练记录]
+  F --&gt; G[Y网络输出]
+  G --&gt; H[E误差矢量]
+  H --&gt; I[Pf输入延迟状态]
+  I --&gt; J[Af层延迟状态]
+  J --&gt; K[使用sim函数仿真]
+  K --&gt; L[使用tansig传递函数]
+  L --&gt; M([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_23">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">MATLAB Elman神经网络分类实例<span class="fc-p">p282</span><span class="fc-lang">MATLAB</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[准备数据]
+  B --&gt; C[外显子899个长度≥42bp]
+  C --&gt; D[内含子751个]
+  D --&gt; E[随机各取100个作为测试集]
+  E --&gt; F[其余为训练集]
+  F --&gt; G[序列编码]
+  G --&gt; H[1~3阶核苷酸组成频率]
+  H --&gt; I[共84维特征]
+  I --&gt; J[建立Elman神经网络]
+  J --&gt; K[使用newelm函数]
+  K --&gt; L[输入p]
+  L --&gt; M[隐层51个神经元]
+  M --&gt; N[输出1个神经元]
+  N --&gt; O[隐层传递函数tansig]
+  O --&gt; P[输出层purelin]
+  P --&gt; Q[设置最大训练次数3000]
+  Q --&gt; R[设置目标误差0.0001]
+  R --&gt; S[训练网络]
+  S --&gt; T[识别外显子/内含子]
+  T --&gt; U([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_24">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">支持向量分类决策函数与支持向量回归<span class="fc-p">p283</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[输入训练样本集]
+  B --&gt; C{"训练集是否线性可分?"}
+  C --&gt;|是| D[求解约束二次优化]
+  D --&gt; E["得到最优 w* 和 b*"]
+  E --&gt; F["计算决策函数 M(x)=sgn(w*·x+b*)"]
+  F --&gt; G[输出分类结果]
+  C --&gt;|否| H[引入核函数 K(x_i,x_j)]
+  H --&gt; I[映射到高维特征空间 F]
+  I --&gt; J[在高维空间求解约束二次优化]
+  J --&gt; K["得到最优 α_i* 和 b*"]
+  K --&gt; L["计算决策函数 M(x)=sgn(Σ α_i* y_i K(x_i,x)+b*)"]
+  L --&gt; G
+  G --&gt; M([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_25">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">SVM训练算法：块算法与固定工作样本集<span class="fc-p">p284</span><span class="fc-lang">伪代码/自然语言</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[分析 SVM 训练慢的原因]
+  B --&gt; C[核函数矩阵计算与存储开销大]
+  C --&gt; D[二次型寻优中大量矩阵运算耗时]
+  D --&gt; E[采用循环迭代分解原问题为子问题]
+  E --&gt; F{"选择子问题划分与迭代策略"}
+  F --&gt;|块算法| G[利用去掉 Lagrange 乘子为零的样本不影响解]
+  G --&gt; H[逐步排除非支持向量]
+  H --&gt; I[反复求解子问题直至收敛]
+  F --&gt;|固定工作样本集| J[固定工作样本集进行迭代优化]
+  J --&gt; I
+  I --&gt; K[得到最优解]
+  K --&gt; L([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_26">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">SVM主要缺点与LIBSVM简介<span class="fc-p">p285</span><span class="fc-lang">Shell/Linux</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[总结 SVM 主要缺点]
+  B --&gt; C[缺点一 可解释性差]
+  C --&gt; D[SVR 缺乏显式表达式]
+  D --&gt; E[难以对自变量效应与互作做显著性测验]
+  E --&gt; F[多通过均方误差相对评价]
+  F --&gt; G[不同数据集间回归性能不可比]
+  B --&gt; H[缺点二 对大训练样本计算复杂度高]
+  H --&gt; I[优化算法复杂度为 O(n^2) 或更高]
+  I --&gt; J[大样本全部参与训练时开销过大]
+  B --&gt; K[缺点三 参数与核函数选择敏感]
+  K --&gt; L[需要调参和模型选择]
+  L --&gt; M[介绍 LIBSVM 工具]
+  M --&gt; N[LIBSVM 提供高效 SVM 实现]
+  N --&gt; O([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_27">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">LIBSVM子程序与svmtrain选项<span class="fc-p">p286</span><span class="fc-lang">Shell/Linux</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[介绍 LIBSVM 主要子程序]
+  B --&gt; C[svmscale 数据规格化]
+  B --&gt; D[svmtrain 训练建模]
+  B --&gt; E[svmpredict 用已有模型预测]
+  B --&gt; F[grid.py 分类问题自动寻找最优参数 C 和 g]
+  B --&gt; G[gridregression.py 回归问题自动寻找 C g p]
+  F --&gt; H[说明 grid.py 用法]
+  G --&gt; I[说明 gridregression.py 用法]
+  H --&gt; J[介绍 svmtrain 选项]
+  I --&gt; J
+  J --&gt; K[选择核函数类型]
+  K --&gt; L[设置惩罚参数 C]
+  L --&gt; M[设置核函数参数 g]
+  M --&gt; N[设置其他训练选项]
+  N --&gt; O([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_28">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">LIBSVM使用示例与MATLAB应用实例引入<span class="fc-p">p287</span><span class="fc-lang">Shell/Linux</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[准备训练集与测试集]
+  B --&gt; C["svmscale -s range train_set &gt; train_set_scale"]
+  C --&gt; D[保存规格化信息文件 range]
+  D --&gt; E["svmscale -r range test_set &gt; test_set_scale"]
+  E --&gt; F[用 range 将测试集规格化]
+  F --&gt; G["grid.py -s 1 -t ..."]
+  G --&gt; H[自动寻找最优参数 C 和 g]
+  H --&gt; I[使用最优参数训练模型]
+  I --&gt; J[用模型进行预测]
+  J --&gt; K[引入 MATLAB 应用实例]
+  K --&gt; L[在 MATLAB 中调用 LIBSVM]
+  L --&gt; M[完成分类或回归实验]
+  M --&gt; N([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_29">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">MATLAB生物信息工具箱：序列获取与序列分析入门<span class="fc-p">p288</span><span class="fc-lang">MATLAB</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[确定目标基因登录号]
+  B --&gt; C{是否需要保存到文件?}
+  C --&gt;|是| D["调用 getgenbank(登录号, TOFILE, 文件名)"]
+  C --&gt;|否| E{是否只提取序列?}
+  E --&gt;|是| F["调用 getgenbank(登录号, SEQUENCEONLY, true)"]
+  E --&gt;|否| G["调用 getgenbank(登录号, PARTIALSEQ, 起始位置)"]
+  D --&gt; H[获取序列数据]
+  F --&gt; H
+  G --&gt; H
+  H --&gt; I[进行序列分析]
+  I --&gt; J([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_30">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">MATLAB序列分析：互补链、二聚体、密码子与ORF<span class="fc-p">p289</span><span class="fc-lang">MATLAB</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[输入核苷酸序列 seq]
+  B --&gt; C{分析类型?}
+  C --&gt;|互补链| D["调用 seqrcomplement(seq)"]
+  C --&gt;|二聚体计数| E["调用 dimercount(序列, chart, bar)"]
+  C --&gt;|密码子频率| F{是否已知ORF起始位置?}
+  F --&gt;|是| G["调用 codoncount(ntseq)"]
+  F --&gt;|否| H["调用 codoncount(Seq, Frame, 帧)"]
+  D --&gt; I[输出结果]
+  E --&gt; I
+  G --&gt; I
+  H --&gt; I
+  I --&gt; J([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_31">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">MATLAB系统发育树构建与基因芯片数据分析函数<span class="fc-p">p290</span><span class="fc-lang">MATLAB</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[定义 data 元胞数组包含物种名称和登录号]
+  B --&gt; C[初始化循环变量 i = 1]
+  C --&gt; D{是否还有未处理的数据?}
+  D --&gt;|是| E["调用 getgenbank(data{i,2}, sequenceonly, true) 获取序列"]
+  E --&gt; F[将序列存入 seqs(i)]
+  F --&gt; G[i = i + 1]
+  G --&gt; D
+  D --&gt;|否| H[构建系统发育树]
+  H --&gt; I[进行基因芯片数据分析]
+  I --&gt; J([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_32">在章节页查看 →</a></div></div></section><section class="fch2" id="fl_ch13"><h2>第十三章 生物信息学编程基础 <span class="fc-n">35 张</span></h2><div class="fc"><div class="fc-h">Ubuntu发行版与Linux常用命令行操作<span class="fc-p">p293</span><span class="fc-lang">Shell/Linux</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[了解Ubuntu发行版]
+  B --&gt; C[基于Debian发行版]
+  C --&gt; D[保留Debian软件包管理系统]
+  D --&gt; E[精选高质量软件包]
+  E --&gt; F[只包含高质量重要应用程序]
+  F --&gt; G[提供健壮功能丰富的计算环境]
+  G --&gt; H[适合家用和商业]
+  H --&gt; I[每6个月发布新版本]
+  I --&gt; J[当时最新为Ubuntu 17.04]
+  J --&gt; K([结束])</pre><div class="fc-lk"><a href="ch13.html#s_ch13_s0_1">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">Linux命令提示符、目录结构与文件类型<span class="fc-p">p294</span><span class="fc-lang">Shell/Linux</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[查看Linux命令提示符示例]
+  B --&gt; C[示例 root@myhost Test]
+  C --&gt; D[最后是当前所在目录]
+  D --&gt; E[~表示当前用户主目录]
+  E --&gt; F[即/home/Test/]
+  F --&gt; G[了解Linux目录结构]
+  G --&gt; H[与Windows差异很大]
+  H --&gt; I[最开始的/表示根目录]
+  I --&gt; J[所有文件和目录都位于根目录之下]
+  J --&gt; K[类似Windows的我的电脑]
+  K --&gt; L[根目录下有许多目录各司其职]
+  L --&gt; M[/dev用于存放设备文件]
+  M --&gt; N[/home下面是各个用户的文件]
+  N --&gt; O[/lib用于存放库文件]
+  O --&gt; P([结束])</pre><div class="fc-lk"><a href="ch13.html#s_ch13_s0_2">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">Linux命令帮助、文件压缩与打包<span class="fc-p">p295</span><span class="fc-lang">Shell/Linux</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[了解命令可带参数]
+  B --&gt; C[如ls -l是带参数的ls命令]
+  C --&gt; D[想知道命令用法和参数设置]
+  D --&gt; E[使用man命令查看在线手册]
+  E --&gt; F[例如man ls]
+  F --&gt; G[内置命令可用help查阅]
+  G --&gt; H[也可通过互联网搜索]
+  H --&gt; I[重点介绍文件压缩]
+  I --&gt; J[Windows常用ZIP和RAR]
+  J --&gt; K[Linux下也有其版本]
+  K --&gt; L[更常用GZip和BZip2]
+  L --&gt; M[可将单个文件压缩]
+  M --&gt; N[默认生成后缀为.gz和.bz2的压缩文件]
+  N --&gt; O[无法独自处理多个文件]
+  O --&gt; P[因此需要打包工具Tar]
+  P --&gt; Q([结束])</pre><div class="fc-lk"><a href="ch13.html#s_ch13_s0_3">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">SAMtools源码下载与解压示例<span class="fc-p">p296</span><span class="fc-lang">Shell/Linux</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[以SAMtools为例演示下载与解压]
+  B --&gt; C[通过搜索引擎找到SAMtools官网]
+  C --&gt; D[官网 http://samtools.sourceforge.net/]
+  D --&gt; E[得知可从sourceforge下载版本源码压缩包]
+  E --&gt; F[samtools依赖htslib库]
+  F --&gt; G[两者都需要下载]
+  G --&gt; H[软件安装帮助信息可从解压缩后的README中获取]
+  H --&gt; I[在Linux中通过wget下载]
+  I --&gt; J[wget https://nch...]
+  J --&gt; K([结束])</pre><div class="fc-lk"><a href="ch13.html#s_ch13_s0_4">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">SAMtools编译安装与Perl简介<span class="fc-p">p297</span><span class="fc-lang">Shell/Linux + Perl</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[继续SAMtools安装]
+  B --&gt; C[执行上述命令后出现samtools支持的操作]
+  C --&gt; D[说明已成功编译]
+  D --&gt; E[为方便在任意目录下执行samtools]
+  E --&gt; F[可通过make install命令安装到系统中]
+  F --&gt; G[执行后即可直接输入samtools运行]
+  G --&gt; H[进入第二节生物信息学中的编程语言]
+  H --&gt; I[首先介绍Perl]
+  I --&gt; J[Perl的主要站点是 http://www.perl.com]
+  J --&gt; K[目前由著名出版社O'Reilly大力支持]
+  K --&gt; L([结束])</pre><div class="fc-lk"><a href="ch13.html#s_ch13_s0_5">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">Perl 字符串比较、数组操作与哈希表初步<span class="fc-p">p298</span><span class="fc-lang">Perl</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[字符串比较运算符]
+  B --&gt; C{"比较类型?"}
+  C --&gt;|相等/不等| D["eq, ne"]
+  C --&gt;|大小比较| E["cmp, lt, gt, le, ge"]
+  D --&gt; F[数组操作]
+  E --&gt; F
+  F --&gt; G[创建数组]
+  G --&gt; H["直接赋值"]
+  G --&gt; I["范围操作符 .."]
+  G --&gt; J["qw 简写"]
+  H --&gt; K[合并数组]
+  I --&gt; K
+  J --&gt; K
+  K --&gt; L["列表展开或 push"]
+  L --&gt; M[确定数组长度]
+  M --&gt; N["$#array"]
+  N --&gt; O[哈希表初步]
+  O --&gt; P[创建哈希]
+  P --&gt; Q[结束]</pre><div class="fc-lk"><a href="ch13.html#s_ch13_s0_6">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">Perl 哈希表操作、正则表达式与替换<span class="fc-p">p299</span><span class="fc-lang">Perl</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[数组排序与删除]
+  B --&gt; C["sort 排序"]
+  B --&gt; D["delete 删除指定下标"]
+  B --&gt; E["$#array=-1 清空"]
+  B --&gt; F["@array=() 或 undef 清空"]
+  C --&gt; G[哈希表操作]
+  D --&gt; G
+  E --&gt; G
+  F --&gt; G
+  G --&gt; H[创建哈希]
+  G --&gt; I[添加元素]
+  G --&gt; J[合并哈希]
+  G --&gt; K[循环哈希]
+  K --&gt; L{"循环方式?"}
+  L --&gt;|each| M[遍历键值对]
+  L --&gt;|keys| N[遍历键]
+  L --&gt;|map| O[映射操作]
+  G --&gt; P[排序哈希]
+  P --&gt; Q[对 keys 排序后遍历]
+  G --&gt; R[删除元素]
+  R --&gt; S[结束]</pre><div class="fc-lk"><a href="ch13.html#s_ch13_s0_7">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">Perl 正则表达式修饰符、引用与子程序<span class="fc-p">p300</span><span class="fc-lang">Perl</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[正则表达式 tr///]
+  B --&gt; C[字符替换]
+  C --&gt; D{"修饰符?"}
+  D --&gt;|c| E[对查找列表求补]
+  D --&gt;|d| F[删除没有替换的字符]
+  D --&gt;|s| G[删除重复替换字符]
+  E --&gt; H[Perl 引用]
+  F --&gt; H
+  G --&gt; H
+  H --&gt; I[创建引用]
+  I --&gt; J["数组引用 \\@array"]
+  I --&gt; K["哈希引用 \\%hash"]
+  I --&gt; L["子程序引用 \\&amp;subroutine"]
+  J --&gt; M[反引用]
+  K --&gt; M
+  L --&gt; M
+  M --&gt; N["@$arrayref"]
+  M --&gt; O["%$hashref"]
+  M --&gt; P["&amp;$coderef 调用"]
+  N --&gt; Q[子程序]
+  O --&gt; Q
+  P --&gt; Q
+  Q --&gt; R[结束]</pre><div class="fc-lk"><a href="ch13.html#s_ch13_s0_8">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">Perl 内置函数：数学、哈希与列表处理<span class="fc-p">p301</span><span class="fc-lang">Perl</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[数学函数]
+  B --&gt; C["cos 余弦"]
+  B --&gt; D["sin 正弦"]
+  B --&gt; E["atan2 反正切"]
+  B --&gt; F[POSIX 函数]
+  C --&gt; G[示例: 角度转弧度计算余弦]
+  D --&gt; G
+  E --&gt; G
+  F --&gt; G
+  G --&gt; H[哈希函数]
+  H --&gt; I["each 遍历键值对"]
+  H --&gt; J["keys 获取所有键"]
+  H --&gt; K["values 获取所有值"]
+  I --&gt; L[示例: 取得键和值数组并打印]
+  J --&gt; L
+  K --&gt; L
+  L --&gt; M[列表处理]
+  M --&gt; N["grep 筛选满足条件的元素"]
+  M --&gt; O["map 对每个元素执行操作并返回结果"]
+  M --&gt; P["join 将数组连接成字符串"]
+  N --&gt; Q[结束]
+  O --&gt; Q
+  P --&gt; Q</pre><div class="fc-lk"><a href="ch13.html#s_ch13_s0_9">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">Perl 随机数、排序、反转与文件处理<span class="fc-p">p302</span><span class="fc-lang">Perl</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[随机数]
+  B --&gt; C["rand(100)-50 产生 -50 到 +50 随机数"]
+  C --&gt; D[数组操作]
+  D --&gt; E["reverse 反转数组"]
+  D --&gt; F["sort 排序数组"]
+  E --&gt; G[文件处理]
+  F --&gt; G
+  G --&gt; H["open 打开文件"]
+  H --&gt; I{"模式?"}
+  I --&gt;|只读| J["&lt; 模式"]
+  I --&gt;|重写| K["&gt; 模式"]
+  I --&gt;|追加| L["&gt;&gt; 模式"]
+  J --&gt; M[读取文件]
+  K --&gt; N[写入文件]
+  L --&gt; N
+  M --&gt; O["close 关闭文件"]
+  N --&gt; O
+  O --&gt; P["print 输出"]
+  P --&gt; Q["write 写入"]
+  Q --&gt; R[结束]</pre><div class="fc-lk"><a href="ch13.html#s_ch13_s0_10">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">Perl 文件读取与格式化输出总结<span class="fc-p">p303</span><span class="fc-lang">Perl</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[打开文件句柄 open FH]
+  B --&gt; C{选择打开模式}
+  C --&gt;|只读| D[open FH 文件名]
+  C --&gt;|重写| E[open FH 大于号 文件名]
+  C --&gt;|追加| F[open FH 双大于号 文件名]
+  D --&gt; G[逐行读取 while FH]
+  E --&gt; G
+  F --&gt; G
+  G --&gt; H[chomp 去除换行符]
+  H --&gt; I[正则或 split 解析数据]
+  I --&gt; J{是否还有下一行}
+  J --&gt;|是| G
+  J --&gt;|否| K[close 关闭文件句柄]
+  K --&gt; L[format 定义输出格式]
+  L --&gt; M[write 写入格式化报告]
+  M --&gt; N([结束])</pre><div class="fc-lk"><a href="ch13.html#s_ch13_s0_11">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">Perl 文件读取与模块使用<span class="fc-p">p304</span><span class="fc-lang">Perl</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B{选择读取方式}
+  B --&gt;|按字节读取| C[read 函数读取指定字节数]
+  B --&gt;|逐行读取| D[readline 或尖括号逐行读取]
+  B --&gt;|读取单字符| E[getc 读取单个字符]
+  C --&gt; F[处理读取内容]
+  D --&gt; F
+  E --&gt; F
+  F --&gt; G{eof 是否到达文件尾}
+  G --&gt;|否| B
+  G --&gt;|是| H[统计文件行数 while FH 累加计数]
+  H --&gt; I[加载 Perl 模块 use LWP Simple]
+  I --&gt; J[通过模块访问 Web 页面]
+  J --&gt; K([结束])</pre><div class="fc-lk"><a href="ch13.html#s_ch13_s0_12">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">Perl DBI 数据库操作与结果集获取<span class="fc-p">p305</span><span class="fc-lang">Perl</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[连接数据库 DBI connect]
+  B --&gt; C[prepare 准备 SQL 语句]
+  C --&gt; D[execute 执行查询]
+  D --&gt; E{操作类型}
+  E --&gt;|查询| F[获取结果集]
+  E --&gt;|插入更新删除| G[do 方法执行语句]
+  F --&gt; H{选择获取方式}
+  H --&gt;|单行数组| I[fetchrow_array]
+  H --&gt;|单行数组引用| J[fetchrow_arrayref]
+  H --&gt;|整个结果集引用| K[fetchall_arrayref]
+  I --&gt; L[处理结果数据]
+  J --&gt; L
+  K --&gt; L
+  G --&gt; L
+  L --&gt; M[disconnect 断开数据库连接]
+  M --&gt; N([结束])</pre><div class="fc-lk"><a href="ch13.html#s_ch13_s0_13">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">BioPerl SeqIO 读写与序列对象获取<span class="fc-p">p306</span><span class="fc-lang">Perl</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B{选择操作方式}
+  B --&gt;|格式转换| C[Bio SeqIO newFh 创建文件句柄]
+  C --&gt; D[指定输入格式 genbank]
+  D --&gt; E[指定输出格式 fasta]
+  E --&gt; F[循环读取并打印实现转换]
+  B --&gt;|获取序列对象| G{序列来源}
+  G --&gt;|从文件| H[next_seq 或尖括号读取]
+  G --&gt;|从数据库| I[Bio DB GenBank]
+  I --&gt; J[get_Seq_by_id 或 get_Seq_by_acc]
+  H --&gt; K[获得 sequence 对象]
+  J --&gt; K
+  F --&gt; L([结束])
+  K --&gt; L</pre><div class="fc-lk"><a href="ch13.html#s_ch13_s0_14">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">BioPerl 序列特征与标签系统<span class="fc-p">p307</span><span class="fc-lang">Perl</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[获取序列对象]
+  B --&gt; C[feature_count 统计特征数量]
+  C --&gt; D[top_SeqFeatures 获取顶层特征数组]
+  D --&gt; E[遍历每个特征]
+  E --&gt; F[输出起止位置 start 和 end]
+  F --&gt; G[all_tags 获取所有标签]
+  G --&gt; H[each_tag_value 获取某标签的值]
+  H --&gt; I[primary_tag 返回主标签]
+  I --&gt; J[输出特征信息如 join 位置]
+  J --&gt; K{是否还有特征}
+  K --&gt;|是| E
+  K --&gt;|否| L([结束])</pre><div class="fc-lk"><a href="ch13.html#s_ch13_s0_15">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">BioPerl 模块分类与功能概览<span class="fc-p">p308</span><span class="fc-lang">Perl</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[了解 BioPerl 模块分类]
+  B --&gt; C[序列操作模块]
+  C --&gt; C1[SeqStats 统计]
+  C --&gt; C2[SeqWord 词频]
+  C --&gt; C3[Restriction 酶切]
+  C --&gt; C4[Sigcleave 信号肽识别]
+  C --&gt; C5[OddCodes 编码]
+  C --&gt; C6[SeqPattern 模式匹配]
+  C --&gt; C7[Coordinate::Pair 坐标转换]
+  C --&gt; C8[RelSegment 相对片段]
+  B --&gt; D[相似性搜索模块]
+  D --&gt; D1[RemoteBlast 远程比对]
+  D --&gt; D2[Search 搜索]
+  D --&gt; D3[SearchIO 结果解析]
+  D --&gt; D4[BPlite 轻量解析]
+  D --&gt; D5[BPpsi 迭代搜索]
+  C1 --&gt; E[汇总模块功能]
+  C2 --&gt; E
+  C3 --&gt; E
+  C4 --&gt; E
+  C5 --&gt; E
+  C6 --&gt; E
+  C7 --&gt; E
+  C8 --&gt; E
+  D1 --&gt; E
+  D2 --&gt; E
+  D3 --&gt; E
+  D4 --&gt; E
+  D5 --&gt; E
+  E --&gt; F([结束])</pre><div class="fc-lk"><a href="ch13.html#s_ch13_s0_16">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">Python 特点、安装与开发环境<span class="fc-p">p309</span><span class="fc-lang">Shell/Linux + Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[了解 Python 在生物信息学中的应用]
+  B --&gt; C[掌握 Python 特点]
+  C --&gt; C1[支持多线程]
+  C --&gt; C2[支持垃圾回收]
+  C --&gt; C3[适合小型与大型项目]
+  B --&gt; D[选择安装平台]
+  D --&gt; E{操作系统?}
+  E --&gt;|Windows| F[访问官网下载安装包]
+  F --&gt; F1[打开 http://www.python.org/]
+  F1 --&gt; F2[下载 Python 2.5 版本]
+  E --&gt;|Linux| G[使用系统包管理器安装]
+  F2 --&gt; H[完成安装]
+  G --&gt; H
+  H --&gt; I[配置开发环境]
+  I --&gt; J([结束])</pre><div class="fc-lk"><a href="ch13.html#s_ch13_s0_17">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">Python 交互式运行与反转序列示例及集成开发环境<span class="fc-p">p310</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[选择运行方式]
+  B --&gt; C{运行方式?}
+  C --&gt;|IDLE| D[用 Python IDLE 打开脚本]
+  D --&gt; D1[按 F5 运行]
+  C --&gt;|Run 菜单| E[在 Run 菜单选择运行]
+  D1 --&gt; F[进入交互式界面]
+  E --&gt; F
+  F --&gt; G[建立 DNA 序列]
+  G --&gt; G1[赋值给变量 seq]
+  G1 --&gt; H[输出原序列]
+  H --&gt; I[使用切片 seq[::-1]]
+  I --&gt; I1[得到反转序列]
+  I1 --&gt; J[赋值给变量 seqRev]
+  J --&gt; K[输出反转序列]
+  K --&gt; L[注意 DNA 反向互补问题]
+  L --&gt; M([结束])</pre><div class="fc-lk"><a href="ch13.html#s_ch13_s0_18">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">Python 生物信息常用程序与 R 语言简介<span class="fc-p">p311</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[了解 Python 生物信息常用程序]
+  B --&gt; C[Matplotlib 二维绘图库]
+  C --&gt; C1[输出出版级图表]
+  C --&gt; C2[支持动态图表]
+  C --&gt; C3[可输出到网络服务器]
+  C --&gt; C4[访问 http://matplotlib.org/]
+  B --&gt; D[PyMOL 分子可视化软件]
+  D --&gt; D1[开源分子可视化]
+  D --&gt; D2[安装后无需单独安装 Python]
+  D --&gt; D3[查看或编辑分子三维结构]
+  D --&gt; D4[支持 PDB 文件]
+  B --&gt; E[了解 R 语言简介]
+  C1 --&gt; F[汇总常用程序]
+  C2 --&gt; F
+  C3 --&gt; F
+  C4 --&gt; F
+  D1 --&gt; F
+  D2 --&gt; F
+  D3 --&gt; F
+  D4 --&gt; F
+  E --&gt; F
+  F --&gt; G([结束])</pre><div class="fc-lk"><a href="ch13.html#s_ch13_s0_19">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">SQL 及数据库编程：数据库与生物数据库<span class="fc-p">p312</span><span class="fc-lang">SQL</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[进入 SQL 及数据库编程]
+  B --&gt; C[了解 SQL 定义]
+  C --&gt; C1[结构化查询语言]
+  C --&gt; C2[标准数据查询语言]
+  C --&gt; C3[最早由 IBM 使用]
+  B --&gt; D[认识数据库在生物信息学中的作用]
+  D --&gt; E[学习构建自己的数据库]
+  E --&gt; F[重点学习关系型数据库管理系统]
+  F --&gt; F1[MySQL 数据库程序]
+  F1 --&gt; F2[SQL 数据库操作]
+  B --&gt; G[简要了解服务器]
+  F2 --&gt; H[完成数据库编程入门]
+  G --&gt; H
+  H --&gt; I([结束])</pre><div class="fc-lk"><a href="ch13.html#s_ch13_s0_20">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">表、服务器端脚本语言、SQL、HTML/CSS 与 MySQL 选择理由<span class="fc-p">p313</span><span class="fc-lang">PHP + SQL</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[数据存储在表中]
+  B --&gt; C[表由列和行组成]
+  C --&gt; D[服务器端脚本语言负责交互]
+  D --&gt; E[接收客户端需求]
+  E --&gt; F[服务器运行脚本语言]
+  F --&gt; G[返回结果给客户端]
+  G --&gt; H[常见语言 PHP 与 ASP]
+  H --&gt; I[SQL 即结构化查询语言]
+  I --&gt; J([结束])</pre><div class="fc-lk"><a href="ch13.html#s_ch13_s0_21">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">phpMyAdmin 管理界面图示<span class="fc-p">p314</span><span class="fc-lang">SQL + Shell/Linux</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[打开 phpMyAdmin 管理界面]
+  B --&gt; C[查看服务器信息]
+  C --&gt; D[Server: localhost via TCP/IP]
+  D --&gt; E[Server version: 5.0.51b-community-nt-log]
+  E --&gt; F[MySQL client version: 5.0.51a]
+  F --&gt; G[Protocol version: 10]
+  G --&gt; H[Used PHP extensions: mysql]
+  H --&gt; I[进行数据库管理操作]
+  I --&gt; J([结束])</pre><div class="fc-lk"><a href="ch13.html#s_ch13_s0_22">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">期刊影响因子表示例与 MySQL 列类型引入<span class="fc-p">p315</span><span class="fc-lang">SQL</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[查看期刊影响因子表]
+  B --&gt; C[列包括期刊缩写]
+  C --&gt; D[列包括 ISSN]
+  D --&gt; E[列包括总被引次数]
+  E --&gt; F[列包括影响因子]
+  F --&gt; G[示例 CANCER CELL 影响因子 26.925]
+  G --&gt; H[示例 MOL CELL 影响因子 14.194]
+  H --&gt; I[引入 MySQL 列类型]
+  I --&gt; J([结束])</pre><div class="fc-lk"><a href="ch13.html#s_ch13_s0_23">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">MySQL数据类型、主键与外键<span class="fc-p">p316</span><span class="fc-lang">SQL</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[了解 MySQL 数据类型]
+  B --&gt; C[DATETIME 8字节 格式 YYYY-MM-DD HH:MM:SS]
+  C --&gt; D[TIMESTAMP 范围至2037年]
+  D --&gt; E[TIME 3字节 HH:MM:SS]
+  E --&gt; F[ENUM 1或2字节 最多65535个不同值]
+  F --&gt; G[SET 1至8字节 最多64个不同值]
+  G --&gt; H[键是特殊列 用于实现实体间链接]
+  H --&gt; I[主键 primary key]
+  I --&gt; J[外键 foreign key]
+  J --&gt; K([结束])</pre><div class="fc-lk"><a href="ch13.html#s_ch13_s0_24">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">数据库设计与范式<span class="fc-p">p317</span><span class="fc-lang">伪代码/自然语言</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[数据库设计即建立数据库结构]
+  B --&gt; C[又称数据建模]
+  C --&gt; D[规范化减少冗余 使数据库精干高效]
+  D --&gt; E[遵循范式规则]
+  E --&gt; F[第一范式 1NF]
+  F --&gt; G[一个表描述一个对象]
+  G --&gt; H[表有主键 常为自动递增整数列]
+  H --&gt; I[每列只包含一个值]
+  I --&gt; J[第二范式 2NF]
+  J --&gt; K[满足1NF基础上]
+  K --&gt; L[将具有重复值的列移到单独表]
+  L --&gt; M[通过主键-外键一对多关系关联]
+  M --&gt; N[第三范式 3NF]
+  N --&gt; O[满足2NF基础上]
+  O --&gt; P[每个非键列都依赖于主键]
+  P --&gt; Q[方法是将非键列移到单独表]
+  Q --&gt; R([结束])</pre><div class="fc-lk"><a href="ch13.html#s_ch13_s0_25">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">创建表与查询数据库信息<span class="fc-p">p318</span><span class="fc-lang">SQL</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[连接数据库]
+  B --&gt; C[编写CREATE TABLE语句]
+  C --&gt; D[定义表名与列名]
+  D --&gt; E[指定列类型与属性]
+  E --&gt; F{是否设置非空?}
+  F --&gt;|是| G[添加NOT NULL约束]
+  F --&gt;|否| H[跳过非空约束]
+  G --&gt; I{是否自动递增?}
+  H --&gt; I
+  I --&gt;|是| J[添加AUTO_INCREMENT]
+  I --&gt;|否| K[跳过自增属性]
+  J --&gt; L[指定PRIMARY KEY主键]
+  K --&gt; L
+  L --&gt; M[创建journal表]
+  M --&gt; N[创建paper表]
+  N --&gt; O[执行SQL语句]
+  O --&gt; P([结束])</pre><div class="fc-lk"><a href="ch13.html#s_ch13_s0_26">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">数据插入与SELECT查询<span class="fc-p">p319</span><span class="fc-lang">SQL</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B{选择插入方式}
+  B --&gt;|批量导入空表| C[使用LOAD DATA]
+  B --&gt;|向已有表添加| D[使用INSERT]
+  C --&gt; E[插入journal表记录]
+  D --&gt; E
+  E --&gt; F[编写SELECT查询]
+  F --&gt; G{查询目的?}
+  G --&gt;|检查全部记录| H[SELECT * FROM journal]
+  G --&gt;|选择特定行| I[SELECT * FROM journal WHERE journal_title等于cell]
+  G --&gt;|选择特定列| J[SELECT journal_title FROM journal]
+  H --&gt; K[查看查询结果]
+  I --&gt; K
+  J --&gt; K
+  K --&gt; L([结束])</pre><div class="fc-lk"><a href="ch13.html#s_ch13_s0_27">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">删除、更新与ALTER语句<span class="fc-p">p320</span><span class="fc-lang">SQL</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B{选择维护操作}
+  B --&gt;|删除数据库| C[DROP DATABASE db_name]
+  B --&gt;|删除表| D[DROP TABLE table_name]
+  B --&gt;|清空表| E[TRUNCATE TABLE table_name]
+  B --&gt;|删除行| F[DELETE FROM table_name]
+  C --&gt; G[删除数据库及所有表]
+  D --&gt; H{是否删除多个表?}
+  H --&gt;|是| I[多个表名用逗号隔开]
+  H --&gt;|否| J[删除单个表]
+  E --&gt; K[完全清空表]
+  F --&gt; L{是否有WHERE条件?}
+  L --&gt;|是| M[删除满足条件的行]
+  L --&gt;|否| N[删除所有行]
+  G --&gt; O[执行维护语句]
+  I --&gt; O
+  J --&gt; O
+  K --&gt; O
+  M --&gt; O
+  N --&gt; O
+  O --&gt; P([结束])</pre><div class="fc-lk"><a href="ch13.html#s_ch13_s0_28">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">PHP特性与安装<span class="fc-p">p321</span><span class="fc-lang">PHP + SQL</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[了解PHP服务器端脚本语言]
+  B --&gt; C[支持多种数据库产品]
+  C --&gt; D[MySQL PostgreSQL Oracle IBM DB2等]
+  D --&gt; E[提供丰富字符串处理函数]
+  E --&gt; F[支持POSIX与Perl正则表达式]
+  F --&gt; G[开源且使用成本低]
+  G --&gt; H[开放式开发与审计]
+  H --&gt; I[快速发现并修复安全漏洞]
+  I --&gt; J[成为数据库编程服务器端脚本语言选择]
+  J --&gt; K[执行结果常显示在浏览器]
+  K --&gt; L([结束])</pre><div class="fc-lk"><a href="ch13.html#s_ch13_s0_29">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">并行计算与高性能计算硬件概述<span class="fc-p">p322</span><span class="fc-lang">伪代码/自然语言</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[引入并行计算作为大规模计算基础]
+  B --&gt; C[计算成为科学研究第三种手段]
+  C --&gt; D[传统串行计算受物理速度极限限制]
+  D --&gt; E[难以满足大规模问题求解需求]
+  E --&gt; F[20世纪90年代以来并行计算迅速发展]
+  F --&gt; G[并行计算机体系结构趋于成熟]
+  G --&gt; H[国际大型研究计划促进发展]
+  H --&gt; I[介绍并行计算载体高性能计算机]
+  I --&gt; J[介绍并行程序设计语言]
+  J --&gt; K[介绍基本并行程序设计方法]
+  K --&gt; L[回顾近30年硬件发展]
+  L --&gt; M([结束])</pre><div class="fc-lk"><a href="ch13.html#s_ch13_s0_30">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">集群体系结构及其在生物信息学中的应用<span class="fc-p">p323</span><span class="fc-lang">伪代码/自然语言</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[介绍集群体系结构]
+  B --&gt; C[说明集群在Top500中占约85%]
+  C --&gt; D[提及MPP占较小比例]
+  D --&gt; E[回顾第一台集群1994年由16台家用计算机通过以太网连接]
+  E --&gt; F[说明集群规模从单机到上千节点]
+  F --&gt; G[描述大型机群采用机架式或刀片式服务器]
+  G --&gt; H[配备UPS及空调]
+  H --&gt; I[总结集群设置简易、扩展性好]
+  I --&gt; J([结束])</pre><div class="fc-lk"><a href="ch13.html#s_ch13_s0_31">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">消息传递与MPI基本函数<span class="fc-p">p324</span><span class="fc-lang">伪代码/自然语言</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[提出问题：进程间发送/接收如何实现]
+  B --&gt; C{两进程是否共享内存?}
+  C --&gt;|是| D[分配地址给发送进程]
+  D --&gt; E[设置满/空位标志]
+  E --&gt; F[接收进程知道数据已满后读取并清空]
+  C --&gt;|否| G[进程只能通过收发消息通信]
+  G --&gt; H[发送和接收进程移动数据时通知系统]
+  H --&gt; I[同步机制作为进程组成部分]
+  I --&gt; J[发送进程在发送缓存有数据时通知系统发送]
+  J --&gt; K[接收进程在接收缓存空时通知系统接收]
+  F --&gt; L([结束])
+  K --&gt; L</pre><div class="fc-lk"><a href="ch13.html#s_ch13_s0_32">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">MPI通信函数与简单并行程序示例<span class="fc-p">p325</span><span class="fc-lang">C + Shell/Linux</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[展示MPI_Finalize结束MPI环境]
+  B --&gt; C[将代码保存为example.c]
+  C --&gt; D[用mpicc -O3 example.c编译]
+  D --&gt; E[运行a.out -procs 2]
+  E --&gt; F[得到输出：0: This is process 0 out of 2]
+  F --&gt; G[得到输出：1: This is process 1 out of 2]
+  G --&gt; H[说明MPI_Comm_rank和MPI_Comm_size作用]
+  H --&gt; I([结束])</pre><div class="fc-lk"><a href="ch13.html#s_ch13_s0_33">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">并行计算性能、Amdahl定律、基本方法与云计算<span class="fc-p">p326</span><span class="fc-lang">伪代码/自然语言</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[定义性能：计算量W，执行时间t，perf=W/t]
+  B --&gt; C[介绍Amdahl定律]
+  C --&gt; D[假设串行百分比为α]
+  D --&gt; E[并行加速比S(q)=1/(α+(1-α)/q)]
+  E --&gt; F[说明q增大时S(q)增大但有上界]
+  F --&gt; G[加速倍数不可能超过1/α]
+  G --&gt; H[介绍基本方法]
+  H --&gt; I[介绍实现应用]
+  I --&gt; J[介绍云计算]
+  J --&gt; K([结束])</pre><div class="fc-lk"><a href="ch13.html#s_ch13_s0_34">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">云计算特点、定义及生物信息学应用<span class="fc-p">p327</span><span class="fc-lang">伪代码/自然语言</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[阐述云计算特点]
+  B --&gt; C[高可靠性：数据多副本容错、节点同构可互换]
+  C --&gt; D[通用性：不针对特定应用，同一云支撑不同应用]
+  D --&gt; E[高可扩展性：规模动态伸缩]
+  E --&gt; F[按需服务：资源池按需购买，像自来水、电、煤气计费]
+  F --&gt; G[给出云计算定义]
+  G --&gt; H[讨论在生物信息学中的潜在应用]
+  H --&gt; I([结束])</pre><div class="fc-lk"><a href="ch13.html#s_ch13_s0_35">在章节页查看 →</a></div></div></section><section class="fch2" id="fl_ch14"><h2>第十四章 新一代测序技术及其应用 <span class="fc-n">18 张</span></h2><div class="fc"><div class="fc-h">Roche 454测序仪原理与流程<span class="fc-p">p331</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[构建DNA文库]
+  B --&gt; C[乳液PCR扩增]
+  C --&gt; D[焦磷酸合成测序]
+  D --&gt; E[加入dNTP]
+  E --&gt; F[释放焦磷酸]
+  F --&gt; G[焦磷酸与APS结合生成ATP]
+  G --&gt; H[荧光素酶催化氧化荧光素]
+  H --&gt; I[发出荧光并检测]
+  I --&gt; J{是否继续测序?}
+  J --&gt;|是| E
+  J --&gt;|否| K([结束])</pre><div class="fc-lk"><a href="ch14.html#s_ch14_s0_2">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">454测序文库制备、乳液PCR与测序步骤<span class="fc-p">p332</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[文库制备]
+  B --&gt; C[随机切割基因组DNA]
+  C --&gt; D[打断成300至800bp片段]
+  D --&gt; E[两端接上接头]
+  E --&gt; F[扩增反应]
+  F --&gt; G[形成单链DNA样品文库]
+  G --&gt; H[乳液PCR]
+  H --&gt; I[测序步骤]
+  I --&gt; J([结束])</pre><div class="fc-lk"><a href="ch14.html#s_ch14_s0_3">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">Illumina/Solexa测序原理与流程<span class="fc-p">p333</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[文库制备与桥式PCR]
+  B --&gt; C[随机打断基因组DNA]
+  C --&gt; D[接上接头]
+  D --&gt; E[单链DNA与玻璃板引物杂交]
+  E --&gt; F[双链解链]
+  F --&gt; G[另一端与平板上引物结合形成桥式连接]
+  G --&gt; H[多轮扩增形成密集簇]
+  H --&gt; I[测序]
+  I --&gt; J[加入4种荧光标记dNTP]
+  J --&gt; K[加入DNA聚合酶及接头引物]
+  K --&gt; L[每加入一个标记dNTP检测荧光]
+  L --&gt; M{是否继续测序?}
+  M --&gt;|是| J
+  M --&gt;|否| N([结束])</pre><div class="fc-lk"><a href="ch14.html#s_ch14_s0_4">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">SOLiD测序原理与流程<span class="fc-p">p334</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[文库制备]
+  B --&gt; C{选择文库类型?}
+  C --&gt;|片段文库| D[打断基因组DNA]
+  D --&gt; E[两头加上接头]
+  E --&gt; F[制成片段文库]
+  C --&gt;|配对末端文库| G[打断基因组DNA]
+  G --&gt; H[与中间接头连接]
+  H --&gt; I[环化]
+  I --&gt; J[EcoP15酶切]
+  J --&gt; K[中间接头两端各25至27bp碱基]
+  K --&gt; L[加上两端接头]
+  L --&gt; M[形成配对末端文库]
+  F --&gt; N[测序]
+  M --&gt; N
+  N --&gt; O([结束])</pre><div class="fc-lk"><a href="ch14.html#s_ch14_s0_5">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">SOLiD连接测序原理<span class="fc-p">p335</span><span class="fc-lang">伪代码/自然语言</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[通用引物与模板两端接头互补结合]
+  B --&gt; C[连接酶连接荧光标记8bp核酸探针到引物末端]
+  C --&gt; D[探针5端标记4种颜色荧光染料]
+  D --&gt; E[探针3端第1、2位碱基构成编码区决定颜色]
+  E --&gt; F[第3至5位为随机碱基]
+  F --&gt; G[第6至8位为可与任何碱基配对的特殊碱基]
+  G --&gt; H[每次连接反应加入一种8碱基荧光探针]
+  H --&gt; I[记录第1、2位编码区颜色信息]
+  I --&gt; J[化学处理断裂探针第5端]
+  J --&gt; K{是否继续测序?}
+  K --&gt;|是| H
+  K --&gt;|否| L([结束])</pre><div class="fc-lk"><a href="ch14.html#s_ch14_s0_6">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">SOLiD数据分析及第二代测序技术应用概述<span class="fc-p">p336</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[SOLiD测序获得4种颜色编码原始序列]
+  B --&gt; C[依据双碱基编码矩阵]
+  C --&gt; D{已知DNA序列任一位置碱基类型?}
+  D --&gt;|是| E[将颜色序列解码为碱基序列]
+  D --&gt;|否| F[无法解码]
+  E --&gt; G[每个碱基判读两遍]
+  G --&gt; H[减少错误]
+  H --&gt; I[原始碱基准确度大于99.94%]
+  I --&gt; J[进入第二代测序技术应用]
+  J --&gt; K[研究已知和未知物种基因组]
+  K --&gt; L[快速获得基因组数据]
+  L --&gt; M[鉴定转录基因、同源基因、新基因等]
+  M --&gt; N([结束])
+  F --&gt; N</pre><div class="fc-lk"><a href="ch14.html#s_ch14_s0_7">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">小RNA测序、lncRNA测序及ChIP-seq<span class="fc-p">p337</span><span class="fc-lang">Shell/Linux + R</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[第二代测序应用]
+  B --&gt; C[小RNA测序]
+  C --&gt; D[对small RNA进行大规模测序分析]
+  D --&gt; E[获得全基因组水平microRNA图谱]
+  E --&gt; F[新microRNA鉴定]
+  E --&gt; G[差异表达分析]
+  E --&gt; H[microRNA聚类和表达谱分析]
+  B --&gt; I[lncRNA测序]
+  I --&gt; J[长链非编码RNA长度超过200nt]
+  J --&gt; K[不编码蛋白质]
+  K --&gt; L[以RNA形式调控基因表达]
+  L --&gt; M[转录水平调控]
+  L --&gt; N[转录后水平调控]
+  L --&gt; O[表观修饰水平调控]
+  M --&gt; P[多数lncRNA无polyA尾]
+  N --&gt; P
+  O --&gt; P
+  P --&gt; Q([结束])
+  F --&gt; Q
+  G --&gt; Q
+  H --&gt; Q</pre><div class="fc-lk"><a href="ch14.html#s_ch14_s0_8">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">DNA甲基化测序方法<span class="fc-p">p338</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[DNA甲基化测序]
+  B --&gt; C[重硫酸盐测序法]
+  C --&gt; D[重硫酸盐处理基因组]
+  D --&gt; E{胞嘧啶是否甲基化?}
+  E --&gt;|否| F[未甲基化胞嘧啶转换为尿嘧啶]
+  E --&gt;|是| G[甲基化胞嘧啶不变]
+  F --&gt; H[主要方法]
+  G --&gt; H
+  H --&gt; I[全基因组重硫酸盐测序 MethylC-seq或BS-seq]
+  H --&gt; J[简化表达重硫酸盐测序 RRBS]
+  I --&gt; K[发现5mC抵抗重硫酸盐转化]
+  J --&gt; K
+  K --&gt; L[发现5hmC也抵抗转化]
+  L --&gt; M[提出hMeDIP-seq]
+  M --&gt; N[利用抗体免疫共沉淀]
+  N --&gt; O([结束])</pre><div class="fc-lk"><a href="ch14.html#s_ch14_s0_9">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">多因素数据统计分析、RASH及NGS数据获取<span class="fc-p">p339</span><span class="fc-lang">R + Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[多因素数据统计分析 two-way ANOVA]
+  B --&gt; C[根据一个以上不同条件综合评判]
+  C --&gt; D[筛选多个条件对两组样品造成的差异基因]
+  D --&gt; E[RASH]
+  E --&gt; F[用挑选的差异基因表达情况计算样品间相关性]
+  F --&gt; G[同一类样品通过聚类出现在同一个簇中]
+  G --&gt; H[聚在同一簇的基因可能具有类似生物学功能]
+  H --&gt; I[常用聚类方法]
+  I --&gt; J[层次聚类]
+  I --&gt; K[K-means聚类]
+  I --&gt; L[DBSCAN算法]
+  J --&gt; M[机器学习及其他分析方法]
+  K --&gt; M
+  L --&gt; M
+  M --&gt; N[根据样本数据进行分析]
+  N --&gt; O([结束])</pre><div class="fc-lk"><a href="ch14.html#s_ch14_s0_10">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">NGS数据分析的主要生物信息学工具<span class="fc-p">p340</span><span class="fc-lang">Shell/Linux</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[NGS数据分析的主要生物信息学工具]
+  B --&gt; C[序列匹配工具]
+  B --&gt; D[组装工具]
+  B --&gt; E[可视化工具]
+  C --&gt; F[MOSAIK用于NGS序列匹配]
+  C --&gt; G[RMAP将短片段匹配到参考基因组]
+  C --&gt; H[SOAP将有缺口或无缺口片段匹配到参考基因组]
+  H --&gt; I[单一或末端匹配的重测序]
+  H --&gt; J[smRNA发现]
+  D --&gt; K[Velvet用于短片段序列的重新组装拼接]
+  D --&gt; L[EULER用于Sanger测序和NGS混合片段组装]
+  D --&gt; M[SHARCGS用于短片段重组装]
+  E --&gt; N[工具涵盖序列匹配、组装和可视化]
+  F --&gt; N
+  G --&gt; N
+  I --&gt; N
+  J --&gt; N
+  K --&gt; N
+  L --&gt; N
+  M --&gt; N
+  N --&gt; O([结束])</pre><div class="fc-lk"><a href="ch14.html#s_ch14_s0_11">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">RNA-seq生物信息学分析流程（无参考基因组与有参考基因组）<span class="fc-p">p341</span><span class="fc-lang">Shell/Linux + 伪代码/自然语言</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[测序数据产量统计]
+  B --&gt; C[去除冗余数据]
+  C --&gt; D[数据成分与质量评估]
+  D --&gt; E[采用Cufflinks等软件重建转录本]
+  E --&gt; F[计算Contig和Scaffold长度分布]
+  F --&gt; G[Unigene长度分布]
+  G --&gt; H[功能注释]
+  H --&gt; I[GO分类]
+  I --&gt; J[代谢通路分析]
+  J --&gt; K[Unigene表达差异分析]
+  K --&gt; L[差异表达Unigene的GO分析]
+  L --&gt; M([结束])</pre><div class="fc-lk"><a href="ch14.html#s_ch14_s0_12">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">有参考基因组RNA-seq分析策略与ChIP-seq分析<span class="fc-p">p342</span><span class="fc-lang">Shell/Linux</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B{有参考基因组RNA-seq策略}
+  B --&gt;|先匹配再组装| C[读长比对到参考基因组]
+  C --&gt; D[合并分散片段为转录本]
+  B --&gt;|先组装再匹配| E[读长组装成转录本]
+  E --&gt; F[比对到基因组]
+  D --&gt; G[ChIP-seq分析]
+  F --&gt; G
+  G --&gt; H[统计Unique mapped reads分布与覆盖深度]
+  H --&gt; I[统计分析基因相关Peak信息]
+  I --&gt; J([结束])</pre><div class="fc-lk"><a href="ch14.html#s_ch14_s0_13">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">表观遗传修饰测序分析与NGS功能基因组学应用<span class="fc-p">p343</span><span class="fc-lang">Shell/Linux</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B{表观遗传修饰测序分析}
+  B --&gt;|BS-seq流程| C[DNA经亚硫酸氢盐处理]
+  C --&gt; D[未甲基化C转化为U，甲基化C不变]
+  D --&gt; E[PCR扩增后测序]
+  E --&gt; F[读长比对到基因组]
+  F --&gt; G[检测DNA甲基化]
+  B --&gt;|ChIP-seq流程| H[蛋白质与DNA结合]
+  H --&gt; I[超声波处理]
+  I --&gt; J[抗体免疫沉淀]
+  J --&gt; K[提纯DNA]
+  K --&gt; L[连接接头]
+  L --&gt; M[PCR扩增后测序]
+  M --&gt; N[读长比对到基因组]
+  N --&gt; O[检测转录因子结合位点]
+  G --&gt; P([结束])
+  O --&gt; P</pre><div class="fc-lk"><a href="ch14.html#s_ch14_s0_14">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">NGS功能基因组学综合应用与单细胞测序<span class="fc-p">p344</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[NGS功能基因组学综合应用]
+  B --&gt; C{数据类型}
+  C --&gt;|DNA-Seq| D[reads]
+  D --&gt; E[de novo组装]
+  E --&gt; F[CNV]
+  F --&gt; G[SNP]
+  G --&gt; H[InDel]
+  C --&gt;|RNA-Seq| I[reads]
+  I --&gt; J[新转录本/基因座]
+  J --&gt; K[可变剪接位点]
+  K --&gt; L[基因融合]
+  H --&gt; M[数据库、通路、调控网络和网络重建]
+  L --&gt; M
+  M --&gt; N[多重相关性、多重实验整合分析]
+  N --&gt; O[单细胞测序]
+  O --&gt; P([结束])</pre><div class="fc-lk"><a href="ch14.html#s_ch14_s0_15">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">单细胞测序应用与宏基因组学<span class="fc-p">p345</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[单细胞测序应用]
+  B --&gt; C[CAR-T疗法中T细胞免疫反应研究]
+  B --&gt; D[研究癌症内异质性]
+  B --&gt; E[研究肿瘤循环细胞CTC]
+  B --&gt; F[研究早期胚胎细胞等数量不足的细胞]
+  C --&gt; G[提升基因表达水平测量精度]
+  D --&gt; G
+  E --&gt; G
+  F --&gt; G
+  G --&gt; H[提升罕见非编码RNA发现能力]
+  H --&gt; I[成为研究热点]
+  I --&gt; J[临床应用被国家立为重点专项]
+  J --&gt; K[单细胞组学]
+  K --&gt; L([结束])</pre><div class="fc-lk"><a href="ch14.html#s_ch14_s0_16">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">人类微生物组计划、细胞微环境与三维基因组学<span class="fc-p">p346</span><span class="fc-lang">Shell/Linux</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[访问HMP数据门户]
+  B --&gt; C[采集鼻腔口腔皮肤胃肠道泌尿生殖道样本]
+  C --&gt; D[宏基因组测序]
+  D --&gt; E[菌群结构与分子过程分析]
+  E --&gt; F[关联健康与疾病]
+  F --&gt; G[2017年第二阶段公开1631个新样本]
+  G --&gt; H[2016年国家微生物组计划拓展至人类之外]
+  H --&gt; I([结束])</pre><div class="fc-lk"><a href="ch14.html#s_ch14_s0_17">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">4D核体计划与Hi-C技术流程<span class="fc-p">p347</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[4D核体计划目标]
+  B --&gt; C[定义细胞核结构与基因组组织术语]
+  C --&gt; D[建立细胞核全面综合模型]
+  D --&gt; E[探索核结构形成原理及影响]
+  E --&gt; F[Hi-C技术流程]
+  F --&gt; G[甲醛交联并分离染色质]
+  G --&gt; H[酶切并用生物素标记]
+  H --&gt; I[连接DNA并纯化]
+  I --&gt; J[移除末端生物素并片段化]
+  J --&gt; K[生物素拉下片段]
+  K --&gt; L[高通量测序]
+  L --&gt; M([结束])</pre><div class="fc-lk"><a href="ch14.html#s_ch14_s0_18">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">新技术相互关系与生物信息学挑战<span class="fc-p">p348</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A([开始]) --&gt; B[第三代单分子测序]
+  B --&gt; C[免去单细胞测序扩增步骤]
+  C --&gt; D[提高测序精确性]
+  D --&gt; E[单细胞测序辅助宏基因组测序]
+  E --&gt; F[发现新细菌Candidatus kryptonia]
+  F --&gt; G[Hi-C辅助宏基因组组装]
+  G --&gt; H[实验方法与计算方法快速发展]
+  H --&gt; I[高通量测序挑战]
+  I --&gt; J[原始图像数据量大]
+  J --&gt; K{是否长期保存?}
+  K --&gt;|否| L[舍弃原始图像数据]
+  K --&gt;|是| M[长期持有序列数据]
+  L --&gt; N[比较分析与可视化]
+  M --&gt; N
+  N --&gt; O([结束])</pre><div class="fc-lk"><a href="ch14.html#s_ch14_s0_19">在章节页查看 →</a></div></div></section>
+<footer>仅供个人学习使用</footer></div>
+<script src="assets/mermaid/mermaid.min.js?v=20261008g"></script>
+<script>
+(function(){
+  if(!window.mermaid) return;
+  var dark=document.documentElement.getAttribute("data-theme")==="dark";
+  try{mermaid.initialize({startOnLoad:false,securityLevel:"loose",theme:dark?"dark":"default",flowchart:{useMaxWidth:true,htmlLabels:true}});}catch(e){}
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){var el=e.target;io.unobserve(el);try{mermaid.run({nodes:[el]});}catch(x){}}});},{rootMargin:"400px"});
+  document.querySelectorAll(".mermaid").forEach(function(el){io.observe(el);});
+})();
+</script>
+</body></html>

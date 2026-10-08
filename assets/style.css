@@ -176,7 +176,7 @@ html[data-theme="sepia"] .tb-gaps{background:#f6ecd2;border-color:#e6d3a3}
 .gitem .gch{float:right;font-size:11px;color:#fff;background:#234f7a;border-radius:10px;padding:0 8px;font-weight:400}
 .gitem .gd{font-size:13px;color:var(--ink);margin-top:3px;line-height:1.6}
 
-@media print{aside,.navbtns,.hwbar,.self,.causes,.no-print{display:none!important}.layout{display:block}main{max-width:none;padding:0}details.sol{display:block!important;border:none;padding:2px 0}details.sol summary{list-style:none}}
+@media print{aside,.navbtns,.hwbar,.self,.causes,.checkpoint,.no-print{display:none!important}.layout{display:block}main{max-width:none;padding:0}.slide{break-inside:avoid;box-shadow:none}.codeblk pre{white-space:pre-wrap;word-break:break-word}.princblk,.formulablk,.flowblk,.points,.fignote{border:1px solid #ccc}details.sol{display:block!important;border:none;padding:2px 0}details.sol summary{list-style:none}details.sol .ansbox{display:block!important}}
 
 /* ================= 模拟测验 ================= */
 .ex-row{margin:6px 0;font-size:13.5px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}

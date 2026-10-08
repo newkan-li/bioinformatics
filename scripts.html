@@ -4,7 +4,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="light dark"><link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1f5c8b"><title>示例脚本合集 · 生物信息学</title>
-<link rel="stylesheet" href="assets/style.css?v=20261008f"><link rel="stylesheet" href="assets/katex/katex.min.css?v=20261008f"><script src="assets/theme.js?v=20261008f"></script>
+<link rel="stylesheet" href="assets/style.css?v=20261008g"><link rel="stylesheet" href="assets/katex/katex.min.css?v=20261008g"><script src="assets/theme.js?v=20261008g"></script>
 <style>
 .sc{border:1px solid var(--line);border-radius:10px;margin:12px 0;overflow:hidden}
 .sc-h{display:flex;align-items:center;gap:10px;padding:8px 12px;background:#132030;color:#cfe3ff;font-size:13.5px;font-weight:600}
@@ -29,7 +29,7 @@ html[data-theme="dark"] .sc details.rb{background:#1b2531}
 </style></head>
 <body data-page="scripts"><div class="wrap" style="max-width:1000px">
 <header class="top"><h1>💾 示例脚本合集</h1><p>来自 ch03/ch12/ch13/ch14 各页的算法伪代码与 Python/Perl/SQL/Linux/MATLAB 片段 ｜ 共 106 段</p></header>
-<p><a href="index.html">← 返回首页</a> ｜ <a href="python-env.html">🐍 Python 环境搭建手册</a> ｜ <a href="algexam.html">🧮 算法/编程专项卷</a> ｜ <a href="alg-summary.html">📚 算法原理速查表</a> ｜ <a href="formula.html">∑ 公式速查表</a> ｜ <a href="kaodian.html">🎯 考点索引</a></p>
+<p><a href="index.html">← 返回首页</a> ｜ <a href="python-env.html">🐍 Python 环境搭建手册</a> ｜ <a href="algexam.html">🧮 算法/编程专项卷</a> ｜ <a href="alg-summary.html">📚 算法原理速查表</a> ｜ <a href="formula.html">∑ 公式速查表</a> ｜ <a href="flow.html">🧭 流程图总览</a> ｜ <a href="kaodian.html">🎯 考点索引</a></p>
 <p><button class="navbtn" id="dln" style="width:auto;margin:0">⬇ 下载全部（.md）</button>
 <a class="navbtn" style="width:auto;margin:0;text-align:center;text-decoration:none" href="assets/py/bioinfo-python-examples.zip" download>⬇ 下载全部 .py（zip）</a> <span class="hint" id="cpmsg"></span></p>
 <div id="scripts"><div class="sc"><div class="sc-h">序列比对的意义与类型概述 <span class="sc-p">p40</span><span class="sc-lang">Python</span><button class="cp" data-c>复制</button></div><details class="sol rb pri" open><summary>📖 算法/方法原理</summary><div class="ansbox">①解决什么问题/用途：本页说明序列比对是生物信息学中最常用的研究手段，用于比较两条或多条蛋白质/核酸序列，发现相似区域、保守位点，推断分子进化关系、共同功能模式，以及辅助结构预测和数据库搜索。<br>②核心思想：比对就像把两段或几段文字并排摆放，找出哪些字词相同、哪些被替换、哪些被插入或删除，从而判断它们是否来自同一“祖先文本”。<br>③主要步骤：双序列比对比较两条序列的相似区域和保守位点；多序列比对同时比较多个序列，寻找共同保守区域、位点和模式；蛋白质与核酸序列比较可探索表达框架；蛋白质与已知三维结构蛋白质比较可获得结构和折叠类型信息。<br>④复杂度或关键参数：本页为概念页，未给出具体复杂度；实际比对算法通常与序列长度、打分矩阵和空位罚分有关。<br>⑤优缺点/适用场景：比对能揭示进化与功能线索，但相似性不等于同源性，结果需结合实验验证；适用于序列分析、数据库搜索、结构预测等场景。</div></details><pre># 双序列比对与多序列比对示意（概念页，无可执行算法）
@@ -6091,6 +6091,6 @@ document.getElementById("dln") && (document.getElementById("dln").onclick=functi
   var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="bioinfo-scripts.md";a.click();
 });
 </script>
-<script src="assets/katex/katex.min.js?v=20261008f"></script>
+<script src="assets/katex/katex.min.js?v=20261008g"></script>
 <script>document.querySelectorAll('.fmx-e[data-tex]').forEach(function(e){if(window.katex){try{katex.render(e.getAttribute('data-tex'),e,{throwOnError:false,displayMode:true});}catch(x){}}});</script>
 </body></html>

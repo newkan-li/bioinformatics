@@ -826,6 +826,7 @@
     tb("📊 学习统计", function () { renderStats(cid, ch, document.getElementById("statsbox")); document.getElementById("statsbox").scrollIntoView({ behavior: "smooth" }); });
     tb("💾 数据备份", function () { backupChapter(cid); });
     tb("🖨 导出PDF（题目+我的作答）", function () { exportChapterPDF(cid); });
+    tb("🖨 打印/导出本页 PDF", function () { window.print(); });
     var rst = el("button", "navbtn", "⬆ 从备份恢复");
     var fi = el("input"); fi.type = "file"; fi.accept = ".json"; fi.style.display = "none";
     fi.onchange = function () { if (fi.files[0]) restoreFile(cid, fi.files[0]); };
