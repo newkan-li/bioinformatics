@@ -885,6 +885,11 @@
         body.appendChild(img);
         body.appendChild(el("div", "notes", esc(s.notes)));
         card.appendChild(body);
+        if (s.principle) {
+          var prb = el("div", "princblk");
+          prb.innerHTML = '<div class="pr-h">📖 算法 / 方法原理</div><p>' + esc(s.principle).replace(/\n/g, "<br>") + "</p>";
+          card.appendChild(prb);
+        }
         if (s.code) {
           var cblk = el("div", "codeblk");
           cblk.innerHTML = '<div class="cb-h">💻 算法 / 代码' + (s.lang ? ' <span class="cb-lang">' + esc(s.lang) + "</span>" : "") + "</div><pre>" + esc(s.code) + "</pre>";
