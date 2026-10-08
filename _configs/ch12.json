@@ -16,238 +16,272 @@
      "统计学习与推理概述及统计学习基础",
      "本页为第十二章开篇，先给出本章提要：参数模型参数估计、无监督学习中的聚类分析与主成分分析；从Fisher线性分类器出发，重点介绍非线性非参数模型、贝叶斯推理、隐马尔可夫模型、动态神经网络、支持向量机的基本原理与应用；最后简介Matlab在生物信息学中的应用。随后进入第一节统计学习与推理基础。考虑单因变量、多自变量数据集(y_i, x_i)，i=1,…,n，x_i为m维自变量。若样本顺序不能变动，称为纵向数据或有序样本，如时间序列、分子序列（每个核苷酸或氨基酸残基视为一个样本）；否则为非纵向数据。纵向数据可通过拓阶、定阶转化为非纵向数据。若y_i与x_i均存在，为有监督学习；若仅有x_i，对x_i聚类即无监督学习，典型应用是构建分子系统发育树。有监督学习中，若y_i∈{-1,1}或{0,1}为两类判别；若y_i∈{1,2,…,R}为多类判别，可通过多个分类器转化为二类判别；若y为实数则为回归分析。基于数据的机器学习即由经验数据集推断函数依赖关系，包括判别分析、回归分析和密度估计。变量y与x遵循未知联合概率F(x,y)，机器学习问题就是根据n个独立同分布观测样本，在一组函数{f(x,w)}中求最优函数f(x,w0)，使期望风险最小。",
      258,
-     "掌握"
+     "掌握",
+     "# 统计学习数据表示：单因变量、多自变量\nimport numpy as np\n\n# y: (n,) 因变量; X: (n, m) 自变量\nn, m = 100, 5\nX = np.random.randn(n, m)\nw_true = np.random.randn(m)\ny = X @ w_true + 0.1 * np.random.randn(n)\n\n# 若样本顺序不能变动，则不能随机打乱\n# 若可交换，可打乱：\nidx = np.random.permutation(n)\nX_shuffled, y_shuffled = X[idx], y[idx]\nprint(X.shape, y.shape)"
     ],
     [
      "第一节 统计学习与推理基础",
      "损失函数、经验风险最小化与Fisher经典参数统计理论",
      "本页继续统计学习基础。回归问题的损失函数可定义为L(y,f(x,w))=(y-f(x,w))^2；密度估计问题的损失函数可定义为负对数似然L(p(x,w))=-ln p(x,w)。学习目标是使期望风险最小，但期望风险无法直接计算，传统方法采用经验风险最小化（ERM）原则，用样本定义经验风险R_emp(w)=1/n Σ L(y_i,f(x_i,w))。对两类判别，经验风险即训练样本错误率；对平方损失，经验风险即平方训练误差；对负对数损失，ERM等价于最大似然法。解决判别分析、回归分析和密度估计主要有四种手段。本页开始介绍第一种：Fisher经典参数统计理论。它隐含三个假定：1）研究者对问题有清楚了解，知道产生数据随机性质的物理规律，欲求函数仅与有限个参数有关，能定义与参数成线性关系的函数集，且自由参数个数较少；但大规模多变量问题会导致“维数灾难”，在几十或几百个变量的实际多维问题中，定义包含最佳逼近的小函数集是天真的想法。2）大多数实际问题的随机分量所隐含的统计规律是正……（本页在此中断）。",
      259,
-     "掌握"
+     "掌握",
+     "# 经验风险最小化（ERM）示例：平方损失\nimport numpy as np\n\ndef empirical_risk_squared(y, X, w):\n    # L(y, f(x,w)) = (y - f(x,w))^2\n    pred = X @ w\n    return np.mean((y - pred) ** 2)\n\n# 两类判别：经验风险 = 训练错误率\ndef empirical_risk_misclassification(y_true, y_pred):\n    return np.mean(y_true != y_pred)\n\n# 密度估计：负对数似然\ndef negative_log_likelihood(log_probs):\n    return -np.mean(log_probs)\n\n# 极简示例\nn, m = 50, 3\nX = np.random.randn(n, m)\ny = np.random.randn(n)\nw = np.zeros(m)\nprint(empirical_risk_squared(y, X, w))"
     ],
     [
      "第一节 统计学习与推理基础",
      "经验非线性方法与过拟合问题",
      "本页介绍第二种手段：经验非线性方法，典型代表是人工神经网络（ANN）。ANN模仿动物神经网络行为特征，进行分布式并行信息处理，具有自学习和自适应能力。对一批相互对应的输入-输出数据，ANN依靠系统复杂性，通过调整内部大量节点之间相互连接的权重完成学习（训练），其中间过程是一个黑箱。ANN具有很好的非线性逼近能力，克服了经典参数统计理论中参数估计方法的困难，但存在模型结构难以确定（缺乏统一数学理论，更多依赖使用者技巧）、可解释性差（没有显性表达式）、易于出现过度训练和训练不足、陷入局部最小等缺陷。与经典参数统计理论一样，ANN也基于经验风险最小化，并要求训练样本充分大。用ERM准则代替期望风险最小化并没有经过充分理论论证，只是直观上合理的想当然做法。实际上，即使假定当样本数趋向无穷大时经验风险趋近于期望风险，很多问题中样本数目也离无穷大相去甚远。在有限样本条件下，训练误差小并不总能得到好的预测效果，某些情况下训练误差过小反而导致推广能力下降，即真实风险增加，这就是过拟合或过学习问题（Vapnik, 1995）。图12-1为过拟合示意图：设A、B、C为训练样本，过平面上3点总能找到一条抛物线使训练误差为0；D为待测点真值，显然基于ERM学习得到的“最优”函数预测值D1反而不如简单线性方程预测值D2。可见，在有限样本情况下，经验风险最小并不一定意味着期望风险最小；学习机器的复杂性不但与所研究的系统有关，而且也要和有限数目的样本相适应。需要一种能够指导在小样本……（本页在此中断）。",
      260,
-     "掌握"
+     "掌握",
+     "# 人工神经网络（ANN）极简示例：MLPRegressor\nfrom sklearn.neural_network import MLPRegressor\nfrom sklearn.model_selection import train_test_split\nimport numpy as np\n\nX = np.random.randn(200, 5)\ny = np.sin(X[:, 0]) + X[:, 1] ** 2 + 0.1 * np.random.randn(200)\n\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)\n\n# 黑箱式学习：调整内部节点连接权重\nann = MLPRegressor(hidden_layer_sizes=(10, 10), activation='relu',\n                   solver='adam', max_iter=2000, random_state=0)\nann.fit(X_train, y_train)\nprint('train R^2:', ann.score(X_train, y_train))\nprint('test  R^2:', ann.score(X_test, y_test))"
     ],
     [
      "第一节 统计学习与推理基础",
      "结构风险最小化（SRM）原则",
      "本页给出统计学习理论的重要结论：实际风险R(w) < R_emp(w) + Φ(h/n)，其中n为样本数，h为VC维。这一结论从理论上说明学习机器的实际风险（期望风险）由两部分组成：一部分是经验风险（训练误差），另一部分是置信范围，它和学习机器的VC维h及训练样本数n有关，可简单表示为R(w) < R_emp(w) + Φ(h/n)。它表明在有限训练样本下，学习机器的VC维越高（复杂性越高），置信范围越大，导致真实风险与经验风险之间可能的差别越大。这就是出现过学习现象的原因（Vapnik, 1995）。因此，ERM准则在样本有限时是不合理的，需要同时最小化经验风险和置信范围。在传统方法中，选择学习模型和算法的过程就是调整置信范围的过程，如果模型比较适合现有训练样本（相当于h值适当），则可以取得较好效果。但因缺乏理论指导，这种选择只能依赖先验知识和经验，造成如ANN等方法对使用者技巧的过分依赖。统计学习理论提出一种新策略：把函数集构造为一个函数子集序列，使各个子集按照VC维的大小排列，在每个子集中寻找最小经验风险，在子集间折中考虑经验风险和置信范围，以取得期望风险的最小。这种思想称为结构风险最小化（structural risk minimization, SRM），即SRM原则（图12-2）。实现SRM原则可以有两种思路。第一种思路是在每个子集中求最小经验风险，然后选择使最小经验风险和……（本页在此中断）。图12-2展示结构风险最小化：横轴为VC维，纵轴为风险，真实风险的界由经验风险和置信范围组成，随VC维增加，经验风险下降而置信范围上升，存在一个使真实风险最小的最优VC维。",
      261,
-     "掌握"
+     "掌握",
+     "# 结构风险最小化（SRM）示意：经验风险 + 置信范围\n# R(w) < R_emp(w) + Phi(h/n)\nimport numpy as np\n\ndef confidence_term(h, n, delta=0.05):\n    # 一种常见VC置信界形式（示意）\n    return np.sqrt((h * (np.log(2 * n / h) + 1) - np.log(delta / 4)) / n)\n\ndef structural_risk(empirical_risk, h, n, delta=0.05):\n    return empirical_risk + confidence_term(h, n, delta)\n\n# 极简示例\nn = 1000\nfor h in [5, 20, 100]:\n    print(h, structural_risk(0.1, h, n))"
     ],
     [
      "第一节 统计学习与推理基础",
      "统计学习理论总结、支持向量机与基于概率的方法；参数估计量的评选标准",
      "本页先总结统计学习理论：它基于结构风险最小原则建立了一套有限样本下机器学习的理论框架和通用方法，较好地解决了小样本、高维数和局部极小点等实际问题，成为20世纪90年代末发展最快的研究方向之一。支持向量机（support vector machine, SVM）正是统计学习理论的具体成果与实现。第四种手段是基于概率的方法，主要包括贝叶斯（Bayes）推理及隐马尔可夫模型（hidden Markov model, HMM），其中贝叶斯推理需利用来源于经验和历史资料的先验信息，后续将单独介绍。随后进入第二节统计模型与参数推断。对给定统计模型，参数估计方法有矩估计、线性最小二乘估计、非线性最小二乘估计（考虑脱法？应为高斯-牛顿法或单纯形法）、加速单纯形法、最大似然法等。参数估计量的评选标准包括：1）无偏性：估计量的期望值与参数真值相等；若样本容量趋近无穷大时估计量数学期望与真值相等，称为渐进无偏性。2）有效性：无偏性表示估计值在真值周围波动，平均偏差为0；同一参数可有多个无偏估计量，方差最小者最有效；若某无偏估计量相对于其他所有可能无偏估计量期望方差最小，称为一致最小方差无偏估计量。3）相合性：样本容量越大，估计值越接近真值。4）充分性与完备性：充分性指估计量充分利用样本中每一变量的信息；完备性指估计量是充分的、唯一的无偏估计量。本页最后开始介绍最小二乘。",
      262,
-     "掌握"
+     "掌握",
+     "# 支持向量机（SVM）与基于概率的方法示例\nfrom sklearn import svm\nfrom sklearn.naive_bayes import GaussianNB\nfrom sklearn.model_selection import train_test_split\nimport numpy as np\n\nX = np.random.randn(200, 4)\ny = (X[:, 0] + X[:, 1] > 0).astype(int)\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)\n\n# SVM\nclf_svm = svm.SVC(kernel='rbf', C=1.0, gamma='scale')\nclf_svm.fit(X_train, y_train)\nprint('SVM accuracy:', clf_svm.score(X_test, y_test))\n\n# 朴素贝叶斯（基于概率的方法）\nclf_nb = GaussianNB()\nclf_nb.fit(X_train, y_train)\nprint('NB accuracy:', clf_nb.score(X_test, y_test))"
     ],
     [
      "第一节 统计学习与推理基础",
      "最小二乘估计与最大似然估计",
      "本页继续第二节，介绍最小二乘和最大似然估计。对于从平均数为μ的总体中抽得样本y1,…,yn，观察值可剖分为总体平均数μ与误差e_i之和，即y_i=μ+e_i。总体平均数μ的最小二乘估计：定义Q=Σ(y_i-μ)^2，为获得最小值，求Q对μ的导数并令其等于0，可得Σ(y_i-μ)=0，即总体平均数的估计量为μ̂=1/n Σ y_i。因此，算术平均数是总体平均数的最小二乘估计。对于多元线性/非线性模型，设自变量x1,x2,…,xm与依变数y存在统计模型关系y=f(x1,x2,…,xm,θ1,θ2,…,θk)+e，其中θ1,θ2,…,θk为待估参数。通过n次观测（n>k）得到n组数据(x1i,x2i,…,xmi,yi)，i=1,2,…,n，以估计θ1,θ2,…,θk，最小二乘估计使Q=Σ(y_i-f(x1i,x2i,…,xmi,θ1,θ2,…,θk))^2最小。最后介绍最大似然估计：最大似然法是参数估计的重要方法，其思路可用一个例子理解。有1个射手射击3次，命中0次，试问该射手的命中概率最有可能为3个命中概率（1/5、8/15和4/5）中的哪一个？回答该问题可从两方面看：一方面，该射手的命中率为0，与此最接近的命中概率为1/5，即1/5最有可能；另一方面，分别假定该射手的命中率为1/5、8/15和4/5，根据二项分布原理分别计算该射手射击3次命中0次的概率分别为……（本页在此中断）。",
      263,
-     "掌握"
+     "掌握",
+     "# 最小二乘估计与最大似然估计\nimport numpy as np\nfrom scipy.optimize import minimize\n\n# 最小二乘估计总体均值 mu\ny = np.array([2.1, 1.9, 2.5, 2.0, 1.8])\nmu_ls = np.mean(y)\nprint('LS mean:', mu_ls)\n\n# 最大似然估计（正态分布均值和方差）\ndef neg_log_likelihood(params, y):\n    mu, sigma = params\n    if sigma <= 0:\n        return np.inf\n    n = len(y)\n    return 0.5 * n * np.log(2 * np.pi * sigma ** 2) + np.sum((y - mu) ** 2) / (2 * sigma ** 2)\n\nres = minimize(neg_log_likelihood, x0=[0, 1], args=(y,), method='Nelder-Mead')\nprint('MLE mu, sigma:', res.x)"
     ],
     [
      "第二节 统计模型与参数推断",
      "最大似然估计与对数似然函数",
      "本页承接参数推断，介绍似然函数与最大似然估计。离散型总体中，若一次复置抽样得到多类计数，如红、白、黑三色球分别为12、24、14，则多项分布似然为 L(p1,p2,p3)=50!/(12!24!14!) p1^12 p2^24 p3^14，其中 p1+p2+p3=1。连续型独立样本的似然为各观测概率密度乘积，L(θ)=∏ f(yi;θ)。若 y~N(μ,σ²)，则似然含 exp[-(yi-μ)²/(2σ²)] 的乘积。最大似然估计是使 L(θ) 最大的 θ。为便于求导，通常取对数，将对数似然 lnL(θ)=∑ln f(yi;θ) 由乘积化为求和。最大值通过令关于各参数的一阶偏导为0并解似然方程组获得。该页还以三色球为例，写出对数似然 lnL(p1,p2,p3)=C+12lnp1+24lnp2+14lnp3，后续可结合约束 p1+p2+p3=1 求 MLE。",
      264,
-     "掌握"
+     "掌握",
+     "# 多项分布 MLE：红12 白24 黑14\nfrom math import lgamma\ncounts = [12, 24, 14]\nn = sum(counts)\n# 对数似然（忽略常数项）\ndef loglik(p):\n    return sum(c * __import__('math').log(pi) for c, pi in zip(counts, p))\n# 约束 p1+p2+p3=1，MLE 为频率\np_hat = [c / n for c in counts]\nprint(p_hat)  # [0.24, 0.48, 0.28]\nprint(loglik(p_hat))\n\n# 正态样本 MLE\nimport numpy as np\ny = np.array([1.2, 2.3, 1.8, 2.1])\nmu_hat = y.mean()\nsigma2_hat = ((y - mu_hat) ** 2).mean()\nprint(mu_hat, sigma2_hat)\n\n# 时间复杂度：O(n)，n 为样本数/类别计数总数"
     ],
     [
      "第二节 统计模型与参数推断",
      "聚类分析概述与数据变换",
      "本页进入聚类分析。聚类分析是研究“物以类聚”的多元统计方法，按对象分为Q型（样本聚类）和R型（变量聚类）。系统聚类/层次聚类事先不指定类数：先令每个样品自成一类，定义样品间距离和类间距离，每次合并距离最近的两类，重新计算类间距离，直到全部归为一类。K均值聚类、动态聚类或快速聚类则需事先确定类数或初步分类，再按分类函数尽可能小的原则调整。还有有序样本最优分割、模糊聚类等。由于不同指标量纲和数量级不同，需数据变换：中心化变换 x'ij=xij-\bar{x}j；规格化变换 x'ij=(xij-min{xj})/(max{xj}-min{xj})；标准化变换 x'ij=(xij-\bar{x}j)/sj，其中 sj²=∑(xij-\bar{x}j)²/(n-1)；对数变换 x'ij=ln xij（xij>0）。这些变换使数据具有可比性，是后续距离计算和聚类的基础。",
      265,
-     "掌握"
+     "掌握",
+     "# 聚类前标准化：消除量纲影响\nimport numpy as np\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.cluster import KMeans, AgglomerativeClustering\n\nX = np.array([[1.0, 200.0],\n              [1.2, 210.0],\n              [5.0, 100.0],\n              [5.2, 105.0]])\n\n# Z-score 标准化\nXs = StandardScaler().fit_transform(X)\n\n# K-means：需预先指定类数 k\nkm = KMeans(n_clusters=2, random_state=0, n_init=10).fit(Xs)\nprint(km.labels_)\n\n# 层次聚类：不预先指定类数\nhc = AgglomerativeClustering(n_clusters=None, distance_threshold=1.5).fit(Xs)\nprint(hc.labels_)\n\n# 时间复杂度：K-means 约 O(n*k*p*t)，层次聚类常见 O(n^3) 或 O(n^2 log n)"
     ],
     [
      "第二节 统计模型与参数推断",
      "常用距离与相似系数",
      "本页系统给出样品间距离和相似性度量。马氏距离考虑指标协差阵 Σ=(σij)，d²(M)=(xi-xj)'Σ⁻¹(xi-xj)，可排除指标间相关性的干扰。兰氏距离 d(L)=∑|xia-xja|/(xia+xja)，要求 xij>0，未考虑指标相关性。计算两两样品距离得到距离矩阵 D，矩阵对称，对角元为0，dij越小表示样品越接近；据此可分类，距离近的归为一类。夹角余弦把两个样品视为p维向量，cosθ=∑xia xja / sqrt(∑xia² ∑xja²)，取值[-1,1]，计算两两相似系数得相似系数矩阵。相关系数 rjk=∑(xij-\bar{x}j)(xik-\bar{x}k)/sqrt[∑(xij-\bar{x}j)²∑(xik-\bar{x}k)²]，计算两两样品相关系数得相关系数矩阵。距离与相似系数从不同角度刻画样品亲疏，是聚类和判别分析的基础。",
      266,
-     "掌握"
+     "掌握",
+     "# 常用距离与相似系数\nimport numpy as np\nfrom scipy.spatial.distance import mahalanobis, cosine\n\nX = np.array([[1.0, 2.0],\n              [2.0, 1.0],\n              [5.0, 5.0]])\n\n# 欧氏距离矩阵\nD = np.sqrt(((X[:, None, :] - X[None, :, :]) ** 2).sum(axis=2))\nprint(D)\n\n# 马氏距离\nS = np.cov(X.T)\nS_inv = np.linalg.inv(S)\nd_m = mahalanobis(X[0], X[1], S_inv)\nprint(d_m)\n\n# 兰氏距离，要求 xij > 0\ndef lance_williams(a, b):\n    return np.sum(np.abs(a - b) / (a + b))\nprint(lance_williams(X[0], X[1]))\n\n# 夹角余弦\nprint(1 - cosine(X[0], X[1]))\n\n# 时间复杂度：两两距离 O(n^2*p)"
     ],
     [
      "第二节 统计模型与参数推断",
      "系统聚类步骤与类间距离",
      "本页给出系统聚类（层次聚类）的具体算法。以 dij 表示样品 xi 与 xj 的距离，Dij 表示类 Gi 与 Gj 的距离。最短距离法定义类间距离为两类最近样品的距离：Dij=min{dab | a∈Gi,b∈Gj}。若 Gi 与 Gj 合并为新类 Gr，则任一类 Gk 与 Gr 的距离为 Dkr=min{Dki,Dkj}。算法从距离矩阵 D(0) 开始，每个样品自成一类，此时 Dij=dij。第二步找出 D(0) 非对角线最小元素 Dpq，将 Gp 与 Gq 合并为新类 Gr。第三步按递推公式计算新类与其他类的距离，得到 D(1)。第四步对 D(1) 重复第二、三步，直到所有元素并成一类。若某步非对角线最小元素不止一个，可同时合并。页末还讨论类平均法较好，最短距离法和重心法“空间浓缩”，并类距离范围小、灵敏度差；其他方法“空间扩张”，灵敏度强；最短距离法一般比最长距离法好；孤立点太多说明聚类方法不好。",
      267,
-     "掌握"
+     "掌握",
+     "# 系统聚类：最短距离法核心步骤\nimport numpy as np\n\ndef single_linkage(D, labels):\n    D = D.astype(float).copy()\n    np.fill_diagonal(D, np.inf)\n    clusters = {i: [i] for i in range(len(labels))}\n    active = set(clusters)\n    while len(active) > 1:\n        # 找当前最小类间距离\n        best = None\n        for i in active:\n            for j in active:\n                if i < j and (best is None or D[i, j] < best[0]):\n                    best = (D[i, j], i, j)\n        _, i, j = best\n        # 合并 i, j 为新类 i\n        clusters[i] += clusters[j]\n        active.remove(j)\n        # 最短距离更新：D[k, i] = min(D[k, i], D[k, j])\n        for k in active:\n            if k != i:\n                D[i, k] = D[k, i] = min(D[i, k], D[j, k])\n    return clusters\n\n# 示例距离矩阵\nD = np.array([[0, 1, 4],\n              [1, 0, 2],\n              [4, 2, 0]])\nprint(single_linkage(D, ['A', 'B', 'C']))\n\n# 时间复杂度：朴素实现 O(n^3)，优化后可 O(n^2 log n)"
     ],
     [
      "第二节 统计模型与参数推断",
      "主成分分析步骤与Fisher判别引入",
      "本页先讲主成分分析（PCA）步骤：设观测样本矩阵 X，先标准化 (xij)'=(xij-\bar{x}j)/sj，其中 sj²=∑(xij-\bar{x}j)²/(n-1)；再计算样本相关系数矩阵 R；解特征方程 |R-λI|=0，得到p个特征根 λ1≥λ2≥…≥λp≥0，并求对应特征向量 Cj=(c1j,…,cpj)'，满足 Cj'Cj=1 且不同特征向量正交；选择 m<p 个主分量，使前m个主分量方差和占全部总方差比例接近1（如≥0.85），从而降维。随后引入 Fisher 判别：判别是根据观察数据对研究对象分类，按准则分 Fisher 判别和 Bayes 判别，按组数分两类和多类，按模型分线性和非线性，按变量处理分逐步和序贯。Fisher 准则要求两组间区别最大、组内离散性最小，确定线性判别函数 y=c1x1+c2x2+…+cpxp。",
      268,
-     "掌握"
+     "掌握",
+     "# 主成分分析 PCA 步骤\nimport numpy as np\n\nX = np.array([[2.5, 2.4],\n              [0.5, 0.7],\n              [2.2, 2.9],\n              [1.9, 2.2],\n              [3.1, 3.0]])\n\n# 1. 标准化\nXc = (X - X.mean(axis=0)) / X.std(axis=0, ddof=1)\n\n# 2. 样本相关系数矩阵\nR = np.corrcoef(Xc, rowvar=False)\n\n# 3. 特征根与特征向量\nvals, vecs = np.linalg.eigh(R)\nidx = np.argsort(vals)[::-1]\nvals, vecs = vals[idx], vecs[:, idx]\nprint(vals)\nprint(vecs)\n\n# 4. 选择前 m 个主分量\nm = 1\nscores = Xc @ vecs[:, :m]\nprint(scores)\n\n# 时间复杂度：O(n*p^2 + p^3)"
     ],
     [
      "第二节 统计模型与参数推断",
      "Fisher两类线性判别函数推导",
      "本页推导 Fisher 两类线性判别。设 A 组有 nA 个样本，B 组有 nB 个样本，A 组各判别指标均值为 \bar{X}(A)，B 组为 \bar{X}(B)。以 \bar{y}(A)=∑c_i \bar{X}_i(A) 表示 A 组重心，\bar{y}(B)=∑c_i \bar{X}_i(B) 表示 B 组重心，则两组间离差用 [\bar{y}(A)-\bar{y}(B)]² 表示；A 组内部离散程度为 ∑[y_i(A)-\bar{y}(A)]²，B 组为 ∑[y_i(B)-\bar{y}(B)]²。Fisher 准则要求组间离差最大、组内离散最小，即最大化 I=[\bar{y}(A)-\bar{y}(B)]² / {∑[y_i(A)-\bar{y}(A)]²+∑[y_i(B)-\bar{y}(B)]²}。由极值原理可导出线性方程组：S11c1+S12c2+…+S1pcp=D1，S21c1+S22c2+…+S2pcp=D2，…，Sp1c1+Sp2c2+…+Sppcp=Dp，其中 Sij 为组内合并协方差，Di=\bar{X}_i(A)-\bar{X}_i(B)。解出 c1,…,cp 得线性判别函数 y=c1x1+…+cpxp，再计算两类重心 \bar{y}(A)、\bar{y}(B)，以样本数为权数加权平均得判别阈值。",
      269,
-     "掌握"
+     "掌握",
+     "# Fisher 两类线性判别：核心计算\nimport numpy as np\n\n# A 组、B 组样本，每行一个样本，每列一个判别指标\nA = np.array([[1.0, 2.0],\n              [1.5, 1.8],\n              [1.2, 2.2]])\nB = np.array([[4.0, 5.0],\n              [4.5, 4.8],\n              [3.8, 5.2]])\n\nmuA = A.mean(axis=0)\nmuB = B.mean(axis=0)\n\n# 组内离差阵\nSA = ((A - muA).T @ (A - muA))\nSB = ((B - muB).T @ (B - muB))\nSw = SA + SB\n\n# Fisher 判别系数 c = Sw^{-1}(muA - muB)\nc = np.linalg.solve(Sw, muA - muB)\nprint(c)\n\n# 判别得分\nyA = A @ c\nyB = B @ c\nprint(yA.mean(), yB.mean())\n\n# 时间复杂度：O(n*p^2 + p^3)"
     ],
     [
      "第四节 贝叶斯推理",
      "判别函数的F检验与贝叶斯推理引论",
      "本页先承接判别分析：为判断判别函数是否具有实际应用价值，需要做显著性检验。页面上方给出F统计量，形式为组间差异与组内差异之比，服从自由度为(n_A+n_B-p-1)的F分布；其中n_A、n_B为两类样本数，p为变量数。若F值超过临界值，则判别函数显著，可用于实际判别。随后转入第四节“贝叶斯推理”。托马斯·贝叶斯是英国数学家，他将归纳推理用于概率论，创立贝叶斯统计理论。贝叶斯决策的核心是：在信息不完全时，先对未知状态给出主观先验概率，再利用贝叶斯公式结合新证据修正概率，最后用期望值和修正后的后验概率作最优决策。基于贝叶斯定理的朴素贝叶斯模型是应用最广的分类模型之一，优点是所需估计参数少、对缺失数据不太敏感、算法简单。接着给出贝叶斯定理基础：条件概率P(B|A)表示A发生条件下B发生的概率；联合概率P(AB)=P(A)P(B|A)。若B_1,B_2,…,B_n互不相容且并为样本空间S，则称为S的一个划分。全概率公式为P(A)=ΣP(B_i)P(A|B_i)。这些定义是后续朴素贝叶斯分类和贝叶斯推理的基础。",
      270,
-     "掌握"
+     "掌握",
+     "# 判别函数显著性 F 检验（示意）\nimport numpy as np\nfrom scipy.stats import f\n\ndef discriminant_f_test(nA, nB, p, between_var, within_var, alpha=0.05):\n    \"\"\"\n    nA, nB: 两类样本数\n    p: 变量数\n    between_var: 组间差异\n    within_var: 组内差异\n    \"\"\"\n    F = between_var / within_var\n    df1 = p\n    df2 = nA + nB - p - 1\n    F_crit = f.ppf(1 - alpha, df1, df2)\n    return F, F_crit, F > F_crit\n\n# 极简示例\nF, F_crit, significant = discriminant_f_test(\n    nA=20, nB=20, p=3, between_var=12.5, within_var=2.5\n)\nprint(F, F_crit, significant)\n\n# 时间复杂度：O(1)"
     ],
     [
      "第四节 贝叶斯推理",
      "朴素贝叶斯分类器与气候训练集示例",
      "本页讲解朴素贝叶斯分类。由于P(X)对所有类别相同，分类时只需比较P(c)P(X|c)或P(X|c)。若类先验未知，通常假设各类等概率，或用类样本比例近似P(c)。当属性较多时，P(X|c)计算量大，因此朴素贝叶斯引入“属性条件独立”假设：在给定类别c下，各属性相互独立，于是P(X|c)=∏P(x_i|c)。对于含c_1,…,c_m类的训练集，最佳分类为选择使P(c_i)P(X|c_i)最大的类，即后验概率最大。随后给出气候训练集示例：14个样本，4个条件属性（天气状态、气温、湿度、风），1个决策属性（类别N或P）。测试样本为天气Sunny、气温Hot、湿度High、风Weak，问属于哪类。该表用于演示如何用训练集估计先验概率和各属性条件概率，再计算后验概率并分类。读表时应注意每个属性取值及类别标签，后续页将代入计算。",
      271,
-     "掌握"
+     "掌握",
+     "# 朴素贝叶斯分类器核心步骤（伪代码）\n# 输入：训练集 D，测试样本 X=(x1,...,xd)，类别集合 C={c1,...,cm}\n# 输出：预测类别 y\n\nfor c in C:\n    prior[c] = count(D, c) / len(D)          # P(c)\n    likelihood[c] = 1\n    for xi in X:\n        likelihood[c] *= P(xi | c)           # 属性条件独立假设\n    score[c] = prior[c] * likelihood[c]\n\ny = argmax_c score[c]\n\n# 时间复杂度：O(m * d)\n# 极简示例：\n# P(Sunny|N)=3/5, P(Hot|N)=2/5, ...\n# score[N] = P(N) * P(Sunny|N) * P(Hot|N) * ..."
     ],
     [
      "第四节 贝叶斯推理",
      "朴素贝叶斯分类计算与隐马尔可夫模型引入",
      "本页先完成气候训练集示例计算。对测试样本X=(Sunny,Hot,High,Weak)，计算类别N的后验概率：P(N|X)=P(N)P(Sunny|N)P(Hot|N)P(High|N)P(Weak|N)/P(X)=5/14×3/5×2/5×4/5×2/5/P(X)=0.0274/P(X)。再计算类别P：P(P|X)=9/14×2/9×2/9×3/9×6/9/P(X)=0.007039/P(X)。因P(N|X)>P(P|X)，按后验概率最大原则，X属于N类。随后进入第五节“隐马尔可夫模型”。马尔可夫模型由前苏联数学家马尔可夫于1906—1912年提出，用于研究自然过程，推动随机过程论发展。马尔可夫性即无后效性：已知当前状态，未来演变不依赖过去。具有离散状态的马尔可夫随机过程称为马尔可夫链，也称无记忆单随机过程。隐马尔可夫模型是双随机过程：状态随机且不可见，行为可见但不可测，因此称为隐马尔可夫模型。通常HMM状态离散且演变无记忆，故称无记忆离散双随机过程。一个隐马尔可夫链包含两部分：一个潜在状态链和一个观察链。",
      272,
-     "掌握"
+     "掌握",
+     "# 气候训练集朴素贝叶斯计算示例\nP_N = 5/14\nP_P = 9/14\n\nP_Sunny_N = 3/5\nP_Hot_N = 2/5\nP_High_N = 4/5\nP_Weak_N = 2/5\n\nP_Sunny_P = 2/9\nP_Hot_P = 2/9\nP_High_P = 3/9\nP_Weak_P = 6/9\n\nscore_N = P_N * P_Sunny_N * P_Hot_N * P_High_N * P_Weak_N\nscore_P = P_P * P_Sunny_P * P_Hot_P * P_High_P * P_Weak_P\n\nprint(score_N)  # 0.0274\nprint(score_P)  # 0.007039\n\npred = 'N' if score_N > score_P else 'P'\nprint(pred)\n\n# 时间复杂度：O(m * d)"
     ],
     [
      "第四节 贝叶斯推理",
      "HMM生成观察序列、模型参数与三个基本问题",
      "本页说明HMM如何生成观察序列O=(o_1,o_2,…,o_T)。步骤：1）根据初始状态概率分布π选择初始状态q_1=i；2）置观察时间t=1；3）根据当前状态i的观察符号概率分布b_i选择o_t=v；4）根据状态转移概率分布A从当前状态q_t=i转移到下一状态q_{t+1}=j；5）置t=t+1，若t<T则回到第3步，否则结束。因此HMM由2个模型参数N、M及3个概率分布参数A、B、π确定，通常记为λ=(A,B,π)。按观察符号概率分布是离散还是连续，HMM分为离散隐马尔可夫模型和连续隐马尔可夫模型。接着提出HMM三个基本问题：问题I评估问题，已知观察序列O和模型λ，计算P(O|λ)，可用前向后向算法；问题II解码问题，已知O和λ，寻找最佳状态序列Q=(q_1,q_2,…,q_T)，使该状态序列最合理地产生O；问题III学习问题，根据观察序列修正模型参数(A,B,π)，使P(O|λ)最大。问题I反映观察序列与模型的吻合程度，可用于模型选择；问题II关键是选择最佳准则决定状态转移，一种准则是使各时刻状态都最可能。",
      273,
-     "掌握"
+     "掌握",
+     "# HMM 生成观察序列（伪代码）\n# 输入：N, M, A, B, pi, T\n# 输出：状态序列 Q 和观察序列 O\n\nq1 = sample_from(pi)          # 根据 pi 选择初始状态\nO = []\nQ = [q1]\nfor t in range(1, T+1):\n    ot = sample_from(B[Q[t-1]])   # 根据 b_i 选择观察符号\n    O.append(ot)\n    if t < T:\n        qt_next = sample_from(A[Q[t-1]])  # 根据 A 转移状态\n        Q.append(qt_next)\n\nreturn Q, O\n\n# 时间复杂度：O(T)\n# 极简示例：\n# pi = [0.6, 0.4]\n# A = [[0.7, 0.3], [0.4, 0.6]]\n# B = [[0.5, 0.5], [0.1, 0.9]]"
     ],
     [
      "第四节 贝叶斯推理",
      "海草湿度HMM示例与穷举法评估",
      "本页给出一个HMM示例，用于说明评估问题。模型状态为天气：Sunny、Cloudy、Rainy；观察为海草湿度：Dry、Dryish、Damp、Soggy。状态转移矩阵A为3×3，例如Sunny到Sunny为0.500，Sunny到Cloudy为0.250，Sunny到Rainy为0.250；Cloudy到Sunny为0.375，Cloudy到Cloudy为0.250，Cloudy到Rainy为0.375；Rainy到Sunny为0.125，Rainy到Cloudy为0.675，Rainy到Rainy为0.200。输出概率矩阵B为3×4，例如Sunny下Dry、Dryish、Damp、Soggy分别为0.60、0.20、0.15、0.05；Cloudy下为0.25、0.25、0.25、0.25；Rainy下为0.05、0.10、0.35、0.50。图中还给出初始状态分布π。评估问题：已知λ=(π,A,B)和连续4天观察O=Dry,Damp,Soggy,Dryish，求P(O|λ)。从定义出发可用穷举法，枚举所有可能状态序列，如Sunny-Sunny-Sunny-Sunny、Sunny-Sunny-Sunny-Cloudy等，计算各路径产生O的概率并求和。穷举法时间复杂度为O(N^T)，计算量随T指数增长，因此需要前向算法等更高效方法。",
      274,
-     "理解"
+     "理解",
+     "# 海草湿度 HMM 示例：穷举法评估 P(O|lambda)\nimport itertools\n\nstates = ['Sunny', 'Cloudy', 'Rainy']\nobs = ['Dry', 'Dryish', 'Damp', 'Soggy']\n\nA = {\n    'Sunny':  {'Sunny': 0.500, 'Cloudy': 0.250, 'Rainy': 0.250},\n    'Cloudy': {'Sunny': 0.375, 'Cloudy': 0.250, 'Rainy': 0.375},\n    'Rainy':  {'Sunny': 0.125, 'Cloudy': 0.625, 'Rainy': 0.250}\n}\n\nB = {\n    'Sunny':  {'Dry': 0.60, 'Dryish': 0.20, 'Damp': 0.15, 'Soggy': 0.05},\n    'Cloudy': {'Dry': 0.25, 'Dryish': 0.25, 'Damp': 0.25, 'Soggy': 0.25},\n    'Rainy':  {'Dry': 0.05, 'Dryish': 0.10, 'Damp': 0.35, 'Soggy': 0.50}\n}\n\npi = {'Sunny': 0.63, 'Cloudy': 0.17, 'Rainy': 0.20}\nO = ['Dry', 'Damp', 'Soggy']\n\nprob = 0.0\nfor Q in itertools.product(states, repeat=len(O)):\n    p = pi[Q[0]] * B[Q[0]][O[0]]\n    for t in range(1, len(O)):\n        p *= A[Q[t-1]][Q[t]] * B[Q[t]][O[t]]\n    prob += p\n\nprint(prob)\n\n# 时间复杂度：O(N^T * T)"
     ],
     [
      "第四节 贝叶斯推理",
      "前向算法计算示例与后向算法定义",
      "本页继续HMM评估问题。先说明穷举法计算量：需要约N^T(T-1)次乘法和N(N-1)(T-1)次加法，指数复杂。随后介绍后向算法。定义后向概率β_t(i)=P(o_{t+1},o_{t+2},…,o_T|q_t=S_i,λ)，表示在模型λ下，t时刻处于状态S_i，从t+1到T的观察序列为o_{t+1},…,o_T的概率。后向算法步骤：1）初始化β_T(i)=1，1≤i≤N；2）递推β_t(i)=Σ_j a_{ij}b_j(o_{t+1})β_{t+1}(j)，t=T-1,T-2,…,1；3）终止P(O|λ)=Σ_i π_i b_i(o_1)β_1(i)。后向算法计算量与前向算法相当。本页还给出前向算法计算示例：第一天为Sunny且海藻状态为Dry的概率为0.63×0.6=0.378；第一天为Cloudy且Dry为0.17×0.25=0.0425；第一天为Rainy且Dry为0.2×0.05=0.01。第二天为Sunny的概率需基于第一天状态，包括第一天Sunny、Cloudy、Rainy且海藻Dry转移到第二天Sunny的概率之和。该页强调前向算法逐步累积概率，后向算法从终止时刻反向递推，两者结合可高效计算P(O|λ)。",
      275,
-     "掌握"
+     "掌握",
+     "# 后向算法（Backward Algorithm）\n# 输入：O, A, B, pi, N, T\n# 输出：P(O|lambda)\n\nbeta = [[0.0] * N for _ in range(T)]\n\n# 1. 初始化\nfor i in range(N):\n    beta[T-1][i] = 1.0\n\n# 2. 递推\nfor t in range(T-2, -1, -1):\n    for i in range(N):\n        beta[t][i] = sum(\n            A[i][j] * B[j][O[t+1]] * beta[t+1][j]\n            for j in range(N)\n        )\n\n# 3. 终止\nP_O = sum(pi[i] * B[i][O[0]] * beta[0][i] for i in range(N))\nprint(P_O)\n\n# 时间复杂度：O(N^2 * T)\n# 极简示例：\n# beta[T-1] = [1, 1, 1]\n# beta[t][i] = sum_j A[i][j] * B[j][o_{t+1}] * beta[t+1][j]"
     ],
     [
      "第五节 隐马尔可夫模型",
      "HMM解码问题与Viterbi算法",
      "本页介绍隐马尔可夫模型（HMM）的解码问题及Viterbi算法。解码问题是指：给定一个确定的HMM模型λ=(A,B,π)和一个观测序列O=(o1,o2,…,oT)，求由该模型产生此观测序列的最佳状态转移序列Q=(q1,q2,…,qT)。所谓“最佳”需要定义准则；Viterbi算法采用的状态序列整体最优准则为：δt(i)=max_{q1,…,qt-1} P(q1,…,qt-1, qt=Si, o1,…,ot | λ)，即在时刻t处于状态Si且观测到前t个观测值的所有路径中的最大概率。该算法不是枚举所有路径，而是按时间t从小到大递推。递推公式为：δt(j)=max_{i∈pre[Sj]} [δt-1(i)·aij]·bj(ot)，其中pre[Sj]为状态Sj的前导状态集，aij为从状态Si转移到Sj的转移概率，bj(ot)为状态Sj下观测ot的发射概率。同时记录使δt(j)最大的前一时刻状态，记为ψt(j)，用于最终回溯最佳路径。该页以天气-海草湿度为例说明：状态集合为{Sunny, Cloudy, Rainy}，观测集合为{Dry, Dryish, Damp, Soggy}，在给定模型参数下求最可能天气状态序列。Viterbi算法是HMM三大基本问题之一——解码问题的经典解法，广泛用于基因识别、序列比对等生物信息学任务。",
      276,
-     "掌握"
+     "掌握",
+     "# Viterbi algorithm for HMM decoding\n# Input: HMM lambda=(A,B,pi), observation sequence O[1..T]\n# Output: best state sequence Q[1..T]\n\ndef viterbi(A, B, pi, O):\n    N = len(A)          # number of states\n    T = len(O)          # length of observation sequence\n    delta = [[0.0]*N for _ in range(T)]\n    psi   = [[0]*N for _ in range(T)]\n\n    # Initialization\n    for i in range(N):\n        delta[0][i] = pi[i] * B[i][O[0]]\n        psi[0][i] = 0\n\n    # Recursion\n    for t in range(1, T):\n        for j in range(N):\n            best, arg = -1.0, 0\n            for i in range(N):\n                p = delta[t-1][i] * A[i][j]\n                if p > best:\n                    best, arg = p, i\n            delta[t][j] = best * B[j][O[t]]\n            psi[t][j]   = arg\n\n    # Termination\n    best, qT = -1.0, 0\n    for i in range(N):\n        if delta[T-1][i] > best:\n            best, qT = delta[T-1][i], i\n\n    # Backtracking\n    Q = [0]*T\n    Q[T-1] = qT\n    for t in range(T-2, -1, -1):\n        Q[t] = psi[t+1][Q[t+1]]\n    return Q, best\n\n# Time complexity: O(T * N^2)\n# Minimal example\nA = [[0.7,0.3],[0.4,0.6]]\nB = [[0.5,0.5],[0.1,0.9]]\npi = [0.6,0.4]\nO = [0,1,0]\nprint(viterbi(A,B,pi,O))"
     ],
     [
      "第五节 隐马尔可夫模型",
      "Viterbi算法递推计算示例",
      "本页继续以天气-海草湿度模型为例，展示Viterbi算法逐日递推计算过程。计算从第一天开始，逐日更新各状态的最大路径概率δ和回溯指针ψ。例如，计算第三天各天气状态对应海藻状态为Soggy的概率：Sunny状态取前一天各状态转移概率与发射概率乘积的最大值，得到约7.088×10^-4，并记录路径来自第二天Sunny；Cloudy状态得到约5.581×10^-3，路径来自第二天Rainy；Rainy状态得到约4.430×10^-3，路径来自第二天Cloudy。第四天观测为Dryish时，Sunny状态概率约4.186×10^-4，路径来自第三天Cloudy；Cloudy状态继续计算。通过这种递推，每一步只需保留到达当前各状态的最大概率路径，避免指数级枚举。最终在最后时刻选择δT(i)最大的状态，再沿ψ指针回溯，即可得到全局最优状态序列。该页体现了Viterbi算法的动态规划思想：最优路径的子路径也是最优的，因此可以分阶段递推。在生物信息学中，类似计算用于基因预测中确定最可能的外显子-内含子结构、蛋白质序列的二级结构预测等。",
      277,
-     "掌握"
+     "掌握",
+     "# Viterbi step-by-step trace (weather / seaweed example)\nimport math\n\nstates = ['Sunny','Cloudy','Rainy']\nobs    = ['Dry','Dryish','Soggy']\n\nA = [[0.5,0.25,0.25],\n     [0.375,0.125,0.5],\n     [0.125,0.675,0.2]]\nB = [[0.6,0.2,0.2],\n     [0.25,0.25,0.5],\n     [0.05,0.1,0.85]]\npi = [0.63,0.17,0.20]\nO  = [0,0,2]   # Dry, Dry, Soggy\n\nN, T = len(states), len(O)\ndelta = [[0.0]*N for _ in range(T)]\npsi   = [[0]*N for _ in range(T)]\n\nfor i in range(N):\n    delta[0][i] = pi[i]*B[i][O[0]]\n\nfor t in range(1,T):\n    for j in range(N):\n        best, arg = -1, 0\n        for i in range(N):\n            p = delta[t-1][i]*A[i][j]\n            if p > best: best, arg = p, i\n        delta[t][j] = best*B[j][O[t]]\n        psi[t][j]   = arg\n    print('Day', t+1, 'delta=', delta[t], 'psi=', psi[t])\n\n# Expected day-3 values:\n# Sunny  ~ 7.088e-4  (from Sunny)\n# Cloudy ~ 5.581e-3  (from Rainy)\n# Rainy  ~ ..."
     ],
     [
      "第五节 隐马尔可夫模型",
      "HMM基因识别程序及HMM优缺点",
      "本页介绍基于HMM的基因识别程序及HMM的优缺点。典型程序包括VEIL、HMMgene、GeneMark.hmm、Geneie和GENSCAN。VEIL用于人类基因寻找，与HMMgene的主要区别是未使用高阶状态；Geneie将神经网络结合到HMM-like模型中；GENSCAN类似HMMgene，但在拼接位点使用不同类型的模型。GeneMark.hmm在原有GeneMark基础上融入HMM算法框架，并使用核糖体结合位点模型提高转录起始密码子预测性，在包括10个完整细菌基因组的测试中明显优于GeneMark。Geneie是稳健的HMM系统，综合信号传感器（拼接位点、起始密码子等）、信号存储传感器（外显子、内含子、基因间序列等）、mRNA阵列、EST等不同来源信息，采用模块化编程，每种状态模块单独训练，便于扩展，提高适用范围和灵敏度。GENSCAN用明确HMM状态构建基因组序列结构模型，信号检测采用加权矩阵、加权排列和最大化独立分解技术。HMM的优缺点：优点是可处理序列的局部依赖、概率框架严谨、可结合多种信息；缺点是状态数多时参数训练复杂，且假设观测独立可能不完全符合生物序列实际。",
      278,
-     "理解"
+     "理解",
+     "# Typical HMM-based gene finders (command-line style)\n# VEIL (human gene finding, no high-order states)\nveil -i human_seq.fa -o veil.gff\n\n# HMMgene (uses high-order states)\nhmmgene -m human -p 0.99 -i seq.fa > hmmgene.gff\n\n# GeneMark.hmm (HMM framework on top of GeneMark)\ngmhmme -m Arabidopsis -f gff -o out.gff seq.fa\n\n# Geneie (HMM-like + neural network)\ngeneie -seq seq.fa -org human -out geneie.gff\n\n# GENSCAN (HMMgene-like, distinct splice-site models)\ngenscan seq.fa > genscan.out\n\n# Pros / cons summary (pseudo)\npros  = ['probabilistic framework', 'handles variable-length features',\n         'trainable from data']\ncons  = ['independence assumption', 'sensitive to training set',\n         'hard to model long-range dependencies']"
     ],
     [
      "第五节 隐马尔可夫模型",
      "动态神经网络概述与Elman网络",
      "本页首先指出HMM的一个局限：只有当事件独立时，模型产生一个序列的概率才是产生各个独立氨基酸概率的乘积；但实际相邻序列相关性明显，例如疏水性氨基酸常连续出现，在蛋白质高级结构中聚集在内部以避开水分子。因此需要能处理时间相关性的模型。接着引入动态神经网络。人工神经网络（ANN）是模仿动物神经网络行为特征、进行分布式并行信息处理的算法数学模型，依靠系统复杂程度，通过调整大量节点间连接关系处理信息，具有自学习和自适应能力，通过输入-输出数据训练掌握规律。神经网络按是否含延迟或反馈环节分为静态和动态：静态网络只能处理与时间无关的问题，如BP网络、RBF网络、样条函数网络、子波函数网络；动态网络可处理与时间有关对象，如时间序列建模、动态系统辨识、语音识别，典型的有Elman网络、Hopfield网络、ART网络、递归神经网络（RNN）、NARX神经网络、PID神经网络、局部反馈总体前馈网络、细胞神经网络等。本书主要介绍Elman动态神经网络（图12-4），由J.L.Elman于1990年针对语音处理提出，是具有局部记忆单元与局部反馈连接的前向神经网络，其前馈连接包括输入层、隐层等。",
      279,
-     "理解"
+     "理解",
+     "# Elman (simple recurrent) network - conceptual PyTorch sketch\nimport torch\nimport torch.nn as nn\n\nclass ElmanNet(nn.Module):\n    def __init__(self, in_dim, hidden_dim, out_dim):\n        super().__init__()\n        self.hidden_dim = hidden_dim\n        self.fc_in  = nn.Linear(in_dim, hidden_dim)\n        self.fc_ctx = nn.Linear(hidden_dim, hidden_dim, bias=False)\n        self.fc_out = nn.Linear(hidden_dim, out_dim)\n        self.act    = nn.Tanh()\n\n    def forward(self, x, h=None):\n        # x: (batch, in_dim); h: (batch, hidden_dim)\n        if h is None:\n            h = torch.zeros(x.size(0), self.hidden_dim)\n        h = self.act(self.fc_in(x) + self.fc_ctx(h))\n        y = self.fc_out(h)\n        return y, h\n\n# Motivation: HMM assumes independent emissions;\n# Elman nets capture temporal correlation (e.g. runs of\n# hydrophobic residues buried in protein cores).\n# Time complexity per step: O(in*h + h*h + h*out)"
     ],
     [
      "第五节 隐马尔可夫模型",
      "Elman网络MATLAB函数：newelm、traingdx、learngdm",
      "本页介绍Elman神经网络在MATLAB中的相关函数。newelm函数用于建立Elman神经网络，参数说明：net为建立的Elman网络；PR为R×2维网络输入矢量取值范围矩阵[Pmin Pmax]；[S1 S2…SNH]表示各层神经元个数；{TF1 TF2…TFNI}表示隐含层和输出层传输函数，默认tansig；BTF表示训练函数，默认traingdx；BLF表示权值和阈值学习函数，默认learngdm；PF表示性能函数，默认mse。该函数可建立N层Elman网络，各层依次级联，除最后一层外每层具有自反馈；加权函数为dotprod，输入函数为netsum，传递函数由用户设定；权值和阈值初始化函数为initnw，自适应调整函数为trains，训练函数由用户指定。traingdx函数采用自适应学习速率动量梯度下降反向传播算法训练网络，格式为[net,TR,Ac,El]=traingdx(NET,Pd,Tl,Ai,Q,TS,VV,TV)，其中TR包含训练次数、性能、验证性能、测试性能和自适应学习速率等记录。learngdm为动量梯度下降权值和阈值学习函数，格式为[dW,LS]=learngdm(...)。这些函数是构建和训练Elman动态神经网络的基础工具，用于处理生物序列等时间相关数据。",
      280,
-     "了解"
+     "了解",
+     "% MATLAB: build and train an Elman network\n% newelm(PR, [S1 S2 ... SN], {TF1 TF2 ...}, BTF, BLF)\n\nPR = [0 1; 0 1];              % R x 2 input range\nS  = [8 4];                   % hidden=8, output=4\nTF = {'tansig','purelin'};    % transfer functions\nBTF = 'traingdx';             % training function (default)\nBLF = 'learngdm';             % weight/bias learning (default)\n\nnet = newelm(PR, S, TF, BTF, BLF);\nnet.trainParam.epochs = 1000;\nnet.trainParam.goal   = 1e-4;\n\n% Example training data\nP = [0 0 1 1; 0 1 0 1];\nT = [0 1 1 0; 1 0 0 1];\n\n[net, tr] = train(net, P, T);\nY = sim(net, P);\ndisp(Y);"
     ],
     [
      "第五节 隐马尔可夫模型",
      "神经网络训练与仿真函数：train、sim、tansig",
      "本页继续介绍MATLAB神经网络函数。train为通用神经网络训练函数，格式为[net,tr,Y,E,Pf,Af]=train(NET,P,T,Pi,Ai,VV,TV)，其中net为训练后网络；tr为训练记录；Y为网络输出；E为误差矢量；Pf为训练终止时输入延迟状态；Af为训练终止时层延迟状态；NET为训练前网络；P为输入向量和矩阵；T为目标矩阵，缺省为0；Pi为初始输入延时，缺省为0；Ai为初始层延时，缺省为0；VV为验证矢量，TV为测试矢量，均可省略。训练函数重复将输入向量应用于网络并更新网络，直到达到最大学习步数、最小误差梯度或误差目标等停止准则。sim函数用于网络仿真，格式有[Y,Pf,Af,E,perf]=sim(NET,P,Pi,Ai,T)等，Y为网络输出，Pf为最终输入延时状态，Af为最终层延时状态，E为实际输出与目标矢量间误差，perf为网络性能值；后两种格式用于无输入网络，Q为批处理数据个数，TS为仿真时间步数。tansig为正切Sigmoid传递函数，格式A=tansig(N)，将净输入映射到(-1,1)区间，常用于隐层。这些函数共同支持动态神经网络的训练、仿真和传递计算，在生物信息学中可用于序列分类、预测等任务。",
      281,
-     "了解"
+     "了解",
+     "% MATLAB: train / sim / tansig usage\n% [net,tr,Y,E,Pf,Af] = train(NET,P,T,Pi,Ai,VV,TV)\n\nnet = newff([0 1; 0 1], [5 1], {'tansig','purelin'}, 'traingdx');\n\nP = [0 0 1 1; 0 1 0 1];\nT = [0 1 1 0];\n\nPi = {};   % initial input delay states (default 0)\nAi = {};   % initial layer delay states (default 0)\nVV = [];   % validation vectors\nTV = [];   % test vectors\n\n[net, tr, Y, E, Pf, Af] = train(net, P, T, Pi, Ai, VV, TV);\n\n% Simulate\nY2 = sim(net, P);\n\n% tansig activation:  f(x) = 2/(1+exp(-2x)) - 1\nx = -5:0.1:5;\ny = tansig(x);\nplot(x, y); grid on;"
     ],
     [
      "第七节 支持向量机",
      "MATLAB Elman神经网络分类实例",
      "本页给出一个用MATLAB神经网络工具箱进行外显子/内含子识别的实例。数据为长度≥42 bp的外显子899个、内含子751个，随机各取100个作为独立测试集，其余为训练集；序列用1~3阶核苷酸组成频率编码，共84维特征。代码用newelm建立Elman神经网络：输入为p，隐层51个神经元，输出1个神经元，隐层传递函数tansig，输出层purelin。设置最大训练次数3000、目标误差0.0001，然后init初始化、train训练，目标t用1和-1表示两类。命令行输出显示训练到3000轮时MSE约0.3001，未达到0.0001目标，梯度约0.3549，提示训练未收敛。该页要点是理解神经网络分类流程：特征编码、数据划分、网络结构、训练参数与结果解读。",
      282,
-     "掌握"
+     "掌握",
+     "```matlab\n% 假设已提取特征：p 为 84×N 输入矩阵，t 为 1×N 目标向量\n% 外显子/内含子各随机取100个作为独立测试集，其余为训练集\n\nnet = newelm(p, t, 51, {'tansig', 'purelin'}, 'traingdx');\nnet.trainParam.epochs = 3000;\nnet.trainParam.goal = 0.0001;\nnet = train(net, p, t);\ny = sim(net, p_test);\n\n% 时间复杂度：单次前向/反向传播约 O(W)，W为连接权数；\n% 训练总复杂度约 O(E * N * W)，E为迭代次数，N为样本数。\n```"
     ],
     [
      "第七节 支持向量机",
      "支持向量分类决策函数与支持向量回归",
      "本页承接支持向量机（SVM）内容。对线性可分问题，通过求解约束二次优化得到分类决策函数 M(x)=sgn(w*·x+b*)=sgn(Σ α_i* y_i (x_i·x)+b*)，由符号确定x归属。对线性不可分训练集，SVC引入核函数K(x_i,x_j)，将样本映射到高维特征空间F，使其线性可分，决策函数变为 M(x)=sgn(Σ α_i* y_i K(x_i,x)+b*)。图12-5示意最大间隔可避免过学习：小间隔训练精度高但测试精度不理想；大间隔允许训练精度略低，但测试精度高。随后介绍支持向量回归SVR：与SVC相似，但所求超平面使所有样本点到超平面距离最小。对线性回归，给定样本集，在精度ε下无误差拟合，允许误差时引入松弛变量ξ_i和ξ_i^*≥0及惩罚参数C≥0，寻优转化为二次规划：min 1/2||w||^2+CΣ(ξ_i+ξ_i^*)，约束包括 y_i-w·x_i-b≤ε+ξ_i、w·x_i+b-y_i≤ε+ξ_i^*、ξ_i,ξ_i^*≥0。",
      283,
-     "掌握"
+     "掌握",
+     "```python\n# SVM 分类决策函数核心形式\n# 线性可分：M(x)=sgn(w*·x+b*)=sgn(Σ α_i* y_i (x_i·x)+b*)\n# 线性不可分：M(x)=sgn(Σ α_i* y_i K(x_i,x)+b*)\n\nimport numpy as np\n\ndef svm_decision(X_sv, y_sv, alpha, b, x, kernel):\n    \"\"\"\n    X_sv: 支持向量, shape=(n_sv, d)\n    y_sv: 支持向量标签, shape=(n_sv,)\n    alpha: 拉格朗日乘子, shape=(n_sv,)\n    b: 偏置\n    x: 待预测样本, shape=(d,)\n    kernel: 核函数 K(a,b)\n    \"\"\"\n    s = 0.0\n    for xi, yi, ai in zip(X_sv, y_sv, alpha):\n        s += ai * yi * kernel(xi, x)\n    return np.sign(s + b)\n\n# 时间复杂度：预测 O(n_sv * d)，n_sv为支持向量数，d为特征维数\n```"
     ],
     [
      "第七节 支持向量机",
      "SVM训练算法：块算法与固定工作样本集",
      "本页讨论SVM训练算法慢的原因及两类改进策略。原因包括：需计算和存储核函数矩阵，样本数超过4000时存储核矩阵需约128 MB内存；二次型寻优中大量矩阵运算耗时。多数对偶寻优算法采用循环迭代，将原问题分解为子问题，反复求解并收敛到最优解。按子问题划分和迭代策略分为两类。一是块算法（chunking algorithm）：基于去掉Lagrange乘子为零的样本不影响解的事实，逐步排除非支持向量。做法是选部分样本构成工作样本集训练，剔除其中非支持向量，用结果检验剩余样本，将不符合的样本与本次支持向量合并成新工作集再训练，重复至最优。当支持向量数远小于训练样本数时可显著提速；但若支持向量本身很多，工作集随迭代增大，算法仍复杂。二是固定工作样本集方法：工作集大小固定在可容忍限度内，迭代中只将剩余样本中“情况最糟的样本”与工作集中样本等量交换，即使支持向量数超过工作集大小也不改变工作集规模。",
      284,
-     "掌握"
+     "掌握",
+     "```text\n块算法（Chunking Algorithm）核心步骤：\n\n输入：训练集 {(x_i, y_i)}，核函数 K，精度 ε\n输出：支持向量及对应 α, b\n\n1. 初始化工作集 W 为任意小规模子集\n2. repeat\n3.     在 W 上求解对偶二次规划子问题，得到 α_W\n4.     保留 α_i > 0 的样本作为候选支持向量\n5.     将违反 KKT 条件最严重的样本加入 W\n6.     移除 α_i = 0 且非支持向量的样本\n7. until 所有样本满足 KKT 条件或达到精度 ε\n8. 输出最终支持向量、α、b\n\n时间复杂度：最坏约 O(n^2) ~ O(n^3)，n为训练样本数；\n存储核矩阵在 n>4000 时约需 128 MB。\n\n极简示例：\n样本数 n=5，初始 W={x1,x2}；\n求解后 x1 为支持向量，x2 的 α=0；\n加入违反 KKT 的 x3，移除 x2；\n重复至全部满足 KKT。\n```"
     ],
     [
      "第七节 支持向量机",
      "SVM主要缺点与LIBSVM简介",
      "本页总结SVM的主要缺点并介绍LIBSVM。缺点有三：1）可解释性差。SVR缺乏显式表达式，不能像多元线性回归、二次多项式回归那样对每个自变量的效应与互作给出显著性测验；其拟合或预测性能多通过与参比模型比较均方误差相对评价，缺乏自身回归性能的统计测验，不同数据集间回归性能不可比。2）对大训练样本计算复杂度高。SVM适于小样本，优化算法计算复杂度为O(n^2)或更高，n为训练样本数。大样本若全部参与训练，优化算法难以解决子问题规模与迭代次数的矛盾；若随机选取部分样本，预测精度有损失。LIBSVM用gridregression.py遍历搜索最优惩罚参数、灵敏度及径向宽度等核函数参数，不用该脚本而用默认参数会明显降低预测精度；遍历搜索3参数9水平共729个组合使计算开销增大。当训练样本数大于100并采用留一法时，SVR训练时间难以忍受。3）核函数选择缺乏先验理论指导，是经验性的。随后介绍LIBSVM：由台湾大学林智仁教授等开发，简单、易用、快速有效，可免费获得，提供C++源代码及Python、Java、R、MATLAB、Perl、Ruby、LabVIEW、C#.net等接口，方便在Windows等平台使用。",
      285,
-     "掌握"
+     "掌握",
+     "```bash\n# LIBSVM 简介与 SVM 主要缺点对应使用提示\n# 缺点1：可解释性差，SVR 无显式回归表达式\n# 缺点2：大训练样本计算复杂度高，约 O(n^2) 或更高\n# 缺点3：参数与核函数选择影响大\n\n# LIBSVM 常用命令示例\nsvm-scale -s range train.txt > train.scale\nsvm-train -s 0 -t 2 -c 1 -g 0.1 train.scale model.txt\nsvm-predict test.scale model.txt output.txt\n\n# 时间复杂度：训练约 O(n^2)~O(n^3)，预测 O(n_sv * d)\n```"
     ],
     [
      "第七节 支持向量机",
      "LIBSVM子程序与svmtrain选项",
      "本页介绍LIBSVM主要子程序及svmtrain选项。主要用到5个子程序：svmscale（数据规格化）、svmtrain（训练建模）、svmpredict（用已有模型预测）、grid.py（分类问题基于Python自动寻找核函数最优参数C和g）、gridregression.py（回归问题自动寻找C、g、p）。grid.py或gridregression.py用法为[options] training_set_file，option可选-s、-t、-v及C、g、p搜索范围。svmscale train_set>train_set_scale，特征值规格化到[-1,1]，label不规格化（默认）。svmtrain [options] train_set_scale，选项包括：-s设置SVM类型，默认0，0为C-SVC分类，1为nu-SVC分类，2为一类SVM分布估计，3为epsilon-SVR回归，4为nu-SVR回归；-t设置核函数类型，0为线性核，1为多项式核，2为径向基核RBF，3为Sigmoid核；-d设置多项式核的degree，默认3；-g设置核函数中的gamma；-c设置惩罚参数C；-p设置epsilon-SVR中的epsilon；-v设置交叉验证折数。该页还列出径向基核公式k(x_i,x_j)=exp(-γ||x_i-x_j||^2)，Sigmoid核公式k(x_i,x_j)=tanh(b(x_i·x_j)+c)。",
      286,
-     "掌握"
+     "掌握",
+     "```bash\n# LIBSVM 主要子程序\nsvmscale        # 数据规格化\nsvmtrain        # 训练建模\nsvmpredict      # 用已有模型预测\ngrid.py         # 分类问题自动寻找最优参数 C 和 g\ngridregression.py  # 回归问题自动寻找 C、g、p\n\n# grid.py / gridregression.py 用法\npython grid.py [options] train_set\npython gridregression.py [options] train_set\n\n# MATLAB 中 svmtrain 选项示例\n% model = svmtrain(train_label, train_data, '-s 0 -t 2 -c 1 -g 0.1');\n% [pred_label, accuracy, decision_values] = svmpredict(test_label, test_data, model);\n\n# 时间复杂度：网格搜索为参数组合数 × 单次训练复杂度\n```"
     ],
     [
      "第七节 支持向量机",
      "LIBSVM使用示例与MATLAB应用实例引入",
      "本页给出LIBSVM完整使用示例并引入MATLAB应用实例。示例流程：1）svmscale -s range train_set>train_set_scale，将训练集规格化并保存规格化信息文件range，用于测试集规格化；2）svmscale -r range test_set>test_set_scale，用range文件将测试集规格化为与训练集关联的文件；3）grid.py -s 1 -t 2 -v 10 train_set_scale，以SVM类型nu-SVC、径向基核、10次交叉验证寻找最优核函数参数C和g，假设结果为C=0.0125、g=0.5；4）svmtrain -s 1 -t 2 -b 1 -C 0.0125 -g 0.5 train_set_scale，以nu-SVC、径向基核、最优C和g训练train_set_scale并建立模型train_set_scale.model，预测时要求给出可能性估计；5）svmpredict -b 1 test_set_scale train_set_scale.model out_file，预测test_set_scale并给出可能性估计，out_file为结果输出文件。其中svmtrain产生的模型文件、test_scale为规格化后的测试文件、output_file为svmpredict输出文件；svm-predict有选项-b可选择是否输出可能性估计。最后开始第八节MATLAB的应用实例，介绍MATLAB是美国MathWorks公司出品的商业数学软件，用于算法开发、数据可视化等。",
      287,
-     "掌握"
+     "掌握",
+     "```bash\n# LIBSVM 完整使用示例\n\n# 1) 训练集规格化，并保存规格化信息文件 range\nsvmscale -s range train_set > train_set_scale\n\n# 2) 用 range 文件将测试集规格化为与训练集关联的文件\nsvmscale -r range test_set > test_set_scale\n\n# 3) 分类问题自动寻找最优参数 C 和 g\npython grid.py -s 1 -t 2 train_set_scale\n\n# 4) 使用最优参数训练模型\nsvmtrain -s 0 -t 2 -c best_C -g best_g train_set_scale model\n\n# 5) 预测\nsvmpredict test_set_scale model output\n\n# MATLAB 应用实例引入\n% model = svmtrain(train_label, train_data, '-s 0 -t 2 -c 1 -g 0.1');\n% [pred, acc, dec] = svmpredict(test_label, test_data, model);\n```"
     ],
     [
      "第八节 MATLAB的应用实例",
      "MATLAB生物信息工具箱：序列获取与序列分析入门",
      "本页介绍MATLAB生物信息工具箱中序列获取函数getgenbank的用法及序列分析的基本内容。getgenbank('EF221854','TOFILE',FILENAME)表示将获取的信息写入文件FILENAME；getgenbank('accession','SEQUENCEONLY',true)表示只提取序列信息；getgenbank('accession','PARTIALSEQ',SEQPARAMS)表示提取序列的一部分，SEQPARAMS为[LN,MI]；getgenbank('accession','fileformat',fmt)表示以fmt（genbank/fasta）格式提取序列信息。序列分析是利用计算机方法寻找核酸或氨基酸序列的信息，工具箱提供大量函数，可进行密度图绘制、核苷酸数目计算、互补链显示、二聚体个数计算、密码子使用频率计算、ORF分析、序列翻译、序列比对等。绘制密度图可用ntdensity(seq)函数，图中展示单体密度和联合体密度，横坐标为序列位置，纵坐标为密度值，图12-6显示A-T和C-G两种联合体密度随位置的变化。",
      288,
-     "掌握"
+     "掌握",
+     "% MATLAB Bioinformatics Toolbox: getgenbank examples\nacc = 'EF221854';\n\n% Fetch full GenBank record and write to file\nfilename = 'EF221854.gb';\ngetgenbank(acc, 'TOFILE', filename);\n\n% Fetch only the sequence\nseq = getgenbank(acc, 'SEQUENCEONLY', true);\n\n% Fetch partial sequence (example: first 500 bases)\nseqPartial = getgenbank(acc, 'PARTIALSEQ', [1 500]);\n\n% Inspect\nlength(seq)\nseq(1:60)"
     ],
     [
      "第八节 MATLAB的应用实例",
      "MATLAB序列分析：互补链、二聚体、密码子与ORF",
      "本页继续介绍MATLAB生物信息工具箱的序列分析函数。显示核苷酸互补链可用seqrcomplement(seq)命令。计算二聚体个数可用dimercount(mitochondria,'chart','bar')，计算序列中二聚体个数并以条形图显示。计算密码子使用频率可用codoncount(ntseq)函数；当无法得知ORF起始位置时，可设置codoncount(Seq,'Frame',FrameValue)中FrameValue确定可读框起始数值（1、2、3）；设置codoncount(Seq,'Reverse',ReverseValue)中ReverseValue为true或false，可计算互补链的密码子使用频率；设置codoncount(Seq,'Figure',FigureValue)中FigureValue为true或false，确定是否图形显示密码子使用频率。ORF分析可用seqshoworfs(ntseq)命令显示可读框；不同生物体密码子略有不同，可通过设置seqshoworfs(SeqNT,'GeneticCode',GeneticCodeValue)选择序列所属生物类别，特异性显示不同物种的可读框。查找终止密码子可用find函数，例如ND2Start=187; StartIndex=find(orfs(1).Start==ND2Start); ND2Stop=orfs(1).Stop(StartIndex)，得到ND2Stop=229。摘录子序列可利用基因的起始和终止位置进行提取。",
      289,
-     "掌握"
+     "掌握",
+     "% MATLAB sequence analysis: complement, dimers, codons, ORF\nseq = 'ATGGCCATTGTAATGGGCCGCTGAAAGGGTGCCCGATAG';\n\n% Reverse complement\nrc = seqrcomplement(seq);\n\n% Dimer counts with bar chart\ndimercount(seq, 'chart', 'bar');\n\n% Codon usage counts\nntseq = seq;\ncodoncount(ntseq);\n\n% If ORF frame is unknown, specify frame\ncodoncount(ntseq, 'Frame', 1);\n\n% Find ORFs (example)\norf = seqshoworfs(ntseq);"
     ],
     [
      "第八节 MATLAB的应用实例",
      "MATLAB系统发育树构建与基因芯片数据分析函数",
      "本页介绍利用MATLAB构建系统发育树的步骤及基因芯片数据分析函数。首先准备序列：定义data元胞数组包含物种名称和GenBank登录号，如'Mountain Gorilla Rwanda','AF089820'; 'Chimp Troglodytes','AF176766'等；循环用getgenbank(data{i,2},'sequenceonly',true)获取序列，并存入seqs(i).Header和seqs(i).Sequence。计算各序列之间的距离：Distance=seqpdist(Seqs)，可设置序列种类（核酸或氨基酸）、距离类型、积分矩阵、空格罚分及插入缺失记分等参数。对序列比对的距离进行构树：Tree=seqlinkage(Dist,Method,Names)，其中Dist为距离矩阵，Names描述分支点，Method为构树方法（包括最小距离和UPGMA等）。画出系统发育树：h=plot(tree)，可通过设置参数'orient'决定图形显示方向。基因芯片数据分析部分指出，基因芯片以高通量、高集成、微型化、自动化优势广泛应用，MATLAB生物信息工具箱提供大量函数用于芯片分析，表12-2列出部分函数：gprread读取芯片数据文件，maboxplot分析每一矩阵数据分布，maimage绘制基因芯片伪彩色图，mairplot绘制密度对比图，maloglog绘制双坐标图，manorm列数据标准化函数，pd.ColumnNames显示芯片数据结构pd的列名称，wt.IDS等。",
      290,
-     "掌握"
+     "掌握",
+     "% MATLAB: build phylogenetic tree from GenBank sequences\ndata = {\n  'Mountain Gorilla Rwanda', 'AF089820';\n  'Chimp Troglodytes',       'AF176766'\n};\n\nn = size(data,1);\nseqs = cell(n,1);\nfor i = 1:n\n  seqs{i} = getgenbank(data{i,2}, 'sequenceonly', true);\nend\n\n% Align sequences (example)\naligned = multialign(seqs);\n\n% Compute pairwise distances and build tree\ndist = seqpdist(aligned);\ntree = seqlinkage(dist, 'UPGMA', data(:,1));\n\n% Visualize\nplot(tree);"
     ],
     [
      "第八节 MATLAB的应用实例",
      "第十二章参考文献",
      "本页为第十二章统计学习与推理的参考文献列表，涵盖数据挖掘、MATLAB生物信息工具箱应用、数据处理系统、生物数学、贝叶斯统计学、机器学习方法、隐马尔可夫模型、基因结构预测及支持向量机等主题。具体包括：邓乃扬、田英杰2004年《数据挖掘中的新方法——支持向量机》；刘新星等2008年MATLAB 7.X生物信息工具箱的应用——基因序列分析(一)；唐启义、汉明光2007年DPS数据处理系统；徐克学1999年《生物数学》；杨英杰等2008年MATLAB 7.X生物信息工具箱的应用——基因芯片分析(三)；贝叶斯统计学原理、模型及应用（廖文、陈安贵译）；Baldi P, Brunak S. 1998年Bioinformatics: the Machine Learning Approach；Baldi P等1994年Hidden Markov models of biological primary sequence information；Burge C, Karlin S 1997年Prediction of complete gene structures in human genomic DNA；Chang C C, Lin C J 2001年LIBSVM: a library for support vector machines。这些文献为本章统计学习与推理方法在生物信息学中的应用提供了理论和方法支撑。",
      291,
-     "掌握"
+     "掌握",
+     ""
     ]
    ],
    "quiz": [
@@ -360,6 +394,72 @@
      ],
      "a": "C",
      "e": "支持向量机分类根据结构风险最小化原则，在特征空间构造最优分类面，使得对未知样本的分类误差最小，而且要使两类之间的间隔最大。确定最优分类面的一组样本即为支持向量。"
+    },
+    {
+     "q": "在统计学习理论中，结构风险最小化（SRM）原则给出的实际风险上界 R(w) < R_emp(w) + Φ(h/n) 中，h 和 n 分别代表什么？",
+     "o": [
+      "A. h 为假设空间维数，n 为样本数",
+      "B. h 为VC维，n 为样本数",
+      "C. h 为样本数，n 为VC维",
+      "D. h 为置信范围，n 为经验风险"
+     ],
+     "a": "B",
+     "e": "结构风险最小化原则中，实际风险由经验风险和置信范围组成，置信范围与学习机器的VC维 h 及训练样本数 n 有关。"
+    },
+    {
+     "q": "关于K均值聚类与系统聚类（层次聚类）的区别，下列说法正确的是？",
+     "o": [
+      "A. K均值聚类需要事先指定类数，系统聚类不需要",
+      "B. 系统聚类需要事先指定类数，K均值聚类不需要",
+      "C. 两者都需要事先指定类数",
+      "D. 两者都不需要事先指定类数"
+     ],
+     "a": "A",
+     "e": "系统聚类/层次聚类事先不指定类数，每次合并距离最近的两类直到全部归为一类；K均值聚类、动态聚类或快速聚类则需事先确定类数或初步分类。"
+    },
+    {
+     "q": "在HMM的前向算法中，前向变量 α_t(i) 的定义是？",
+     "o": [
+      "A. P(o_{t+1},...,o_T | q_t=S_i, λ)",
+      "B. P(o_1,...,o_t, q_t=S_i | λ)",
+      "C. P(q_t=S_i | o_1,...,o_T, λ)",
+      "D. P(q_t=S_i, q_{t+1}=S_j | λ)"
+     ],
+     "a": "B",
+     "e": "前向变量 α_t(i) 表示在模型 λ 下，t 时刻处于状态 S_i 且观察到 o_1,...,o_t 的概率；后向变量 β_t(i) 则定义为 P(o_{t+1},...,o_T | q_t=S_i, λ)。"
+    },
+    {
+     "q": "在MATLAB中，用于建立Elman神经网络的函数是？",
+     "o": [
+      "A. newff",
+      "B. newelm",
+      "C. newhop",
+      "D. newp"
+     ],
+     "a": "B",
+     "e": "newelm 用于建立Elman神经网络；newff 用于建立前馈网络，newhop 用于Hopfield网络，newp 用于感知机。"
+    },
+    {
+     "q": "LIBSVM中，用于分类问题自动寻找核函数最优参数 C 和 g 的子程序是？",
+     "o": [
+      "A. svmscale",
+      "B. svmtrain",
+      "C. grid.py",
+      "D. svmpredict"
+     ],
+     "a": "C",
+     "e": "grid.py 用于分类问题基于Python自动寻找核函数最优参数 C 和 g；gridregression.py 用于回归问题自动寻找 C、g、p。"
+    },
+    {
+     "q": "在Fisher两类线性判别中，判别函数是否具有实际应用价值需要做显著性检验，所用的F统计量服从的自由度为？",
+     "o": [
+      "A. (n_A, n_B)",
+      "B. (p, n_A+n_B-p-1)",
+      "C. (n_A+n_B-p-1)",
+      "D. (n_A+n_B, p)"
+     ],
+     "a": "B",
+     "e": "F统计量形式为组间差异与组内差异之比，服从自由度为 (p, n_A+n_B-p-1) 的F分布，其中 n_A、n_B 为两类样本数，p 为变量数。"
     }
    ]
   }
@@ -430,6 +530,16 @@
    "q": "论述隐马尔可夫模型(HMM)的三个基本问题及其主要解决算法，并说明其在生物信息学中的典型应用。",
    "a": "HMM 有三个基本问题：1) 评估问题(evaluation)：已知观察序列 O 和模型 λ=(A,B,π)，如何计算由此模型产生此观察序列的概率 P(O|λ)？可通过计算、比较 P(O|λ)，从多个模型参数中选择出与观察序列匹配最好的模型，前人已研究出“前向后向”算法来解决这个问题。2) 解码问题(decoding)：已知观察序列 O 和模型，如何确定一个合理的状态序列，使之能最佳地产生 O，即如何选择最佳的状态序列 q=(q1,q2,...,qT)？一种可能的最佳准则是选择状态 q_t，使它们在各 t 时刻都是最可能的状态，即 q_t=arg max{P(q_t=i|O,λ)}。但有时会出现不允许的转移，即 a_ij=0，那么对这些 i 和 j 所得到的状态序列就是不可能状态序列。目前解决这个问题的最好方案是 Viterbi 算法。3) 学习问题(learning)：如何根据观察序列不断修正模型参数 (A,B,π)，使 P(O|λ) 最大？这个问题在三个问题中最难，因为没有解析法可用来求解最大似然模型，所以只能使用迭代法(如 Baum-Welch 算法)或最佳梯度法。生物信息学应用：HMM 广泛用于序列分析、结构预测、基因识别等领域，如基因预测、CpG 岛识别、蛋白质家族建模、序列比对和结构域识别。",
    "steps": "1) 列出三个问题：评估、解码、学习；2) 分别给出前向后向、Viterbi、Baum-Welch；3) 说明各问题目标与难点；4) 举例生物信息学应用。"
+  },
+  {
+   "q": "请写出K均值聚类（K-means）的算法伪代码，并分析其时间复杂度（设样本数为 n，特征维数为 d，类数为 K，迭代次数为 T）。",
+   "a": "K-means伪代码：\n输入：样本集 X={x1,...,xn}，类数 K\n1. 随机选择 K 个样本作为初始聚类中心 c1,...,cK\n2. repeat\n3.   对每个样本 xi：\n4.     计算 xi 到各中心 cj 的距离（如欧氏距离）\n5.     将 xi 分配到距离最近的类 j\n6.   对每个类 j：\n7.     计算该类所有样本的均值，更新中心 cj\n8. until 中心不再变化或达到最大迭代次数 T\n输出：K 个聚类及各类中心\n\n时间复杂度：每次迭代中，分配步骤需计算 n 个样本到 K 个中心的距离，每个距离计算为 O(d)，故为 O(nKd)；更新步骤需遍历所有样本计算均值，为 O(nd)。因此每次迭代 O(nKd)，T 次迭代总时间复杂度为 O(TnKd)。",
+   "steps": "1. 初始化K个聚类中心；2. 分配样本到最近中心；3. 更新中心为类均值；4. 重复直到收敛；5. 复杂度分析：每次迭代O(nKd)，总O(TnKd)。"
+  },
+  {
+   "q": "请设计基于HMM的基因识别流程，并说明Viterbi算法在其中的作用。要求写出主要步骤和Viterbi递推公式。",
+   "a": "基于HMM的基因识别流程：\n1. 定义HMM模型 λ=(A,B,π)：状态对应基因结构元件（如外显子、内含子、拼接位点等），观察符号对应核苷酸序列。\n2. 用已知基因序列训练模型参数 A（状态转移概率）、B（发射概率）、π（初始状态概率），常用Baum-Welch算法。\n3. 对给定DNA序列 O=(o1,...,oT)，利用Viterbi算法解码，寻找最可能的状态序列 Q=(q1,...,qT)，即基因结构注释。\n4. 根据状态序列确定外显子、内含子等基因元件的位置。\n\nViterbi算法递推公式：\n初始化：δ1(i)=π_i b_i(o1)，ψ1(i)=0\n递推：对 t=2,...,T，\nδt(j)=max_i [δ_{t-1}(i) a_{ij}] b_j(o_t)\nψt(j)=argmax_i [δ_{t-1}(i) a_{ij}]\n终止：P*=max_i δT(i)，qT*=argmax_i δT(i)\n回溯：qt*=ψ_{t+1}(q_{t+1}*)，t=T-1,...,1\n\nViterbi算法作用：在给定观测序列和HMM模型下，高效地找到整体概率最大的状态序列，避免穷举所有路径的指数复杂度，时间复杂度为 O(N^2 T)，其中 N 为状态数，T 为序列长度。",
+   "steps": "1. 定义HMM状态与观察；2. 训练参数A、B、π；3. 用Viterbi解码得最优状态序列；4. 递推公式：δt(j)=max_i[δ_{t-1}(i)a_{ij}]b_j(o_t)，ψt(j)=argmax_i[δ_{t-1}(i)a_{ij}]；5. 回溯得到路径；6. 复杂度O(N^2T)。"
   }
  ],
  "term": [

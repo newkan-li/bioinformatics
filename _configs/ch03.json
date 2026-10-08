@@ -16,140 +16,160 @@
      "序列比对的意义与类型概述",
      "本页开篇指出比较是科学研究的重要方法，在生物信息学中，比对是最常用的研究手段之一。双序列比对通过比较两条蛋白质或核酸序列的相似区域和保守位点，推断可能的分子进化关系；多序列比对则同时比较多个序列，寻找共同保守区域、位点和模式，探索导致共同功能的序列模式。此外，蛋白质序列与核酸序列比较可用于探索核酸序列可能的表达框架；蛋白质序列与已知三维结构的蛋白质比较可获得结构和折叠类型信息。比对也是数据库搜索算法的基础，将查询序列与整个数据库所有序列比较，能快速获得最相似序列的已有数据，对分析新基因的结构和功能有很大帮助。随后进入第一节“序列比对相关概念”，定义序列比对为运用特定数学模型或算法找出两个或多个序列之间最大匹配碱基或残基数，结果反映序列间相似性关系及生物学特征。序列比对是序列分析和数据库搜索的基础，也可用于寻找保守基序，通过判断序列间是否具有足够相似性来判定是否同源。从比对序列数量可分为双序列比对和多序列比对。",
      40,
-     "掌握"
+     "掌握",
+     "# 双序列比对与多序列比对示意（概念页，无可执行算法）\n# 仅示意：用 Biopython 做一次双序列比对\nfrom Bio import pairwise2\nfrom Bio.pairwise2 import format_alignment\n\nseq1 = \"ACGGTT\"\nseq2 = \"ACGTT\"\nfor a in pairwise2.align.globalxx(seq1, seq2):\n    print(format_alignment(*a))"
     ],
     [
      "第一节 序列比对相关概念",
      "字符编辑操作与双序列比对",
      "本页引入字符编辑操作概念，通过编辑操作将一个序列转化为另一个序列。定义空位字符“-”代表gap，并定义四种编辑操作：Match(a,a)表示字符匹配；Delete(a,-)表示从第一条序列删除字符a，或在第二条序列相应位置插入空位；Replace(a,b)表示以第二条序列中的字符b替换第一条序列中的字符a；Insert(-,b)表示在第一条序列插入空位，或删除第二条序列中对应字符b。在比较两条序列时，一条序列上的删除操作等价于另一条序列对应位置上的插入操作，反之亦然。两个空位字符不能匹配，因为无意义。通过编辑操作计算的两条序列距离称为编辑距离。双序列比对就是对两条序列进行编辑操作，通过字符匹配和替换，或插入和删除字符，使两条序列长度相同，并使其编辑距离尽可能小，使尽可能多的字符匹配。图3-1展示序列CATCTACTC和ACTACATC的两种比对结果及对应编辑操作。就不同类型编辑操作定义代价函数w，例如w(a,a)=0表示Match，w(a,b)=1表示Replace，w(a,-)=w(-,b)=1表示Delete或Insert。也可使用得分函数p表示得分，如Match得分高，Replace得分低。",
      41,
-     "掌握"
+     "掌握",
+     "# 编辑操作：Match / Delete / Replace / Insert\ndef edit_ops(a, b):\n    if a == b:\n        return (\"Match\", a, b, 0)\n    if a == \"-\":\n        return (\"Insert\", a, b, 1)\n    if b == \"-\":\n        return (\"Delete\", a, b, 1)\n    return (\"Replace\", a, b, 1)\n\nprint(edit_ops(\"A\", \"A\"))\nprint(edit_ops(\"A\", \"-\"))\nprint(edit_ops(\"A\", \"G\"))\nprint(edit_ops(\"-\", \"G\"))"
     ],
     [
      "第一节 序列比对相关概念",
      "全局比对与局部比对递归算法",
      "本页给出全局比对递归关系：设定初值后，S(i,j) = max{ S(i-1,j-1)+p(a_i,b_j), S(i-1,j)+p(a_i,-), S(i,j-1)+p(-,b_j) }。全局比对的主要优势在于对具有高度同源性的序列进行优化，这在以已知三维结构的同源序列为基础对未知序列进行三维结构预测的模型构建过程中十分有用。随后介绍局部序列比对：局部比对仅获得特定序列在数据库中配对最好的亚区。两条DNA长序列可能只在一些局部区域具有很高相似度，或只在很小区域（编码区）存在关系；不同家族蛋白质往往具有功能和结构上相同的一些区域，因此局部比对比全局比对更具实际意义。局部比对算法与全局比对几乎一样，给定序列A和B，S(i,j)表示两个序列任何比对的最好分数。递归关系为：S(i,j) = max{ 0, S(i-1,j-1)+p(a_i,b_j), S(i-1,j)+p(a_i,-), S(i,j-1)+p(-,b_j) }。与全局比对相比只多了“0”这一项，原因是全局比对从序列前端开始排起，而局部比对任何地方都可能是起点。如果往前连接分数小于0，就不再往前追溯，而以此点作为起点。局部比对路径不需要到达搜索图尽头，如果某种比对的分值不会因为增加比对数量而增加，这种联配就是最佳的。局部比对适合全长中具有局部小同源性片段的序列比较，一般用于特定序列位点、结构域及其他类型重复序列的搜索，也在发现数据库中待分析序列的同源序列过程中具有重要意义。",
      42,
-     "掌握"
+     "掌握",
+     "# Needleman-Wunsch 全局比对核心递归\n# S(i,j)=max{S(i-1,j-1)+p(ai,bj), S(i-1,j)+p(ai,-), S(i,j-1)+p(-,bj)}\n# 时间复杂度 O(mn)，空间复杂度 O(mn)\n\ndef global_align(a, b, match=1, mismatch=-1, gap=-2):\n    m, n = len(a), len(b)\n    S = [[0]*(n+1) for _ in range(m+1)]\n    for i in range(1, m+1):\n        S[i][0] = S[i-1][0] + gap\n    for j in range(1, n+1):\n        S[0][j] = S[0][j-1] + gap\n    for i in range(1, m+1):\n        for j in range(1, n+1):\n            diag = S[i-1][j-1] + (match if a[i-1] == b[j-1] else mismatch)\n            up = S[i-1][j] + gap\n            left = S[i][j-1] + gap\n            S[i][j] = max(diag, up, left)\n    return S[m][n]\n\nprint(global_align(\"ACGGTT\", \"ACGTT\"))\n\n# 局部比对 Smith-Waterman 仅将负分置 0，并取全矩阵最大值"
     ],
     [
      "第一节 序列比对相关概念",
      "相似、同一与同源及直系/旁系同源",
      "本页强调相似性不等于同源性，切不可说成具有41%的同源性。具有很高相似性并不等于具有同源性，但大多数情况下相似性可以表明两序列间同源性。当发现两个基因或蛋白质具有很高序列相似性时，会推测它们之间具有共同进化历程，从而判断它们具有相似生物学功能，但该推断在成为结论前必须经过实验验证。随后区分直系同源和旁系同源：分子进化不仅使不同物种发生差异，某个物种基因组内部也可能发生进化事件。来自共同祖先的基因称为同源基因。直系同源基因是指在不同物种中有相同功能的同源基因，是在物种形成过程中形成的；旁系同源基因是指一个物种内的同源基因。直系同源基因和旁系同源基因统称为同源基因。一般情况下，一个生物物种基因组中，两个基因或可读框在各自全长60%以上范围内，同一性不少于30%时，称为同源基因。研究直系同源基因之间或旁系同源基因之间的功能关系，可以为基因组分析提供很大帮助。直系同源基因由共同祖先演化而来，具有序列相似性；旁系同源是种内基因倍增的结果。当序列相似性高时，直系同源可以暗示功能性同源；旁系同源一般会有相似但并不相同的功能。实践中区分直系同源和旁系同源单从序列信息出发并不容易，尤其当两个物种有许多旁系同源基因时。图3-2展示同源基因分类。",
      43,
-     "掌握"
+     "掌握",
+     "# 相似性、同一性与同源性概念检查（非算法页）\ndef identity_percent(seq1, seq2):\n    same = sum(1 for x, y in zip(seq1, seq2) if x == y)\n    return 100.0 * same / len(seq1)\n\n# 注意：identity_percent 只能说明“同一性”，不能直接表述为“同源性”\nprint(identity_percent(\"ACGGTT\", \"ACGTT\"))\n\n# 直系同源 ortholog / 旁系同源 paralog 通常由系统发生树或同源聚类推断"
     ],
     [
      "第一节 序列比对相关概念",
      "序列比对打分目的与打分矩阵概念",
      "本页指出序列分析的目的是揭示核苷酸或氨基酸序列中的信息。简单的代价模型没有考虑“同类字符”与“非同类字符”替换的差别。实际上，不同类型字符替换的代价和得分差别很大，尤其对于蛋白质序列。某些氨基酸可以很容易相互取代而不改变其理化性质，保守替换比随机替换更可能维持蛋白质功能。因此，理化性质相近的氨基酸残基之间替换应比理化性质相距甚远的氨基酸残基替换得分高，保守氨基酸替换得分应高于非保守氨基酸替换。这就引出打分矩阵的概念。打分矩阵是序列比较的基础，选择不同打分矩阵将得到不同比较结果，了解打分矩阵理论依据有助于实际应用中选择合适打分矩阵。序列比对过程中，只考虑残基同一性，即两个序列之间完全相同的匹配残基数目，可把这种只考虑残基同一性的矩阵理解为一个打分值为1和0的打分矩阵，即相同残基打分值为1、不同残基打分值为0。这种矩阵通常称为稀疏矩阵，即大多数矩阵单元值为0。显然，这种单一相似性打分矩阵具有很大局限性。改进打分矩阵表征性能，找出潜在具有生物学意义的最佳匹配，提高数据库搜索灵敏度，而又不至于降低信噪比，是序列比对算法的核心。相似性打分矩阵就是为解决上述问题而产生。相似性打分矩阵构建基于远距离进化过程中观察到的残基替换率，并用不同打分值表征不同残基之间相似性程度。恰当选择相似性打分矩阵，可以提高序列比对敏感度，特别是在两序列之间完全相同的残基数比较少的情况下。必须说明，相似性打分矩阵有其固有噪声，因为它们在对两个具有一定相似性的不同残基赋予某个相似性分值的同时，也引进了比对过程的噪声。这意味着随着微弱信号的增强，随机匹配的可能性也会增大。",
      44,
-     "理解"
+     "理解",
+     "# 打分矩阵概念：同类/非同类替换得分不同\n# 简单代价模型 vs 替换矩阵\n\ndef simple_score(a, b):\n    return 1 if a == b else -1\n\ndef matrix_score(a, b, matrix):\n    return matrix[a][b]\n\nblosum62_mini = {\n    \"A\": {\"A\": 4, \"G\": 0},\n    \"G\": {\"A\": 0, \"G\": 6},\n}\nprint(simple_score(\"A\", \"G\"))\nprint(matrix_score(\"A\", \"G\", blosum62_mini))"
     ],
     [
      "第一节 序列比对相关概念",
      "DNA打分矩阵与氨基酸打分矩阵",
      "本页首先给出考虑颠换和置换的DNA打分矩阵示例：A、G、C、T四种碱基，对角线为0.99，表示相同碱基匹配得分高；非对角线为0.006、0.002等，表示不同碱基替换得分低，其中转换与颠换得分不同。随后介绍氨基酸序列打分矩阵：20种氨基酸彼此之间的替换远比核苷酸复杂。大量研究资料表明，不同氨基酸残基之间相似性差别很大，蛋白质分子进化历程中，不同残基之间相互替换的概率也截然不同。根据氨基酸R基团的极性、带电性和化学结构等性质，可将它们划分为不同相似组。例如Dayhoff提出一种较简单处理方案，将20种氨基酸分为6组：第一组包括C；第二组包括S、T、P、A、G；第三组包括N、D、E、Q；第四组包括H、R、K；第五组包括M、I、L、V；第六组包括F、Y、W。同一组残基一律等量齐观，这样把20种符号简化为6种，往往在不需要精确分析时能获得理想结果。另一种更常用方法是统计自然界中各种氨基酸残基的相互替换率，常用的有PAM矩阵和BLOSUM矩阵。接着介绍PAM矩阵：PAM矩阵是第一个广泛使用的最优矩阵，由Dayhoff等在20世纪60年代后期提出。PAM矩阵基于进化原理，建立在进化单点可接受突变模型基础上。Dayhoff等研究了71个相关蛋白质家族的1572个突变，发现蛋白质家族中的氨基酸替换并不是随机的。1个PAM是一个进化的变异单位，即每100个残基中有1个可接受单点突变。这并不意味着经过100次PAM后每个氨基酸都发生变化，因为其中一些位置可能会经过多次突变或回复突变。",
      45,
-     "理解"
+     "理解",
+     "# DNA 打分矩阵示例（含转换/颠换差异）\nimport numpy as np\n\nbases = [\"A\", \"G\", \"C\", \"T\"]\ndna_matrix = np.array([\n    [0.99, 0.006, 0.002, 0.002],\n    [0.006, 0.99, 0.002, 0.002],\n    [0.002, 0.002, 0.99, 0.006],\n    [0.002, 0.002, 0.006, 0.99],\n])\n\ndef dna_score(x, y):\n    return dna_matrix[bases.index(x)][bases.index(y)]\n\nprint(dna_score(\"A\", \"G\"))\nprint(dna_score(\"A\", \"C\"))\n\n# 氨基酸打分矩阵通常使用 BLOSUM / PAM，如 Bio.Align.substitution_matrices\nfrom Bio.Align import substitution_matrices\nblosum62 = substitution_matrices.load(\"BLOSUM62\")\nprint(blosum62[\"A\"][\"G\"])"
     ],
     [
      "第二节 序列比对打分方法",
      "PAM打分矩阵与PAM值选择",
      "本页介绍PAM（Point Accepted Mutation）系列打分矩阵及其使用原则。PAM矩阵基于突变数据构建，反映蛋白质序列中氨基酸替换的接受概率。PAM1表示每100个残基发生1次可接受突变的进化距离，PAM250表示每100个残基发生250次突变的进化距离。亲缘关系近的序列（如PAM100~PAM150）应选用较低PAM值矩阵，亲缘关系远的序列应选用较高PAM值矩阵（如PAM250），相当于容许更高的噪声背景。页中展示了PAM250矩阵的部分数值，矩阵元素为对数 odds 分值，正值表示该替换比随机期望更常见，负值表示更少见。页下方给出残基差异百分率与进化距离PAM值的对照表，例如约20%差异对应PAM23，约50%差异对应PAM80，约80%差异对应PAM246。学习时应理解PAM矩阵的构建思想、PAM值的生物学含义以及如何根据序列差异程度选择合适矩阵。",
      46,
-     "掌握"
+     "掌握",
+     "# PAM 矩阵选择示例（伪代码）\ndef choose_pam(identity_percent):\n    # identity_percent: 两条序列的相似度百分比\n    if identity_percent >= 85:\n        return 'PAM1~PAM50'\n    elif identity_percent >= 60:\n        return 'PAM100~PAM150'\n    elif identity_percent >= 40:\n        return 'PAM200'\n    else:\n        return 'PAM250'\n\n# 时间复杂度: O(1)\n# 示例:\nprint(choose_pam(70))  # 输出 'PAM100~PAM150'\nprint(choose_pam(30))  # 输出 'PAM250'"
     ],
     [
      "第二节 序列比对打分方法",
      "BLOSUM打分矩阵的构建与特点",
      "本页介绍BLOSUM（Blocks Substitution Matrix）矩阵及其与PAM矩阵的区别。BLOSUM矩阵由Henikoff夫妇基于BLOCKS数据库中的保守序列模块构建，通过设置最小相同残基百分比将序列片段整合，避免同一残基对被重复计数。例如，BLOSUM80由相同残基≥80%的序列模块产生，BLOSUM62由相同残基≥62%的聚合序列产生。BLOSUM编号数字越大，序列间进化关系越近；而PAM编号数字越大，进化关系越远，二者相反。BLOSUM矩阵基于真实局部比对数据，PAM矩阵则通过矩阵自乘外推得到。实践中BLOSUM62性能最佳，已成为许多蛋白质比对工具的标准矩阵。页中展示了BLOSUM62矩阵的部分数值，正值表示保守替换，负值表示非保守替换。学习时应掌握BLOSUM矩阵的构建原理、编号含义及其与PAM矩阵的异同。",
      47,
-     "掌握"
+     "掌握",
+     "# BLOSUM 矩阵选择示例（伪代码）\ndef choose_blosum(identity_percent):\n    # 根据序列相似度选择 BLOSUM 编号\n    if identity_percent >= 80:\n        return 'BLOSUM80'\n    elif identity_percent >= 62:\n        return 'BLOSUM62'\n    elif identity_percent >= 45:\n        return 'BLOSUM45'\n    else:\n        return 'BLOSUM30'\n\n# 时间复杂度: O(1)\n# 示例:\nprint(choose_blosum(75))  # 输出 'BLOSUM62'\nprint(choose_blosum(90))  # 输出 'BLOSUM80'"
     ],
     [
      "第二节 序列比对打分方法",
      "不同打分矩阵的双序列比对示例",
      "本页通过图3-5展示使用PAM250和BLOSUM62矩阵进行双序列比对的差异。Query为检测序列，Sbjct为目标序列，Identities表示相同残基数目及百分比，Positives表示相同和相似残基的总和及百分比。图(a)使用PAM250矩阵，得到36/52（69%）相同残基，47/52（90%）相似残基；图(b)使用BLOSUM62矩阵，得到36/53（68%）相同残基，47/53（89%）相似残基。比对结果中“+”表示可能发生替换的相似残基。该示例说明不同打分矩阵会影响比对结果的细节，但总体相似性趋势一致。BLOSUM矩阵基于更丰富的局部比对数据，对高度保守残基的分析可能更敏感。学习时应理解Identities和Positives的含义，以及如何通过比对结果评估序列相似性。",
      48,
-     "理解"
+     "理解",
+     "# 使用 Biopython 进行双序列比对并比较打分矩阵\nfrom Bio import Align\nfrom Bio.Align import substitution_matrices\n\nseq1 = \"HEAGAWGHEE\"\nseq2 = \"PAWHEAE\"\n\nfor matrix_name in [\"PAM250\", \"BLOSUM62\"]:\n    matrix = substitution_matrices.load(matrix_name)\n    aligner = Align.PairwiseAligner()\n    aligner.substitution_matrix = matrix\n    aligner.open_gap_score = -10\n    aligner.extend_gap_score = -0.5\n    alignments = aligner.align(seq1, seq2)\n    best = alignments[0]\n    print(f\"--- {matrix_name} ---\")\n    print(best)\n    print(\"Score:\", best.score)\n\n# 时间复杂度: O(m*n)，m、n 为序列长度"
     ],
     [
      "第二节 序列比对打分方法",
      "仿射空位罚分与dotplot算法",
      "本页首先介绍仿射空位罚分（affine gap penalty），其公式为g(k)=a+b×k，其中a为起始空位罚分，b为空位延伸罚分，k为空位数量。该罚分模型认为打开一个空位代价较高，而延伸空位代价较低，更符合生物学实际。例如a=-4，b=-3时，某比对共罚23分。随后进入第三节“序列比对算法”，介绍三种主要算法：dotplot算法、动态规划算法和BLAST算法。dotplot算法是最古老的序列比对算法，通过点阵作图直观展示两条序列的相似性。构建点阵矩阵时，将两条序列分别沿x轴和y轴排列，相同碱基或残基在矩阵交点处填充点。图3-7展示序列MVSSGPLAMGEDLTFP和ASSGPLAMHPSEDLTFDD构成的点阵矩阵，对角线上的连续点表示相似片段。学习时应掌握仿射空位罚分的计算及dotplot算法的基本原理。",
      49,
-     "掌握"
+     "掌握",
+     "# 仿射空位罚分计算\ndef affine_gap_penalty(k, a=-4, b=-3):\n    # k: 空位长度; a: 起始罚分; b: 延伸罚分\n    return a + b * k\n\n# 时间复杂度: O(1)\n# 示例: 长度 5 的空位\nprint(affine_gap_penalty(5))  # -4 + (-3)*5 = -19\n\n# dotplot 算法核心步骤（伪代码）\n# 1. 构建 m x n 矩阵，m=|s|, n=|t|\n# 2. 若 s[i] == t[j]，则 M[i][j] = 1，否则为 0\n# 3. 在矩阵中寻找对角线连续片段\n# 时间复杂度: O(m*n)\n\ndef dotplot(s, t):\n    m, n = len(s), len(t)\n    M = [[1 if s[i] == t[j] else 0 for j in range(n)] for i in range(m)]\n    return M\n\nprint(dotplot(\"ACGT\", \"ACGT\"))"
     ],
     [
      "第二节 序列比对打分方法",
      "dotplot算法特点与动态规划算法",
      "本页继续讲解dotplot算法，指出其相似性片段实际上是相同片段，且不能提供统计学意义上的相似性。随后重点介绍动态规划算法，分为全局和局部两类。全局动态规划算法由Needleman和Wunsch于1970年提出，称为Needleman-Wunsch算法，用于发现两条序列全局水平上的相似性；局部动态规划算法由Smith和Waterman于1981年提出，称为Smith-Waterman算法，用于发现局部水平上的相似性。算法步骤包括：1. 计算得分矩阵，使用迭代方法，公式为M_{i,j}=max(M_{i-1,j-1}+D_{i,j}, M_{i-1,j}+D_{i-1,j}, M_{i,j-1}+D_{i,j-1})，其中M_{0,0}=0，矩阵大小为(m+1)×(n+1)；2. 回溯寻找最优路径。全局比对最佳路径终点在最后一行最后一列，局部比对最佳路径终点在元素值最大的位置。学习时应掌握动态规划算法的基本思想和迭代公式。",
      50,
-     "掌握"
+     "掌握",
+     "# Needleman-Wunsch 全局比对（伪代码）\ndef needleman_wunsch(s, t, match=2, mismatch=-1, gap=-1):\n    m, n = len(s), len(t)\n    M = [[0]*(n+1) for _ in range(m+1)]\n    for i in range(1, m+1):\n        M[i][0] = M[i-1][0] + gap\n    for j in range(1, n+1):\n        M[0][j] = M[0][j-1] + gap\n    for i in range(1, m+1):\n        for j in range(1, n+1):\n            score = match if s[i-1] == t[j-1] else mismatch\n            M[i][j] = max(\n                M[i-1][j-1] + score,\n                M[i-1][j] + gap,\n                M[i][j-1] + gap\n            )\n    return M[m][n]\n\n# 时间复杂度: O(m*n)，空间复杂度: O(m*n)\nprint(needleman_wunsch(\"acgctg\", \"catgt\"))\n\n# Smith-Waterman 局部比对核心差异：\n# M[i][j] = max(0, M[i-1][j-1]+score, M[i-1][j]+gap, M[i][j-1]+gap)\n# 最终得分取矩阵中的最大值"
     ],
     [
      "第二节 序列比对打分方法",
      "动态规划算法计算示例",
      "本页通过具体例子说明动态规划算法的计算过程。给定序列s=“acgctg”和t=“catgt”，记分函数为相同+2、不相同-1、插入空位-1，要求计算全局比对结果。图3-9展示得分矩阵，首先将M_{0,0}赋值为0，然后按公式迭代计算各元素。例如M_{1,1}的计算：M_{0,0}+D_{1,1}=0+(-1)=-1，M_{0,1}+D_{0,1}=-1+(-1)=-2，M_{1,0}+D_{1,0}=-1+(-1)=-2，取最大值得-1。然后从右下角元素开始回溯，每一步可选择左方、左上角或上方单元格。若当前单元格对应字符相同，则回溯到左上角；否则回溯到三个单元格中值最大的。最终得到3条回溯路径，即3个最优比对结果。学习时应通过该例掌握得分矩阵的填充和回溯过程，理解动态规划算法如何保证全局最优比对。",
      51,
-     "掌握"
+     "掌握",
+     "# 动态规划全局比对计算示例\ns = \"acgctg\"\nt = \"catgt\"\nmatch, mismatch, gap = 2, -1, -1\n\ndef dp_global(s, t):\n    m, n = len(s), len(t)\n    M = [[0]*(n+1) for _ in range(m+1)]\n    for i in range(1, m+1):\n        M[i][0] = M[i-1][0] + gap\n    for j in range(1, n+1):\n        M[0][j] = M[0][j-1] + gap\n    for i in range(1, m+1):\n        for j in range(1, n+1):\n            d = match if s[i-1] == t[j-1] else mismatch\n            M[i][j] = max(M[i-1][j-1]+d, M[i-1][j]+gap, M[i][j-1]+gap)\n    return M\n\nM = dp_global(s, t)\nfor row in M:\n    print(row)\nprint(\"全局比对得分:\", M[len(s)][len(t)])\n\n# 时间复杂度: O(m*n)\n# 示例 M[1][1] = max(0+(-1), -1+(-1), -1+(-1)) = -1"
     ],
     [
      "第四节 序列比对工具",
      "BLAST算法原理与特点",
      "本页承接动态规划算法，指出其精确但耗时、不适合大规模数据库搜索的局限，进而介绍BLAST算法。BLAST由Altschul等1990年提出，采用短片段匹配（seed）和有效统计模型，寻找查询序列与数据库之间的最佳局部比对。基本思想是产生数量更少但质量更高的增强点（词）来提高速度。算法步骤：1）编译查询序列生成固定长度字段（词）列表；2）扫描数据库获得与词匹配的序列记录；3）以匹配词为中心向两端延伸，寻找超过阈值分数S的高分值片段对（HSP）。E值表示随机条件下得分大于S的不同比对期望数目，用于估计假阳性，公式为E=Kmn e^{-λS}，其中m为查询长度，n为数据库长度，S为原始得分，K和λ为Karlin-Altschul统计量。BLAST为近似算法，速度快且较精确，适用于从大量序列中搜索相似序列；动态规划则适用于少量序列间精确比对。本页还引出第四节序列比对工具，介绍FASTA和BLAST两大数据库搜索工具，FASTA为FAST-ALL缩写。",
      52,
-     "掌握"
+     "掌握",
+     "# BLAST 核心步骤伪代码\n# 输入: query, db, word_len=3, T=11, X=1\n# 输出: 最佳局部比对 hits\n\ndef blast(query, db, word_len=3, T=11, X=1):\n    words = make_words(query, word_len)      # 1) 编译查询序列生成词列表\n    hits = []\n    for rec in db:                            # 2) 扫描数据库\n        for w in words:\n            for pos in find_all(rec, w):\n                hit = extend(rec, pos, query, T, X)  # 3) 向两端延伸\n                if hit.score >= T:\n                    hits.append(hit)\n    return sorted(hits, key=lambda h: -h.score)\n\n# 时间复杂度: O(|query| * |db|) 最坏, 实际因 seed 过滤远低于此\n# 极简示例:\n# query = \"ACGTACGT\", db = [\"TTACGTAA\"]\n# word_len=3 -> words={ACG,CGT,GTA,TAC}\n# 命中 \"ACG\" 后延伸得到局部比对\n"
     ],
     [
      "第四节 序列比对工具",
      "FASTA程序功能与BLAST工具分类",
      "本页以表3-2列出FASTA程序功能：FASTA用于DNA对DNA或蛋白质对蛋白质数据库相似性搜索；FASTX/Y将DNA正向翻译成3种蛋白质后分别搜索蛋白质库；FASTF将混合无序多肽片段搜索蛋白质库；FASTS将有序多肽片段搜索蛋白质库；TFASTX/Y将DNA数据库每条序列翻译成6种蛋白质后与待搜索蛋白质序列比较。随着序列数据快速增长，FASTA速度不足，逐渐被更快的BLAST取代。BLAST工具是程序集合，包括基本和高级工具。基本BLAST包括blastn、blastp、blastx、tblastn和tblastx：blastn将DNA查询序列两条链与DNA数据库比较；blastp将蛋白质查询序列与蛋白质数据库比较；blastx将DNA序列按所有阅读框翻译成6个蛋白质后逐一与蛋白质数据库比较。本页为后续高级BLAST和结果解析奠定基础。",
      53,
-     "掌握"
+     "掌握",
+     "# FASTA 家族程序功能对照 (表3-2)\nFASTA_PROGRAMS = {\n    \"FASTA\":   \"DNA vs DNA 或 protein vs protein 库搜索\",\n    \"FASTX/Y\": \"DNA 正向翻译成 3 种蛋白后搜索蛋白库\",\n    \"FASTF\":   \"混合无序多肽片段搜索蛋白库\",\n    \"FASTS\":   \"有序多肽片段搜索蛋白库\",\n    \"TFASTX/Y\":\"DNA 库每条序列翻译成 6 种蛋白后与查询蛋白比较\",\n}\n\n# 典型命令行调用\n# fasta query.fa db.fa\n# fastx query_dna.fa protein_db.fa\n# tfastx query_protein.fa dna_db.fa\n\n# 说明: 随数据量增长, FASTA 速度不足, 逐渐被 BLAST 取代\n"
     ],
     [
      "第四节 序列比对工具",
      "BLAST结果解析与图形化显示",
      "本页介绍BLAST比对结果解析。Gap costs采用线性空位罚分，包括开放罚分和延伸罚分，默认开放罚分11、延伸罚分1。比对结果分为四部分：1）搜索详细情况，包括BLAST类型、数据库描述、查询内容和分类报告；2）图形化显示数据库中与查询序列匹配项的简明图，每条彩色带表示匹配区域，颜色表示得分高低，图3-10展示12个BLAST命中在查询序列上的分布，横轴为查询位置，色带越红得分越高；3）匹配序列列表，每条包括Score(Bits)、E值及数据库链接；4）查询与目标序列的双序列比对，图3-11示例中Score为位记分分数，Expect为期望值，Positives为相似性分值，Identities为同一性分值，Gaps为空位。通过结果解析可判断匹配显著性和相似程度。",
      54,
-     "理解"
+     "理解",
+     "# 解析 BLAST 结果 (tabular 格式) 并绘制命中分布\n# 命令行: blastp -query q.fa -db db -outfmt 6 -out hits.tsv\n\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\ncols = [\"qseqid\",\"sseqid\",\"pident\",\"length\",\"mismatch\",\"gapopen\",\n        \"qstart\",\"qend\",\"sstart\",\"send\",\"evalue\",\"bitscore\"]\ndf = pd.read_csv(\"hits.tsv\", sep=\"\\t\", names=cols)\n\n# 图形化: 每条色带表示匹配区域, 颜色表示得分高低\nfig, ax = plt.subplots(figsize=(10, 4))\nfor i, row in df.iterrows():\n    ax.plot([row.qstart, row.qend], [i, i],\n            linewidth=6, color=plt.cm.Reds(row.bitscore / df.bitscore.max()))\nax.set_xlabel(\"Query position\")\nax.set_ylabel(\"Hit index\")\nplt.title(\"BLAST hits on query\")\nplt.show()\n\n# Gap costs: 线性空位罚分, 默认 open=11, extend=1\n"
     ],
     [
      "第四节 序列比对工具",
      "PSI-BLAST阈值与PHI-BLAST模式识别",
      "本页继续介绍高级BLAST工具。PSI-BLAST（位置特异性迭代BLAST）在第四步构建PSSM矩阵时，需选择小于某个期望值的序列进行多序列比对，该期望值即PSI-BLAST Threshold，用于控制纳入比对的序列范围。PHI-BLAST（pattern hit initiated BLAST）即模式识别BLAST，能找到与查询序列相似且符合特定模式（pattern）的蛋白质序列。例如用人类视黄醇结合蛋白rbp4搜索符合模式GXW[LYF][LEA][LIVLM]的相似蛋白质。NCBI模式符号解释如图3-12：字母表示蛋白质或DNA字母表；[ ]表示括号内任一字符，如[LFYT]表示L或F或Y或T之一；-表示间隔符；x后无字符表示任意残基；(n)表示前一残基重复n次；(m,n)表示前一残基重复m到n次；>仅出现在模式末尾，表示无更多匹配。这些符号用于灵活定义蛋白质模式。",
      55,
-     "理解"
+     "理解",
+     "# PSI-BLAST 迭代构建 PSSM 与 PHI-BLAST 模式搜索\n# 命令行示例\n\n# PSI-BLAST: 迭代 3 次, 阈值 0.005\n# psiblast -query q.fa -db nr -num_iterations 3 \\\n#          -inclusion_ethresh 0.005 -out psiblast.out\n\n# PHI-BLAST: 查询序列 + 模式\n# phi-blast -query q.fa -db nr \\\n#           -phi_pattern \"[LIV]-{KRP}-x(2)-[ST]\" -out phi.out\n\n# 伪代码: PSI-BLAST 迭代\n# PSSM = build_pssm(query)\n# for it in range(num_iterations):\n#     hits = search(PSSM, db)\n#     sel  = [h for h in hits if h.evalue < threshold]  # PSI-BLAST Threshold\n#     PSSM = build_pssm(msa(sel))\n# return hits\n"
     ],
     [
      "第四节 序列比对工具",
      "多序列比对概念、应用与算法",
      "本页进入第五节多序列比对。图3-13展示多序列比对实例：(a)为正确比对，(b)为另一比对结果，(c)因箭头所指一列全为空位，不是有效的多序列比对。多序列比对应用广泛：发现新序列与已知序列家族的同源性、预测蛋白质二级和三级结构、发现蛋白间系统发生关系、获取蛋白质家族中结构或功能相似片段等。多序列比对算法包括：1）动态规划算法，思想与双序列相同，但维数由二维变为多维，先计算多维打分矩阵，再回溯寻找路径代表比对结果；2）渐进式算法，大多数工具采用，基于相似序列具有进化相关性假设，先两两比对构建距离矩阵，再构建指导树（guide tree），最后从最紧密两条序列开始逐步引入邻近序列并重新构建比对，直至所有序列加入；3）迭代算法，核心是使用比对记分函数反复添加附加序列到已知比对中，先找所有双序列比对中距离值最小的一组组成最优比对，再反复找与最优比对距离最小的序列，与最优比对表头文件匹配并修改最优比对和表头文件。",
      56,
-     "掌握"
+     "掌握",
+     "# 多序列比对 (MSA) 动态规划核心思想\n# 双序列 DP 为二维, 多序列 DP 为 N 维\n\n# 伪代码 (N 条序列, 长度 L)\n# score = zeros(L1+1, L2+1, ..., LN+1)\n# for i1 in 0..L1:\n#   for i2 in 0..L2:\n#     ...\n#       for iN in 0..LN:\n#           score[i1..iN] = max(\n#               score[i1-1,...,iN-1] + s(a1[i1],...,aN[iN]),\n#               score[i1-1,...,iN]   + gap,\n#               ... 共 2^N - 1 种转移\n#           )\n# 回溯得到最优比对\n\n# 时间复杂度: O(2^N * L^N)  —— 指数级, 仅适用于少量短序列\n\n# 应用: 同源性发现, 二级/三级结构预测, 系统发生关系, 功能片段识别\n"
     ],
     [
      "第四节 序列比对工具",
      "ClustalX/W多序列比对工具及操作步骤",
      "本页介绍多序列比对工具ClustalX/W。ClustalX和ClustalW均采用渐进式多序列比对算法，区别在于ClustalX具有图形界面，ClustalW为文本界面；源代码和程序免费，多平台可用。以ClustalX为例，比对步骤：1）加载序列文件，在File菜单选择Load Sequences，支持NBRF/PIR、EMBL/Swiss-Prot、FASTA(Pearson)、NCBI、GDE、Clustal、MSF(GCG)、RSF(GCG)等多种格式，加载后显示输入界面（图3-14）；2）多序列比对，在Alignments菜单选择Do Complete Alignment进行完整比对，出现交互式对话框可修改参数；也可分两步：先Produce Guide Tree进行双序列比对和构建指导树，再Do Alignment from Tree根据指导树完成渐进式比对；比对结果如图3-15所示；3）比对结果输出，在File菜单下可选择输出格式。ClustalX/W是使用最广泛的多序列比对工具之一。",
      57,
-     "掌握"
+     "掌握",
+     "# ClustalX/W 渐进式多序列比对\n# 命令行 (ClustalW)\n# clustalw2 -INFILE=seqs.fa -OUTFILE=aln.aln -OUTPUT=FASTA\n\n# ClustalX 图形界面操作步骤:\n# 1) File -> Load Sequences  (支持 NBRF/PIR, EMBL/Swiss-Prot, FASTA, NCBI, GCG 等)\n# 2) Alignment -> Do Complete Alignment\n# 3) 保存比对结果\n\n# 渐进式算法伪代码\n# 1. 两两比对计算距离矩阵 D\n# 2. 用 NJ/UPGMA 构建引导树 (guide tree)\n# 3. 按树从叶到根逐步加入序列, 用 profile-profile 比对\n# 时间复杂度: O(N^2 * L^2)  (两两比对阶段)\n"
     ],
     [
      "第五节 多序列比对",
      "ClustalX 结果界面与 MultAlin 多序列比对工具",
      "本页承接第五节多序列比对，先展示 ClustalX 的图形化结果界面与输出界面（图3-15、图3-16）。ClustalX 是 ClustalW 的图形前端，支持 UNIX、Linux、MacOSX、Windows、Cygwin 等多平台，也可从网站下载本地使用。图中可见比对模式（Multiple Alignment Mode）、字体大小、输出格式（如 GDE）、大小写、序列编号、保存范围等选项，说明多序列比对结果可交互查看并导出。随后介绍 MultAlin 工具：由 Florence Corpet 开发，用于核酸和蛋白质多序列比对。其算法核心是启发式层次聚类：先做双序列比对，再依据双序列比对得分进行分层聚类，在聚类基础上进行多序列比对，最后根据多序列比对中的双序列比对得分建立指导树；该过程循环迭代，直到分值不再上升，多序列比对结束。MultAlin 可在线使用（http://multalin.toulouse.inra.fr/multalin/），支持多种序列格式，使用方便，但运算时间长、空间要求高，适用于序列较少且长度较短的情况。学习时应理解 ClustalX 与 MultAlin 的定位差异：前者是常用多序列比对程序的可视化操作界面，后者是基于层次聚类的在线比对工具；同时掌握 MultAlin 的迭代聚类思想及其适用限制。",
      58,
-     "理解"
+     "理解",
+     "# ClustalX 图形前端：命令行等价调用 ClustalW/Clustal Omega\n# 安装（Linux）\nsudo apt-get install clustalw clustalo\n\n# 基本多序列比对（ClustalW）\nclustalw -INFILE=input.fasta -OUTFILE=output.aln -OUTPUT=GDE -TYPE=PROTEIN\n\n# Clustal Omega（推荐，速度更快）\nclustalo -i input.fasta -o output.aln --outfmt=clustal --force\n\n# 批量比对并指定输出格式\nfor f in *.fasta; do\n  clustalo -i \"$f\" -o \"${f%.fasta}.aln\" --outfmt=clustal --force\ndone"
     ],
     [
      "第五节 多序列比对",
      "多序列比对工具练习与本章参考文献",
      "本页是第三章序列比对原理的收尾部分，包含习题与参考文献。习题要求使用 Clustal、T-Coffee、MultAlin 等工具进行多序列比对，并比较它们结果的异同。该练习旨在通过实际操作理解不同多序列比对算法在比对结果上的差异：Clustal 系列基于渐进比对，T-Coffee 结合一致性与结构信息，MultAlin 采用层次聚类迭代策略，因此对同一组序列可能产生不同比对。比较时应关注保守区、空位位置、比对长度、一致性等指标。参考文献列出多序列比对与序列比对算法的重要文献，包括 Corpet 1998 关于层次聚类多序列比对、Gotoh 1982 改进的序列匹配算法、Henikoff 等关于 Blocks 数据库与氨基酸替换矩阵、Higgins 与 Sharp 1998 关于 CLUSTAL 软件包、Karlin 与 Altschul 1990 关于序列特征统计显著性评估等。这些文献对应本章的核心概念：打分矩阵、空位罚分、动态规划、渐进比对、统计显著性。学习时应能根据文献线索回顾相应方法，并理解多序列比对工具的选择需结合序列数量、长度、计算资源和比对目的。",
      59,
-     "了解"
+     "了解",
+     "# 多序列比对工具对比练习：Clustal vs T-Coffee vs MultAlin\n# 1) Clustal Omega\nclustalo -i seqs.fasta -o aln_clustal.aln --outfmt=clustal --force\n\n# 2) T-Coffee（结合一致性/结构信息）\nt_coffee seqs.fasta -output=clustalw -outfile=aln_tcoffee.aln\n\n# 3) MultAlin（层次聚类迭代，Web/本地）\n# 本地可用 multalin 或通过 EMBL-EBI 接口\n\n# 4) 结果比较：计算保守区与空位差异（Python）\nfrom Bio import AlignIO\n\ndef gap_stats(path):\n    aln = AlignIO.read(path, \"clustal\")\n    n = len(aln)\n    L = aln.get_alignment_length()\n    gaps = sum(str(r.seq).count('-') for r in aln)\n    return n, L, gaps, gaps / (n * L)\n\nfor p in [\"aln_clustal.aln\", \"aln_tcoffee.aln\"]:\n    print(p, gap_stats(p))\n\n# 5) 保守区可视化（MATLAB 风格伪代码）\n# aln = fastaread('output.aln');\n# imagesc(double(aln) == '-' ); colormap(gray); title('Gap map');"
     ]
    ],
    "quiz": [
@@ -262,6 +282,72 @@
      ],
      "a": "B",
      "e": "HMM是描述大量相互联系状态之间发生转换概率的模型，本质上是一条表示匹配、缺失或插入状态的链。用于多序列比对计算时，可用来检测序列比对结果中的保守区。每个保守残基可用匹配状态描述，空位插入用插入状态描述，残基缺失状态表示允许在本该匹配的位置发生缺失。HMM是统计概率算法，用于多序列比对。"
+    },
+    {
+     "q": "在双序列比对中，字符编辑操作 Replace(a,b) 的含义是？",
+     "o": [
+      "A. 从第一条序列删除字符 a，并在第二条序列相应位置插入空位",
+      "B. 以第二条序列中的字符 b 替换第一条序列中的字符 a",
+      "C. 在第一条序列中插入字符 b，并删除第二条序列中的字符 a",
+      "D. 将第一条序列中的字符 a 与第二条序列中的字符 b 匹配"
+     ],
+     "a": "B",
+     "e": "Replace(a,b) 表示以第二条序列中的字符 b 替换第一条序列中的字符 a，属于替换操作，不是匹配、删除或插入。"
+    },
+    {
+     "q": "全局比对动态规划递归关系 S(i,j)=max{ S(i-1,j-1)+p(a_i,b_j), S(i-1,j)+p(a_i,-), S(i,j-1)+p(-,b_j) } 中，S(i-1,j)+p(a_i,-) 对应哪种编辑操作？",
+     "o": [
+      "A. 匹配或替换 a_i 与 b_j",
+      "B. 在第二条序列中插入空位，即删除 a_i",
+      "C. 在第一条序列中插入空位，即插入 b_j",
+      "D. 同时删除 a_i 和 b_j"
+     ],
+     "a": "B",
+     "e": "S(i-1,j)+p(a_i,-) 表示第一条序列的 a_i 与空位配对，相当于从第一条序列删除 a_i，或在第二条序列相应位置插入空位。"
+    },
+    {
+     "q": "关于 Needleman-Wunsch 算法和 Smith-Waterman 算法，下列说法正确的是？",
+     "o": [
+      "A. Needleman-Wunsch 用于局部比对，Smith-Waterman 用于全局比对",
+      "B. Needleman-Wunsch 由 Smith 和 Waterman 于 1970 年提出",
+      "C. Needleman-Wunsch 用于全局比对，Smith-Waterman 用于局部比对",
+      "D. 两者都只能用于蛋白质序列，不能用于核酸序列"
+     ],
+     "a": "C",
+     "e": "Needleman-Wunsch 算法用于全局比对，Smith-Waterman 算法用于局部比对；二者均基于动态规划，可用于核酸或蛋白质序列。"
+    },
+    {
+     "q": "BLAST 算法提高数据库搜索速度的关键策略是？",
+     "o": [
+      "A. 直接进行完整的动态规划比对，保证最优结果",
+      "B. 采用短片段匹配 seed 和有效统计模型，寻找最佳局部比对",
+      "C. 只比较序列长度相同的序列，减少搜索空间",
+      "D. 将所有序列翻译为蛋白质后再比较"
+     ],
+     "a": "B",
+     "e": "BLAST 通过短片段匹配 seed 和有效统计模型，产生数量更少但质量更高的增强点，从而在保证一定灵敏度的同时大幅提高搜索速度。"
+    },
+    {
+     "q": "关于 PAM 和 BLOSUM 打分矩阵，下列说法正确的是？",
+     "o": [
+      "A. PAM1 表示每 100 个残基发生 1 次可接受突变，BLOSUM80 由相同残基≥80%的序列模块产生",
+      "B. PAM250 表示每 100 个残基发生 250 次不可接受突变",
+      "C. BLOSUM 矩阵基于突变数据构建，PAM 矩阵基于 BLOCKS 数据库构建",
+      "D. PAM 和 BLOSUM 矩阵都只适用于 DNA 序列"
+     ],
+     "a": "A",
+     "e": "PAM1 表示每 100 个残基发生 1 次可接受突变的进化距离；BLOSUM80 由相同残基≥80%的序列模块产生。PAM 基于突变数据，BLOSUM 基于 BLOCKS 数据库。"
+    },
+    {
+     "q": "在 ClustalX 中进行多序列比对时，加载序列文件应使用哪个菜单操作？",
+     "o": [
+      "A. File 菜单中的 Load Sequences",
+      "B. Edit 菜单中的 Load Sequences",
+      "C. Alignment 菜单中的 Load Sequences",
+      "D. Help 菜单中的 Load Sequences"
+     ],
+     "a": "A",
+     "e": "ClustalX 加载序列文件时，在 File 菜单中选择 Load Sequences，支持 NBRF/PIR 等格式。"
     }
    ]
   }
@@ -332,6 +418,16 @@
    "q": "分析多序列比对中渐进式算法、迭代算法和统计概率算法的基本思想及特点。",
    "a": "渐进式算法是大多数多序列比对工具采用的算法，基本思想基于相似序列通常具有进化相关性假设：首先进行双序列比对构建距离矩阵；然后进行指导树构建；最后进行渐进式比对，对关系密切的序列加权，从最紧密两条序列开始逐步引入邻近序列并不断重新构建比对，直到所有序列加入。迭代算法核心是使用比对记分函数反复添加附加序列到已知比对中。统计概率算法常用隐马尔可夫模型（HMM），描述大量相互联系状态之间发生转换概率的模型，本质上是一条表示匹配、缺失或插入状态的链，用于检测序列比对结果中的保守区。",
    "steps": "1. 渐进式：距离矩阵→指导树→渐进比对；2. 迭代：反复添加序列优化；3. 统计概率：HMM描述状态转换；4. 各有优缺点，适用于不同规模和数据。"
+  },
+  {
+   "q": "请写出计算两条序列全局比对得分的动态规划伪代码，并分析其时间复杂度和空间复杂度。假设两条序列长度分别为 m 和 n，打分函数为 p(a,b)，空位罚分为线性罚分。",
+   "a": "伪代码：\nfunction global_align_score(seq1, seq2, p, gap):\n    m = len(seq1)\n    n = len(seq2)\n    创建 (m+1) × (n+1) 的矩阵 S\n    S[0][0] = 0\n    for i = 1 to m:\n        S[i][0] = S[i-1][0] + p(seq1[i-1], '-')\n    for j = 1 to n:\n        S[0][j] = S[0][j-1] + p('-', seq2[j-1])\n    for i = 1 to m:\n        for j = 1 to n:\n            diag = S[i-1][j-1] + p(seq1[i-1], seq2[j-1])\n            up   = S[i-1][j]   + p(seq1[i-1], '-')\n            left = S[i][j-1]   + p('-', seq2[j-1])\n            S[i][j] = max(diag, up, left)\n    return S[m][n]\n\n时间复杂度：O(mn)，因为需要填充 (m+1)×(n+1) 个矩阵元素，每个元素计算常数次操作。\n空间复杂度：O(mn)，用于存储得分矩阵；若只需得分，可优化为 O(min(m,n))。",
+   "steps": "1. 初始化边界：S[0][0]=0，第一行和第一列按空位罚分累加。\n2. 双重循环填充矩阵：每个单元格取对角线、上方、左方三个候选得分的最大值。\n3. 返回 S[m][n] 作为全局比对得分。\n4. 时间复杂度 O(mn)，空间复杂度 O(mn)，可滚动数组优化空间。"
+  },
+  {
+   "q": "设计一个基于动态规划的局部序列比对算法流程，要求能够输出局部比对得分及对应的比对片段。请描述算法步骤，并说明如何回溯得到局部比对。",
+   "a": "算法流程（Smith-Waterman）：\n1. 给定序列 A 长度 m，B 长度 n，打分函数 p(a,b)，空位罚分 gap。\n2. 创建 (m+1)×(n+1) 矩阵 H，初始化 H[0][j]=0，H[i][0]=0。\n3. 记录最大得分 max_score=0 及其位置 (max_i, max_j)。\n4. 对 i=1..m，j=1..n：\n   diag = H[i-1][j-1] + p(A[i-1], B[j-1])\n   up   = H[i-1][j] + gap\n   left = H[i][j-1] + gap\n   H[i][j] = max(0, diag, up, left)\n   若 H[i][j] > max_score，更新 max_score 和位置。\n5. 从 (max_i, max_j) 开始回溯：\n   若 H[i][j] == 0，停止；\n   若 H[i][j] == H[i-1][j-1] + p(A[i-1], B[j-1])，则 A[i-1] 与 B[j-1] 配对，i--, j--；\n   否则若 H[i][j] == H[i-1][j] + gap，则 A[i-1] 与空位配对，i--；\n   否则 B[j-1] 与空位配对，j--。\n6. 将回溯路径反转，得到局部比对片段和得分 max_score。\n\n时间复杂度 O(mn)，空间复杂度 O(mn)。",
+   "steps": "1. 初始化矩阵边界为 0，因为局部比对可以从任意位置开始。\n2. 填充矩阵时允许得分为 0，表示重新开始局部比对。\n3. 记录全局最大得分及其位置。\n4. 从最大得分位置回溯，直到遇到 0 停止。\n5. 回溯时根据得分来源判断匹配、删除或插入，反转路径得到比对片段。\n6. 复杂度为 O(mn) 时间和 O(mn) 空间。"
   }
  ],
  "term": [

@@ -883,7 +883,12 @@
         var img = el("img"); img.src = s.img; img.loading = "lazy"; img.alt = s.title;
         img.onclick = function () { document.getElementById("lbimg").src = s.img; document.getElementById("lightbox").classList.add("on"); };
         body.appendChild(img);
-        body.appendChild(el("div", "notes", esc(s.notes)));
+        body.appendChild(el("div", "notes", esc(s.notes).replace(/\n/g, "<br>")));
+        if (s.code) {
+          var cblk = el("div", "codeblk");
+          cblk.innerHTML = '<div class="cb-h">💻 算法 / 代码</div><pre>' + esc(s.code) + "</pre>";
+          body.appendChild(cblk);
+        }
         card.appendChild(body);
         if (s.points && s.points.length) {
           var pb = el("div", "points");
@@ -1429,7 +1434,7 @@
         '<div class="rev-title">' + esc(s.title) + "</div>" +
         '<div class="rev-hint">先在心里回忆这一页讲了什么，再展开核对。</div>';
       var body = el("div", "rev-body"); body.style.display = "none";
-      body.innerHTML = '<div class="notes">' + esc(s.notes) + "</div>" +
+      body.innerHTML = '<div class="notes">' + esc(s.notes).replace(/\n/g, "<br>") + "</div>" +
         (s.points && s.points.length ? '<div class="points"><div class="pt-h">📌 本页要点</div><ul>' + s.points.map(function (p) { return "<li>" + esc(p) + "</li>"; }).join("") + "</ul></div>" : "") +
         (s.fig ? '<div class="fignote"><div class="fn-h">🔍 图注解读</div><p>' + esc(s.fig).replace(/\n/g, "<br>") + "</p></div>" : "");
       var rv = el("button", "rev-reveal", "展开讲解"); rv.setAttribute("data-open", "展开讲解");
