@@ -905,6 +905,14 @@
           });
           card.appendChild(fblk);
         }
+        if (s.flow) {
+          var flowblk = el("div", "flowblk");
+          flowblk.appendChild(el("div", "fl-h", "🧭 算法流程图"));
+          var mpre = el("pre", "mermaid");
+          mpre.textContent = s.flow;
+          flowblk.appendChild(mpre);
+          card.appendChild(flowblk);
+        }
         if (s.code) {
           var cblk = el("div", "codeblk");
           cblk.innerHTML = '<div class="cb-h">💻 算法 / 代码' + (s.lang ? ' <span class="cb-lang">' + esc(s.lang) + "</span>" : "") + "</div><pre>" + esc(s.code) + "</pre>";
@@ -1826,12 +1834,24 @@
     }
   });
 
+  /* ================= mermaid flowcharts ================= */
+  function runMermaid() {
+    if (!window.mermaid) return;
+    var nodes = document.querySelectorAll("#main .mermaid");
+    if (!nodes.length) return;
+    try {
+      var dark = document.documentElement.getAttribute("data-theme") === "dark";
+      window.mermaid.initialize({ startOnLoad: false, securityLevel: "loose", theme: dark ? "dark" : "default", flowchart: { useMaxWidth: true, htmlLabels: true } });
+      window.mermaid.run({ nodes: nodes });
+    } catch (e) { }
+  }
+
   /* ================= boot ================= */
   document.addEventListener("DOMContentLoaded", function () {
     if ("serviceWorker" in navigator) { try { navigator.serviceWorker.register("sw.js").catch(function () { }); } catch (e) { } }
     maybeRemind(); setInterval(maybeRemind, 60000);
     var page = document.body.dataset.page;
-    if (page === "chapter") renderChapter(document.body.dataset.ch);
+    if (page === "chapter") { renderChapter(document.body.dataset.ch); runMermaid(); }
     else if (page === "index") renderIndex();
     else if (page === "wrong") renderWrongPage();
     else if (page === "glossary") renderGlossary();

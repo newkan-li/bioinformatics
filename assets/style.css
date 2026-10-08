@@ -394,6 +394,10 @@ html[data-theme="dark"] .checkpoint .cp-opt{background:#1f262e;color:#d7dee8}
 html[data-theme="dark"] .hm-0{background:#2a333d}
 html[data-theme="dark"] .fc-card,html[data-theme="dark"] .fc-chip,html[data-theme="dark"] .fc-rate button{background:#1f262e;color:#d7dee8}
 
+.flowblk{margin:10px 0 0;border:1px solid #cde6d6;border-radius:8px;background:#f4fbf6;padding:8px 12px;overflow:auto}
+.flowblk .fl-h{font-size:13px;font-weight:700;color:#1b7f3b;margin-bottom:6px}
+.flowblk .mermaid{background:transparent;text-align:center;margin:0}
+html[data-theme="dark"] .flowblk{background:#16221b;border-color:#2c4a38}
 .formulablk{margin:10px 0 0;border:1px solid #e2d6f2;border-radius:8px;background:#faf6ff;padding:8px 12px}
 .formulablk .fm-h{font-size:13px;font-weight:700;color:#6a3fb5;margin-bottom:4px}
 .formulablk .fm{margin:6px 0;padding:6px 0;border-top:1px dashed #e6ddf5}
