@@ -1,0 +1,889 @@
+{
+ "ch03": {
+  "40": [],
+  "41": [
+   {
+    "name": "编辑操作定义",
+    "expr": "Match(a,a)；Delete(a,-)；Replace(a,b)；Insert(-,b)",
+    "note": "a、b为字符；'-'为空位字符(gap)。Match表示匹配，Delete表示删除/插入空位，Replace表示替换，Insert表示插入空位/删除。"
+   }
+  ],
+  "42": [
+   {
+    "name": "全局比对递推",
+    "expr": "S(i,j)=max{ S(i-1,j-1)+p(a_i,b_j), S(i-1,j)+p(a_i,-), S(i,j-1)+p(-,b_j) }",
+    "note": "S(i,j)为前i个与j个字符的最优得分；a_i、b_j为序列字符；p为打分函数；'-'为空位。"
+   },
+   {
+    "name": "局部比对递推",
+    "expr": "S(i,j)=max{ 0, S(i-1,j-1)+p(a_i,b_j), S(i-1,j)+p(a_i,-), S(i,j-1)+p(-,b_j) }",
+    "note": "加入0项使局部比对可从任意位置重新开始，得分为负时归零。"
+   }
+  ],
+  "43": [],
+  "44": [],
+  "45": [
+   {
+    "name": "DNA打分矩阵示例",
+    "expr": "M(A,A)=M(G,G)=M(C,C)=M(T,T)=0.99；M(A,G)=M(G,A)=0.006；M(A,C)=M(C,A)=0.002 等",
+    "note": "对角线为相同碱基匹配得分；非对角线为不同碱基替换得分，转换与颠换得分不同。"
+   },
+   {
+    "name": "氨基酸打分矩阵概念",
+    "expr": "s(a_i,b_j) 依据氨基酸残基理化性质相似性取值",
+    "note": "s为氨基酸替换得分；相似残基替换得分高于不相似残基替换。"
+   }
+  ],
+  "46": [
+   {
+    "name": "PAM进化距离定义",
+    "expr": "PAMn：每100个残基发生n次可接受突变的进化距离",
+    "note": "PAM1表示每100个残基发生1次可接受突变；PAM250表示每100个残基发生250次突变"
+   },
+   {
+    "name": "PAM值选择原则",
+    "expr": "亲缘关系近 → 低PAM值（如PAM100~PAM150）；亲缘关系远 → 高PAM值（如PAM250）",
+    "note": "高PAM值相当于容许更高的噪声背景"
+   }
+  ],
+  "47": [
+   {
+    "name": "BLOSUM编号含义",
+    "expr": "BLOSUMx：由相同残基≥x%的序列模块产生",
+    "note": "如BLOSUM80由相同残基≥80%的序列模块产生；BLOSUM62由相同残基≥62%的聚合序列产生"
+   },
+   {
+    "name": "BLOSUM与PAM编号趋势对比",
+    "expr": "BLOSUM编号越大 → 进化关系越近；PAM编号越大 → 进化关系越远",
+    "note": "两者编号方向相反"
+   }
+  ],
+  "48": [
+   {
+    "name": "序列一致性百分比",
+    "expr": "Identities = 相同残基数目 / 比对总长度 × 100%",
+    "note": "PAM250示例：36/52（69%）；BLOSUM62示例：36/53（68%）"
+   },
+   {
+    "name": "序列相似性百分比",
+    "expr": "Positives = 相同和相似残基总数 / 比对总长度 × 100%",
+    "note": "PAM250示例：47/52（90%）；BLOSUM62示例：47/53（89%）；“+”表示可能发生相似替换"
+   }
+  ],
+  "49": [
+   {
+    "name": "仿射空位罚分",
+    "expr": "g(k)=a+b×k",
+    "note": "a为起始空位罚分，b为空位延伸罚分，k为空位数量；打开空位代价较高，延伸空位代价较低"
+   },
+   {
+    "name": "仿射空位罚分示例",
+    "expr": "a=-4，b=-3，k=某空位数量 → 总罚分= -4 + (-3)×k",
+    "note": "页中示例某比对共罚23分"
+   }
+  ],
+  "50": [
+   {
+    "name": "全局动态规划算法",
+    "expr": "Needleman-Wunsch算法：用于发现两条序列全局水平上的相似性",
+    "note": "由Needleman和Wunsch于1970年提出"
+   },
+   {
+    "name": "局部动态规划算法",
+    "expr": "Smith-Waterman算法：用于发现局部水平上的相似性",
+    "note": "由Smith和Waterman于1981年提出"
+   }
+  ],
+  "51": [
+   {
+    "name": "动态规划得分矩阵递推",
+    "expr": "M(i,j)=max{ M(i-1,j-1)+D(i,j), M(i-1,j)+D(i-1,j), M(i,j-1)+D(i,j-1) }",
+    "note": "M为得分矩阵；D为记分函数；相同+2、不相同-1、插入空位-1"
+   },
+   {
+    "name": "得分矩阵初始化",
+    "expr": "M(0,0)=0",
+    "note": "从M(0,0)开始按递推公式迭代计算各元素"
+   },
+   {
+    "name": "M(1,1)计算示例",
+    "expr": "M(1,1)=max{ M(0,0)+D(1,1), M(0,1)+D(0,1), M(1,0)+D(1,0) } = max{ -1, -2, -2 } = -1",
+    "note": "序列s=“acgctg”，t=“catgt”；M(0,0)+D(1,1)=0+(-1)=-1"
+   }
+  ],
+  "52": [
+   {
+    "name": "局部比对高分片段对阈值",
+    "expr": "H ≥ S",
+    "note": "H为以匹配词为中心向两端延伸得到的局部比对得分，S为设定的阈值分数"
+   },
+   {
+    "name": "BLAST词匹配",
+    "expr": "w = 固定长度字段（词）",
+    "note": "w为查询序列编译生成的短片段（seed/word），用于快速扫描数据库"
+   }
+  ],
+  "53": [],
+  "54": [
+   {
+    "name": "线性空位罚分",
+    "expr": "Gap cost = g_o + g_e × L",
+    "note": "g_o为开放罚分（默认11），g_e为延伸罚分（默认1），L为空位长度"
+   },
+   {
+    "name": "比对得分",
+    "expr": "Score = Σ s(a_i, b_j) - Gap cost",
+    "note": "s(a_i,b_j)为残基/碱基匹配得分，Gap cost为空位罚分"
+   }
+  ],
+  "55": [
+   {
+    "name": "PSI-BLAST阈值",
+    "expr": "E-value < Threshold",
+    "note": "期望值小于PSI-BLAST Threshold的序列被纳入多序列比对以构建PSSM矩阵"
+   },
+   {
+    "name": "PHI-BLAST模式匹配",
+    "expr": "Pattern: GXW...",
+    "note": "GXW为示例模式，X表示任意氨基酸，PHI-BLAST寻找符合该模式且与查询相似的序列"
+   }
+  ],
+  "56": [
+   {
+    "name": "多序列比对动态规划",
+    "expr": "D(i_1, i_2, ..., i_k) = max{ D(i_1-1, ..., i_k-1) + s(...), ... }",
+    "note": "k为序列条数，D为k维打分矩阵，s为匹配得分，回溯路径代表比对结果"
+   },
+   {
+    "name": "渐进式比对",
+    "expr": "比对 = 逐步合并两两比对",
+    "note": "大多数工具采用渐进式算法，先比对最相似序列，再逐步加入其他序列"
+   }
+  ],
+  "57": [],
+  "58": [],
+  "59": []
+ },
+ "ch12": {
+  "258": [
+   {
+    "name": "数据集表示",
+    "expr": "(y_i, x_i), i=1,…,n，x_i∈ℝ^m",
+    "note": "y_i为因变量，x_i为m维自变量；若样本顺序不可变动，则为纵向数据或有序样本"
+   }
+  ],
+  "259": [
+   {
+    "name": "回归损失函数",
+    "expr": "L(y,f(x,w))=(y−f(x,w))^2",
+    "note": "平方损失，用于回归问题"
+   },
+   {
+    "name": "密度估计损失函数",
+    "expr": "L(p(x,w))=−ln p(x,w)",
+    "note": "负对数似然损失，用于密度估计"
+   },
+   {
+    "name": "经验风险最小化",
+    "expr": "R_emp(w)=1/n Σ_{i=1}^n L(y_i,f(x_i,w))",
+    "note": "用样本平均损失近似期望风险；两类判别时即训练错误率，平方损失时即平方训练误差"
+   }
+  ],
+  "260": [],
+  "261": [
+   {
+    "name": "结构风险最小化界",
+    "expr": "R(w) < R_emp(w) + Φ(h/n)",
+    "note": "R(w)为实际风险，R_emp(w)为经验风险，Φ(h/n)为置信范围，h为VC维，n为样本数"
+   }
+  ],
+  "262": [],
+  "263": [
+   {
+    "name": "观测值分解",
+    "expr": "y_i = μ + e_i",
+    "note": "y_i为观察值，μ为总体平均数，e_i为误差"
+   },
+   {
+    "name": "最小二乘目标函数",
+    "expr": "Q = Σ (y_i − μ)^2",
+    "note": "对总体平均数μ的最小二乘估计，最小化Q"
+   },
+   {
+    "name": "总体平均数的最小二乘估计",
+    "expr": "μ̂ = 1/n Σ y_i",
+    "note": "令dQ/dμ=0得Σ(y_i−μ)=0，故算术平均数是总体平均数的最小二乘估计"
+   }
+  ],
+  "264": [
+   {
+    "name": "多项分布似然函数",
+    "expr": "L(p1,p2,p3)=50!/(12!24!14!) p1^12 p2^24 p3^14，其中 p1+p2+p3=1",
+    "note": "p1,p2,p3为三类概率；12,24,14为观测频数；50为总样本数"
+   },
+   {
+    "name": "连续型独立样本似然函数",
+    "expr": "L(θ)=∏ f(yi;θ)",
+    "note": "θ为参数；f(yi;θ)为第i个观测的概率密度；∏表示连乘"
+   },
+   {
+    "name": "正态分布似然函数（含密度形式）",
+    "expr": "L(μ,σ²)=∏ (1/(√(2π)σ)) exp[-(yi-μ)²/(2σ²)]",
+    "note": "yi~N(μ,σ²)；μ为均值；σ²为方差"
+   }
+  ],
+  "265": [
+   {
+    "name": "中心化变换",
+    "expr": "x'ij = xij - x̄j",
+    "note": "xij为原始指标值；x̄j为第j个指标的均值；x'ij为中心化后的值"
+   }
+  ],
+  "266": [
+   {
+    "name": "马氏距离",
+    "expr": "d²(M) = (xi - xj)' Σ⁻¹ (xi - xj)",
+    "note": "xi,xj为两个样品的p维向量；Σ为协差阵；Σ⁻¹为协差阵的逆"
+   },
+   {
+    "name": "兰氏距离",
+    "expr": "d(L) = ∑ |xia - xja| / (xia + xja)",
+    "note": "xia,xja为样品i和j在第a个指标上的值；要求xij>0；求和遍及所有指标"
+   },
+   {
+    "name": "夹角余弦",
+    "expr": "cosθ = ∑ xia xja / sqrt(∑ xia²) sqrt(∑ xja²)",
+    "note": "xia,xja为样品i和j在第a个指标上的值；求和遍及所有指标"
+   }
+  ],
+  "267": [
+   {
+    "name": "最短距离法类间距离",
+    "expr": "Dij = min{ dab | a∈Gi, b∈Gj }",
+    "note": "Dij为类Gi与Gj的距离；dab为样品a与b的距离；Gi,Gj为两个类"
+   },
+   {
+    "name": "合并后新类与其它类的距离递推",
+    "expr": "Dkr = min{ Dki, Dkj }",
+    "note": "Gr为Gi与Gj合并后的新类；Gk为任一类；Dkr为Gk与Gr的距离"
+   }
+  ],
+  "268": [
+   {
+    "name": "标准化变换",
+    "expr": "(xij)' = (xij - x̄j) / sj",
+    "note": "xij为原始观测值；x̄j为第j个指标均值；sj为第j个指标标准差"
+   },
+   {
+    "name": "样本方差",
+    "expr": "sj² = ∑ (xij - x̄j)² / (n-1)",
+    "note": "n为样本数；x̄j为第j个指标均值"
+   },
+   {
+    "name": "特征方程",
+    "expr": "|R - λI| = 0",
+    "note": "R为样本相关系数矩阵；λ为特征根；I为单位矩阵"
+   },
+   {
+    "name": "主成分方差贡献率",
+    "expr": "∑_{i=1}^m λi / ∑_{i=1}^p λi ≥ 0.8",
+    "note": "λi为第i个特征根；m为主分量个数；p为原始变量个数"
+   }
+  ],
+  "269": [
+   {
+    "name": "组重心线性组合",
+    "expr": "ȳ(A) = ∑ ci X̄i(A)，ȳ(B) = ∑ ci X̄i(B)",
+    "note": "ci为判别系数；X̄i(A),X̄i(B)分别为A组和B组第i个指标均值"
+   },
+   {
+    "name": "两组间离差",
+    "expr": "[ȳ(A) - ȳ(B)]²",
+    "note": "ȳ(A),ȳ(B)分别为A组和B组的重心"
+   },
+   {
+    "name": "组内离散程度",
+    "expr": "∑ [yi(A) - ȳ(A)]²",
+    "note": "yi(A)为A组第i个样品的判别得分；ȳ(A)为A组重心"
+   }
+  ],
+  "270": [
+   {
+    "name": "判别函数F检验",
+    "expr": "F = (组间差异 / 组内差异) ~ F(p, n_A+n_B-p-1)",
+    "note": "n_A、n_B为两类样本数，p为变量数；F值超过临界值则判别函数显著"
+   }
+  ],
+  "271": [
+   {
+    "name": "朴素贝叶斯分类准则",
+    "expr": "c* = argmax_{c_i} P(c_i)P(X|c_i)",
+    "note": "P(X)对所有类别相同，分类时只需比较P(c)P(X|c)或P(X|c)"
+   },
+   {
+    "name": "属性条件独立假设",
+    "expr": "P(X|c) = ∏_{i=1}^{d} P(x_i|c)",
+    "note": "在给定类别c下，各属性x_i相互独立"
+   },
+   {
+    "name": "类先验估计",
+    "expr": "P(c) ≈ |D_c| / |D|",
+    "note": "类先验未知时，可用类样本比例近似"
+   }
+  ],
+  "272": [
+   {
+    "name": "类别N后验概率计算",
+    "expr": "P(N|X) = P(N)P(Sunny|N)P(Hot|N)P(High|N)P(Weak|N) / P(X) = (5/14)×(3/5)×(2/5)×(4/5)×(2/5) / P(X) = 0.0274 / P(X)",
+    "note": "测试样本X=(Sunny,Hot,High,Weak)，类别N"
+   },
+   {
+    "name": "类别P后验概率计算",
+    "expr": "P(P|X) = P(P)P(Sunny|P)P(Hot|P)P(High|P)P(Weak|P) / P(X) = (9/14)×(2/9)×(2/9)×(3/9)×(6/9) / P(X) = 0.007039 / P(X)",
+    "note": "测试样本X=(Sunny,Hot,High,Weak)，类别P"
+   },
+   {
+    "name": "后验概率分类决策",
+    "expr": "若 P(N|X) > P(P|X)，则 X 属于类别 N",
+    "note": "按后验概率最大原则分类"
+   }
+  ],
+  "273": [
+   {
+    "name": "HMM模型参数",
+    "expr": "λ = (A, B, π)",
+    "note": "A为状态转移概率分布，B为观察符号概率分布，π为初始状态概率分布；N为状态数，M为观察符号数"
+   },
+   {
+    "name": "观察序列生成",
+    "expr": "O = (o_1, o_2, …, o_T)",
+    "note": "根据π选择初始状态q_1，再按b_i选择观察o_t，按A转移状态，重复至T"
+   }
+  ],
+  "274": [
+   {
+    "name": "状态转移矩阵A",
+    "expr": "A = [a_{ij}]_{3×3}，例如 a_{Sunny,Sunny}=0.500, a_{Sunny,Cloudy}=0.250, a_{Sunny,Rainy}=0.250; a_{Cloudy,Sunny}=0.375, a_{Cloudy,Cloudy}=0.250, a_{Cloudy,Rainy}=0.375; a_{Rainy,Sunny}=0.1…",
+    "note": "状态为Sunny、Cloudy、Rainy；观察为Dry、Dryish、Damp、Soggy"
+   },
+   {
+    "name": "穷举法评估观察序列概率",
+    "expr": "P(O|λ) = Σ_{Q} P(O,Q|λ) = Σ_{q_1,…,q_T} π_{q_1} b_{q_1}(o_1) ∏_{t=2}^{T} a_{q_{t-1}q_t} b_{q_t}(o_t)",
+    "note": "对所有可能状态序列Q求和，用于HMM评估问题"
+   }
+  ],
+  "275": [
+   {
+    "name": "穷举法计算量",
+    "expr": "约 N^T(T-1) 次乘法，N(N-1)(T-1) 次加法",
+    "note": "N为状态数，T为观察序列长度；指数复杂度"
+   },
+   {
+    "name": "后向概率定义",
+    "expr": "β_t(i) = P(o_{t+1}, o_{t+2}, …, o_T | q_t = S_i, λ)",
+    "note": "在模型λ下，t时刻处于状态S_i，从t+1到T的观察序列为o_{t+1},…,o_T的概率"
+   },
+   {
+    "name": "后向算法初始化",
+    "expr": "β_T(i) = 1, 1 ≤ i ≤ N",
+    "note": "后向算法初始条件"
+   },
+   {
+    "name": "后向算法递推",
+    "expr": "β_t(i) = Σ_{j=1}^{N} a_{ij} b_j(o_{t+1}) β_{t+1}(j)",
+    "note": "从t+1到T的后向概率递推公式"
+   }
+  ],
+  "276": [
+   {
+    "name": "HMM模型定义",
+    "expr": "λ=(A,B,π)",
+    "note": "A为状态转移概率矩阵，B为观测概率/发射概率矩阵，π为初始状态概率分布"
+   },
+   {
+    "name": "观测序列",
+    "expr": "O=(o1,o2,…,oT)",
+    "note": "长度为T的观测序列"
+   },
+   {
+    "name": "状态序列",
+    "expr": "Q=(q1,q2,…,qT)",
+    "note": "与观测序列对应的隐状态序列"
+   },
+   {
+    "name": "Viterbi递推变量定义",
+    "expr": "δt(i)=max_{q1,…,qt-1} P(q1,…,qt-1, qt=Si, o1,…,ot | λ)",
+    "note": "δt(i)表示在时刻t处于状态Si，且观测到o1…ot的最大路径概率；Si为第i个状态"
+   }
+  ],
+  "277": [
+   {
+    "name": "Viterbi递推更新",
+    "expr": "δt(j)=max_i [ δt-1(i) · a_ij ] · b_j(ot)",
+    "note": "δt(j)为时刻t状态Sj的最大路径概率；a_ij为从状态Si转移到Sj的概率；b_j(ot)为状态Sj发射观测ot的概率"
+   },
+   {
+    "name": "Viterbi回溯指针",
+    "expr": "ψt(j)=argmax_i [ δt-1(i) · a_ij ]",
+    "note": "ψt(j)记录时刻t状态Sj的最优前驱状态索引"
+   },
+   {
+    "name": "第三天Sunny状态概率示例",
+    "expr": "δ3(Sunny)≈7.088×10^-4",
+    "note": "以天气-海草湿度模型为例，第三天天气为Sunny且海藻状态为Soggy的最大路径概率"
+   },
+   {
+    "name": "第三天Cloudy状态概率示例",
+    "expr": "δ3(Cloudy)≈5.581×10^-3",
+    "note": "第三天天气为Cloudy且海藻状态为Soggy的最大路径概率，路径来自第二天Rainy"
+   }
+  ],
+  "278": [],
+  "279": [
+   {
+    "name": "HMM独立事件序列概率",
+    "expr": "P(O|λ)=∏_{t=1}^{T} P(ot|λ)",
+    "note": "当事件独立时，序列概率为各独立观测概率的乘积；O为观测序列，T为序列长度"
+   }
+  ],
+  "280": [
+   {
+    "name": "newelm函数调用格式",
+    "expr": "net=newelm(PR,[S1 S2 … SNH],{TF1 TF2 … TFNI},BTF,BLF,PF)",
+    "note": "PR为R×2维输入取值范围矩阵[Pmin Pmax]；[S1 S2 … SNH]为各层神经元个数；{TF1 TF2 … TFNI}为传输函数，默认tansig；BTF为训练函数，默认traingdx；BLF为权值和阈值学习函数，默认learngdm；PF为性能函数，默认mse"
+   }
+  ],
+  "281": [
+   {
+    "name": "train函数调用格式",
+    "expr": "[net,tr,Y,E,Pf,Af]=train(NET,P,T,Pi,Ai,VV,TV)",
+    "note": "net为训练后网络；tr为训练记录；Y为网络输出；E为误差矢量；Pf为训练终止时输入延迟状态；Af为训练终止时层延迟状态；NET为训练前网络；P为输入向量和矩阵；T为目标矩阵，缺省为0；Pi为初始输入延时，缺省为0；Ai为初始层延时，缺省为0；VV为验证矢量；TV为测试矢量"
+   },
+   {
+    "name": "tansig传输函数",
+    "expr": "tansig(x)=2/(1+e^{-2x})-1",
+    "note": "双曲正切S型传输函数，常用于神经网络隐含层"
+   }
+  ],
+  "282": [
+   {
+    "name": "Elman网络输入特征维数",
+    "expr": "D=3×4=12（每阶4种碱基）→ 1~3阶共 4+4²+4³=84 维",
+    "note": "D为编码特征维数；1~3阶核苷酸组成频率拼接"
+   },
+   {
+    "name": "Elman隐层输出",
+    "expr": "h(t)=tansig(W₁·x(t)+b₁)",
+    "note": "h为隐层输出，x为输入，W₁、b₁为隐层权值与偏置，tansig为双曲正切S型函数"
+   },
+   {
+    "name": "Elman输出层",
+    "expr": "y(t)=purelin(W₂·h(t)+b₂)",
+    "note": "y为网络输出，W₂、b₂为输出层权值与偏置，purelin为线性传递函数"
+   },
+   {
+    "name": "训练目标",
+    "expr": "min E=Σ(y(t)-ŷ(t))²，E≤0.0001，迭代≤3000",
+    "note": "E为误差平方和，ŷ为期望输出"
+   }
+  ],
+  "283": [
+   {
+    "name": "线性可分SVM决策函数",
+    "expr": "M(x)=sgn(w*·x+b*)=sgn(Σᵢ αᵢ* yᵢ (xᵢ·x)+b*)",
+    "note": "w*、b*为最优超平面参数；αᵢ*为Lagrange乘子；yᵢ∈{+1,-1}；xᵢ为支持向量"
+   },
+   {
+    "name": "核函数SVM决策函数",
+    "expr": "M(x)=sgn(Σᵢ αᵢ* yᵢ K(xᵢ,x)+b*)",
+    "note": "K(xᵢ,x)为核函数，将样本映射到高维特征空间F使其线性可分"
+   },
+   {
+    "name": "约束二次优化",
+    "expr": "max W(α)=Σᵢ αᵢ - ½ Σᵢ Σⱼ αᵢ αⱼ yᵢ yⱼ K(xᵢ,xⱼ)，s.t. Σᵢ αᵢ yᵢ=0，0≤αᵢ≤C",
+    "note": "α为Lagrange乘子，C为惩罚参数"
+   }
+  ],
+  "284": [
+   {
+    "name": "核矩阵存储量",
+    "expr": "S≈n²×8 字节（n>4000 时约 128 MB）",
+    "note": "n为样本数；核函数矩阵为n×n，双精度8字节"
+   },
+   {
+    "name": "对偶问题分解",
+    "expr": "max W(α)=Σᵢ αᵢ - ½ Σᵢ Σⱼ αᵢ αⱼ yᵢ yⱼ K(xᵢ,xⱼ)",
+    "note": "将原问题分解为子问题循环迭代求解"
+   },
+   {
+    "name": "KKT条件（非支持向量）",
+    "expr": "αᵢ=0 ⇒ 样本不影响解，可剔除",
+    "note": "块算法依据：去掉Lagrange乘子为零的样本不影响最优解"
+   }
+  ],
+  "285": [
+   {
+    "name": "SVM计算复杂度",
+    "expr": "T(n)=O(n²) 或更高",
+    "note": "n为训练样本数；大样本时优化算法难以处理子问题规模与迭代次数"
+   },
+   {
+    "name": "回归性能评价（均方误差）",
+    "expr": "MSE=(1/m)Σᵢ(yᵢ-ŷᵢ)²",
+    "note": "m为样本数；SVR缺乏显式表达式，多通过MSE与参比模型比较"
+   }
+  ],
+  "286": [],
+  "287": [],
+  "288": [],
+  "289": [],
+  "290": []
+ },
+ "ch13": {
+  "293": [],
+  "294": [],
+  "295": [],
+  "296": [],
+  "297": [],
+  "298": [
+   {
+    "name": "Perl字符串比较运算符",
+    "expr": "eq, ne, cmp, lt, gt, le, ge",
+    "note": "分别表示字符串相等、不等、比较（返回-1/0/1）、小于、大于、小于等于、大于等于。"
+   },
+   {
+    "name": "Perl数组长度",
+    "expr": "$#array+1 或 @array 或 scalar(@array)",
+    "note": "$#array为最后一个元素索引，@array在标量上下文中返回元素个数。"
+   }
+  ],
+  "299": [
+   {
+    "name": "数组排序",
+    "expr": "@sorted = sort @array",
+    "note": "sort 对数组元素按默认字符串顺序排序"
+   },
+   {
+    "name": "删除数组元素",
+    "expr": "delete $array[$i]",
+    "note": "删除指定下标 i 的元素"
+   },
+   {
+    "name": "清空数组",
+    "expr": "$#array = -1",
+    "note": "将数组最后一个下标设为 -1，从而清空数组"
+   },
+   {
+    "name": "哈希遍历",
+    "expr": "while (($key, $value) = each %hash) { ... }",
+    "note": "each 依次返回哈希的键值对"
+   }
+  ],
+  "300": [
+   {
+    "name": "字符替换",
+    "expr": "tr/查找列表/替换列表/修饰符",
+    "note": "tr/// 对字符进行逐字符替换；修饰符 c 求补，d 删除未替换字符，s 删除重复替换字符"
+   },
+   {
+    "name": "数组引用与反引用",
+    "expr": "$arrayref = \\@array; @$arrayref",
+    "note": "\\@array 创建数组引用，@$arrayref 反引用得到原数组"
+   },
+   {
+    "name": "哈希引用与反引用",
+    "expr": "$hashref = \\%hash; %$hashref",
+    "note": "\\%hash 创建哈希引用，%$hashref 反引用得到原哈希"
+   },
+   {
+    "name": "子程序引用与调用",
+    "expr": "$coderef = \\&subroutine; &$coderef()",
+    "note": "\\&subroutine 创建子程序引用，&$coderef 调用该子程序"
+   }
+  ],
+  "301": [
+   {
+    "name": "角度转弧度",
+    "expr": "rad = deg * π / 180",
+    "note": "将角度 deg 转换为弧度 rad，用于 cos/sin 等三角函数"
+   },
+   {
+    "name": "余弦函数",
+    "expr": "cos(rad)",
+    "note": "Perl 内置 cos 计算余弦值"
+   },
+   {
+    "name": "哈希键值获取",
+    "expr": "@keys = keys %hash; @values = values %hash",
+    "note": "keys 返回所有键，values 返回所有值"
+   },
+   {
+    "name": "列表筛选与映射",
+    "expr": "@out = grep { 条件 } @list; @out = map { 表达式 } @list",
+    "note": "grep 筛选满足条件的元素，map 对每个元素执行操作并返回结果"
+   }
+  ],
+  "302": [
+   {
+    "name": "随机数生成",
+    "expr": "rand(100) - 50",
+    "note": "产生 -50 到 +50 之间的随机数"
+   },
+   {
+    "name": "数组反转",
+    "expr": "@reversed = reverse @array",
+    "note": "reverse 返回反转后的列表"
+   },
+   {
+    "name": "数组排序",
+    "expr": "@sorted = sort @array",
+    "note": "sort 返回排序后的列表"
+   },
+   {
+    "name": "文件打开",
+    "expr": "open(FH, \"<\", $file) or die $!",
+    "note": "打开文件；模式 \"<\" 只读，\">\" 重写，\">>\" 追加"
+   }
+  ],
+  "303": [
+   {
+    "name": "逐行读取文件",
+    "expr": "while ($line = <FH>) { chomp $line; ... }",
+    "note": "从文件句柄 FH 逐行读取，chomp 去除行尾换行符"
+   },
+   {
+    "name": "格式化输出",
+    "expr": "format NAME = ... . ; write",
+    "note": "format 定义输出格式，write 按格式写入"
+   },
+   {
+    "name": "文件打开模式",
+    "expr": "open(FH, \"<\", $file); open(FH, \">\", $file); open(FH, \">>\", $file)",
+    "note": "分别表示只读、重写、追加模式"
+   }
+  ],
+  "304": [
+   {
+    "name": "按字节读取",
+    "expr": "read(FH, $buf, $length)",
+    "note": "从文件句柄 FH 读取 length 个字节到 buf"
+   },
+   {
+    "name": "逐行读取",
+    "expr": "$line = readline(FH) 或 $line = <FH>",
+    "note": "readline 或 <> 逐行读取文本"
+   },
+   {
+    "name": "读取单个字符",
+    "expr": "$char = getc(FH)",
+    "note": "getc 从文件句柄读取一个字符"
+   },
+   {
+    "name": "文件尾测试",
+    "expr": "eof(FH)",
+    "note": "测试文件句柄是否到达文件尾"
+   }
+  ],
+  "305": [],
+  "306": [],
+  "307": [],
+  "308": [],
+  "309": [],
+  "310": [
+   {
+    "name": "序列反转（切片）",
+    "expr": "seqRev = seq[::-1]",
+    "note": "seq 为原始 DNA 序列字符串，seqRev 为其反转序列"
+   }
+  ],
+  "311": [],
+  "312": [],
+  "313": [],
+  "314": [],
+  "315": [
+   {
+    "name": "影响因子",
+    "expr": "IF = C / P",
+    "note": "C 为该期刊前两年发表论文在统计年的总被引次数；P 为该期刊前两年发表的论文总数"
+   }
+  ],
+  "316": [],
+  "317": [
+   {
+    "name": "第一范式（1NF）条件",
+    "expr": "∀列 c ∈ 表 T，c 的每个取值均为原子值；且 T 有主键 K",
+    "note": "T 为关系表；c 为列；K 为主键；原子值表示不可再分"
+   },
+   {
+    "name": "第二范式（2NF）条件",
+    "expr": "T ∈ 1NF 且 ∀非主属性 A，A 完全函数依赖于主键 K，即不存在 K 的真子集 K' 使 K' → A",
+    "note": "A 为非主属性；K 为主键；→ 表示函数依赖"
+   },
+   {
+    "name": "第三范式（3NF）条件",
+    "expr": "T ∈ 2NF 且 ∀非主属性 A，A 直接依赖于主键 K，即不存在非主属性 B 使 K → B 且 B → A",
+    "note": "A、B 为非主属性；K 为主键；要求消除传递依赖"
+   }
+  ],
+  "318": [
+   {
+    "name": "CREATE TABLE 基本形式",
+    "expr": "CREATE TABLE 表名 ( 列名1 类型1 [属性], 列名2 类型2 [属性], ..., PRIMARY KEY(列名) )",
+    "note": "表名、列名、类型为 SQL 标识符与数据类型；属性如 NOT NULL、AUTO_INCREMENT"
+   },
+   {
+    "name": "journal 表结构定义",
+    "expr": "journal(id INT AUTO_INCREMENT PRIMARY KEY, journal_title VARCHAR(50) NOT NULL, issn VARCHAR(20), total_cites MEDIUMINT, impact_factor FLOAT)",
+    "note": "id 为自增主键；journal_title 非空；issn、total_cites、impact_factor 为普通列"
+   },
+   {
+    "name": "paper 表结构定义",
+    "expr": "paper(id INT AUTO_INCREMENT PRIMARY KEY, ...)",
+    "note": "本页仅明确 paper 表含自增主键 id，其余列未在页内完整列出"
+   }
+  ],
+  "319": [
+   {
+    "name": "SELECT 全表查询",
+    "expr": "SELECT * FROM journal",
+    "note": "* 表示选择所有列；journal 为表名"
+   },
+   {
+    "name": "SELECT 条件查询",
+    "expr": "SELECT * FROM journal WHERE journal_title='cell'",
+    "note": "WHERE 指定行选择条件；journal_title 为列名；'cell' 为字符串常量"
+   },
+   {
+    "name": "SELECT 投影查询",
+    "expr": "SELECT journal_title FROM journal",
+    "note": "选择指定列；可多列用逗号分隔"
+   },
+   {
+    "name": "INSERT 插入记录",
+    "expr": "INSERT INTO journal (journal_title, issn, total_cites, impact_factor) VALUES ('...', '...', ..., ...)",
+    "note": "INSERT 用于向已有数据表增添数据；VALUES 提供对应列值"
+   }
+  ],
+  "320": [
+   {
+    "name": "DROP DATABASE",
+    "expr": "DROP DATABASE db_name",
+    "note": "删除数据库 db_name 及其所有表"
+   },
+   {
+    "name": "DROP TABLE",
+    "expr": "DROP TABLE table_name1, table_name2, ...",
+    "note": "删除一个或多个表；多个表名用逗号隔开"
+   },
+   {
+    "name": "TRUNCATE TABLE",
+    "expr": "TRUNCATE TABLE table_name",
+    "note": "完全清空表 table_name"
+   },
+   {
+    "name": "DELETE 与 UPDATE",
+    "expr": "DELETE FROM table_name [WHERE where_definition]；UPDATE table_name SET 列=值 [WHERE where_definition]",
+    "note": "DELETE 删除满足条件的行；无 WHERE 则删除所有行；UPDATE 修改满足条件的行"
+   }
+  ],
+  "321": [],
+  "322": [],
+  "323": [],
+  "324": [],
+  "325": [],
+  "326": [
+   {
+    "name": "性能定义",
+    "expr": "perf = W / t",
+    "note": "W为求解问题的计算量，t为执行时间，perf单位为FLOP/s"
+   },
+   {
+    "name": "Amdahl定律加速比",
+    "expr": "S(q) = 1 / (α + (1 - α) / q)",
+    "note": "α为串行部分所占百分比，q为处理机数量，S(q)为并行加速比"
+   },
+   {
+    "name": "Amdahl定律上界",
+    "expr": "lim_{q→∞} S(q) = 1 / α",
+    "note": "加速比上界为串行比例α的倒数"
+   }
+  ],
+  "327": []
+ },
+ "ch14": {
+  "331": [
+   {
+    "name": "焦磷酸测序发光反应",
+    "expr": "dNTP + DNA(n) → DNA(n+1) + PPi；PPi + APS → ATP + SO4；ATP + 荧光素 → 氧化荧光素 + 光",
+    "note": "DNA聚合酶催化dNTP延伸释放焦磷酸PPi；ATP硫酸化酶催化PPi与APS生成ATP；荧光素酶催化发光"
+   }
+  ],
+  "332": [],
+  "333": [],
+  "334": [],
+  "335": [
+   {
+    "name": "双碱基编码探针结构",
+    "expr": "探针 = [荧光标记]-(第1位碱基)(第2位碱基)-(第3~5位随机碱基)-(第6~8位通用碱基)",
+    "note": "第1、2位为编码区决定荧光颜色；第3-5位随机；第6-8位可与任意碱基配对"
+   }
+  ],
+  "336": [
+   {
+    "name": "双碱基编码解码",
+    "expr": "若已知参考序列某位置碱基 b_i，则 b_{i+1} = decode(c_i, b_i)",
+    "note": "c_i为第i次连接测得的颜色编码；通过双碱基编码矩阵由前一碱基和颜色推出下一碱基；每个碱基被读取两次，准确度>99.94%"
+   }
+  ],
+  "337": [],
+  "338": [
+   {
+    "name": "重硫酸盐转化反应",
+    "expr": "C + HSO₃⁻ → U + HSO₃⁻（未甲基化胞嘧啶）；5mC + HSO₃⁻ → 5mC（甲基化胞嘧啶不变）",
+    "note": "C为胞嘧啶，U为尿嘧啶，5mC为5-甲基胞嘧啶。"
+   },
+   {
+    "name": "5hmC抗转化",
+    "expr": "5hmC + HSO₃⁻ → 5hmC",
+    "note": "5hmC为5-羟甲基胞嘧啶，也抵抗重硫酸盐转化。"
+   }
+  ],
+  "339": [
+   {
+    "name": "双因素方差分析模型",
+    "expr": "y_ijk = μ + α_i + β_j + (αβ)_ij + ε_ijk",
+    "note": "y_ijk为观测值，μ为总均值，α_i为因素A效应，β_j为因素B效应，(αβ)_ij为交互效应，ε_ijk为随机误差。"
+   },
+   {
+    "name": "样本间相关性",
+    "expr": "r_xy = Σ(x_i - x̄)(y_i - ȳ) / √[Σ(x_i - x̄)² Σ(y_i - ȳ)²]",
+    "note": "r_xy为样本x与y的相关系数，x_i、y_i为表达值，x̄、ȳ为均值。"
+   },
+   {
+    "name": "K-means聚类目标函数",
+    "expr": "J = Σ_{k=1}^{K} Σ_{x_i ∈ C_k} ||x_i - μ_k||²",
+    "note": "K为簇数，C_k为第k簇，μ_k为第k簇质心，x_i为样本点。"
+   }
+  ],
+  "340": [],
+  "341": [],
+  "342": [],
+  "343": [
+   {
+    "name": "亚硫酸氢盐转化规则",
+    "expr": "C → U（未甲基化）；C → C（甲基化）",
+    "note": "BS-seq中未甲基化胞嘧啶经亚硫酸氢盐处理脱氨变为尿嘧啶，PCR扩增后读为T；甲基化C保持不变读为C"
+   },
+   {
+    "name": "甲基化率估计",
+    "expr": "甲基化水平 = C_reads / (C_reads + T_reads)",
+    "note": "C_reads为比对到该位点仍为C的读长数，T_reads为变为T的读长数"
+   }
+  ],
+  "344": [],
+  "345": [],
+  "346": [],
+  "347": [],
+  "348": []
+ }
+}

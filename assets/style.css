@@ -394,6 +394,17 @@ html[data-theme="dark"] .checkpoint .cp-opt{background:#1f262e;color:#d7dee8}
 html[data-theme="dark"] .hm-0{background:#2a333d}
 html[data-theme="dark"] .fc-card,html[data-theme="dark"] .fc-chip,html[data-theme="dark"] .fc-rate button{background:#1f262e;color:#d7dee8}
 
+.formulablk{margin:10px 0 0;border:1px solid #e2d6f2;border-radius:8px;background:#faf6ff;padding:8px 12px}
+.formulablk .fm-h{font-size:13px;font-weight:700;color:#6a3fb5;margin-bottom:4px}
+.formulablk .fm{margin:6px 0;padding:6px 0;border-top:1px dashed #e6ddf5}
+.formulablk .fm:first-of-type{border-top:0}
+.formulablk .fm-n{font-size:12.5px;font-weight:700;color:#5b3a99}
+.formulablk .fm-e{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13.4px;line-height:1.7;color:#2a2f3a;white-space:pre-wrap;margin:2px 0}
+.formulablk .fm-note{font-size:12.5px;color:#5b6b7b}
+html[data-theme="dark"] .formulablk{background:#221b31;border-color:#3a2c52}
+html[data-theme="dark"] .formulablk .fm{border-top-color:#3a2c52}
+html[data-theme="dark"] .formulablk .fm-e{color:#e0d6f5}
+html[data-theme="dark"] .formulablk .fm-note{color:#b6a8cf}
 .princblk{margin:10px 0 0;border:1px solid #cfe0ee;border-radius:8px;background:#f3f8ff;padding:8px 12px}
 .princblk .pr-h{font-size:13px;font-weight:700;color:var(--blue);margin-bottom:4px}
 .princblk p{font-size:13.4px;line-height:1.8;margin:.2em 0;color:#26405c}

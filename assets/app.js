@@ -890,6 +890,15 @@
           prb.innerHTML = '<div class="pr-h">📖 算法 / 方法原理</div><p>' + esc(s.principle).replace(/\n/g, "<br>") + "</p>";
           card.appendChild(prb);
         }
+        if (s.formula && s.formula.length) {
+          var fblk = el("div", "formulablk");
+          fblk.innerHTML = '<div class="fm-h">∑ 数学公式</div>' + s.formula.map(function (f) {
+            return '<div class="fm"><div class="fm-n">' + esc(f.name || "") + "</div>"
+              + '<div class="fm-e">' + esc(f.expr || "") + "</div>"
+              + (f.note ? '<div class="fm-note">' + esc(f.note) + "</div>" : "") + "</div>";
+          }).join("");
+          card.appendChild(fblk);
+        }
         if (s.code) {
           var cblk = el("div", "codeblk");
           cblk.innerHTML = '<div class="cb-h">💻 算法 / 代码' + (s.lang ? ' <span class="cb-lang">' + esc(s.lang) + "</span>" : "") + "</div><pre>" + esc(s.code) + "</pre>";
