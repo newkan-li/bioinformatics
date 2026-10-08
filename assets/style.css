@@ -396,5 +396,6 @@ html[data-theme="dark"] .fc-card,html[data-theme="dark"] .fc-chip,html[data-them
 
 .codeblk{margin:10px 0 0;border:1px solid var(--line);border-radius:8px;background:#0f1720;overflow:hidden}
 .codeblk .cb-h{font-size:12.5px;font-weight:700;color:#9fd0ff;padding:6px 12px;background:#132030}
+.codeblk .cb-lang{display:inline-block;margin-left:8px;font-size:11.5px;font-weight:600;color:#eafff3;background:#2f6f4f;border-radius:999px;padding:1px 9px}
 .codeblk pre{margin:0;padding:12px;overflow:auto;color:#d7e3f0;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.6px;line-height:1.6}
 html[data-theme="light"] .codeblk{background:#0f1720}

@@ -887,7 +887,7 @@
         card.appendChild(body);
         if (s.code) {
           var cblk = el("div", "codeblk");
-          cblk.innerHTML = '<div class="cb-h">💻 算法 / 代码</div><pre>' + esc(s.code) + "</pre>";
+          cblk.innerHTML = '<div class="cb-h">💻 算法 / 代码' + (s.lang ? ' <span class="cb-lang">' + esc(s.lang) + "</span>" : "") + "</div><pre>" + esc(s.code) + "</pre>";
           card.appendChild(cblk);
         }
         if (s.points && s.points.length) {
