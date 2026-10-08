@@ -892,11 +892,17 @@
         }
         if (s.formula && s.formula.length) {
           var fblk = el("div", "formulablk");
-          fblk.innerHTML = '<div class="fm-h">∑ 数学公式</div>' + s.formula.map(function (f) {
-            return '<div class="fm"><div class="fm-n">' + esc(f.name || "") + "</div>"
-              + '<div class="fm-e">' + esc(f.expr || "") + "</div>"
-              + (f.note ? '<div class="fm-note">' + esc(f.note) + "</div>" : "") + "</div>";
-          }).join("");
+          fblk.appendChild(el("div", "fm-h", "∑ 数学公式"));
+          s.formula.forEach(function (f) {
+            var d = el("div", "fm");
+            d.appendChild(el("div", "fm-n", f.name || ""));
+            var e = el("div", "fm-e");
+            d.appendChild(e);
+            if (f.tex && window.katex) { try { window.katex.render(f.tex, e, { throwOnError: false, displayMode: true }); } catch (err) { e.textContent = f.expr || ""; } }
+            else { e.textContent = f.expr || ""; }
+            if (f.note) d.appendChild(el("div", "fm-note", f.note));
+            fblk.appendChild(d);
+          });
           card.appendChild(fblk);
         }
         if (s.code) {
