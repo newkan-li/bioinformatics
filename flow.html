@@ -4,7 +4,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="light dark"><link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1f5c8b"><title>算法流程图总览 · 生物信息学</title>
-<link rel="stylesheet" href="assets/style.css?v=20261008g"><script src="assets/theme.js?v=20261008g"></script>
+<link rel="stylesheet" href="assets/style.css?v=20261008h"><script src="assets/theme.js?v=20261008h"></script>
 <style>
 .fid2{background:#eef7f0;border:1px solid #b7e3c9;border-radius:10px;padding:8px 12px;font-size:13px;line-height:2;margin-bottom:12px}
 .fid2 a{color:#1b7f3b;text-decoration:none;margin-right:4px}
@@ -43,19 +43,19 @@ html[data-theme="dark"] .fid2{background:#16221b;border-color:#2c4a38}
   K --&gt; M
   L --&gt; M
   M --&gt; N([结束])</pre><div class="fc-lk"><a href="ch03.html#s_ch03_s0_0">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">字符编辑操作与双序列比对<span class="fc-p">p41</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
-  A([开始]) --&gt; B[引入字符编辑操作概念]
-  B --&gt; C[定义空位字符-代表gap]
-  C --&gt; D{选择编辑操作}
-  D --&gt;|Match| E[Match(a,a)表示字符匹配]
-  D --&gt;|Delete| F[Delete(a,-)从第一条序列删除字符a或在第二条序列相应位置插入空位]
-  D --&gt;|Replace| G[Replace(a,b)以第二条序列中的字符b替换第一条序列中的字符a]
-  D --&gt;|Insert| H[Insert(-,b)在第一条序列插入空位或删除第二条序列中对应字符b]
-  E --&gt; I[通过编辑操作将一个序列转化为另一个序列]
+  A(["开始"]) --&gt; B["引入字符编辑操作概念"]
+  B --&gt; C["定义空位字符，代表gap"]
+  C --&gt; D{"选择编辑操作?"}
+  D --&gt;|"Match"| E["Match(a,a)表示字符匹配"]
+  D --&gt;|"Delete"| F["Delete(a,-)从第一条序列删除字符a，或在第二条序列相应位置插入空位"]
+  D --&gt;|"Replace"| G["Replace(a,b)以第二条序列中的字符b替换第一条序列中的字符a"]
+  D --&gt;|"Insert"| H["Insert(-,b)在第一条序列插入空位，或删除第二条序列中对应字符b"]
+  E --&gt; I["通过编辑操作将一个序列转化为另一个序列"]
   F --&gt; I
   G --&gt; I
   H --&gt; I
-  I --&gt; J[比较两条序列]
-  J --&gt; K([结束])</pre><div class="fc-lk"><a href="ch03.html#s_ch03_s0_1">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">全局比对与局部比对递归算法<span class="fc-p">p42</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  I --&gt; J["比较两条序列"]
+  J --&gt; K(["结束"])</pre><div class="fc-lk"><a href="ch03.html#s_ch03_s0_1">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">全局比对与局部比对递归算法<span class="fc-p">p42</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
   A([开始]) --&gt; B[设定初值]
   B --&gt; C[全局比对递归关系]
   C --&gt; D["S(i,j) = max{ S(i-1,j-1)+p(a_i,b_j), S(i-1,j)+p(a_i,-), S(i,j-1)+p(-,b_j) }"]
@@ -378,24 +378,24 @@ html[data-theme="dark"] .fid2{background:#16221b;border-color:#2c4a38}
   J --&gt; L[参数估计量的评选标准]
   K --&gt; L
   L --&gt; M([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_4">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">最小二乘估计与最大似然估计<span class="fc-p">p263</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
-  A([开始]) --&gt; B[从总体抽取样本 y1 到 yn]
-  B --&gt; C[将观察值剖分为总体平均数与误差之和]
-  C --&gt; D["定义最小二乘目标 Q=Σ(y_i-μ)^2"]
-  D --&gt; E[对 μ 求导并令导数为 0]
-  E --&gt; F[得到 Σ(y_i-μ)=0]
-  F --&gt; G["解得 μ̂=1/n Σ y_i"]
-  G --&gt; H[算术平均数是总体平均数的最小二乘估计]
-  H --&gt; I([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_5">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">最大似然估计与对数似然函数<span class="fc-p">p264</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
-  A([开始]) --&gt; B[获取离散型总体复置抽样计数]
+  A(["开始"]) --&gt; B["从总体抽取样本 y1 到 yn"]
+  B --&gt; C["将观察值剖分为总体平均数与误差之和"]
+  C --&gt; D["定义最小二乘目标 Q 等于 Σ(y_i 减 μ)的平方"]
+  D --&gt; E["对 μ 求导并令导数为 0"]
+  E --&gt; F["得到 Σ(y_i 减 μ)等于 0"]
+  F --&gt; G["解得 μ̂ 等于 1 除以 n 再乘以 Σ y_i"]
+  G --&gt; H["算术平均数是总体平均数的最小二乘估计"]
+  H --&gt; I(["结束"])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_5">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">最大似然估计与对数似然函数<span class="fc-p">p264</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A(["开始"]) --&gt; B["获取离散型总体复置抽样计数"]
   B --&gt; C["构造多项分布似然 L(p1,p2,p3)"]
-  C --&gt; D[获取连续型独立样本观测值]
+  C --&gt; D["获取连续型独立样本观测值"]
   D --&gt; E["构造似然 L(θ)=∏ f(yi;θ)"]
-  E --&gt; F[若 y 服从正态分布 N(μ,σ²)]
-  F --&gt; G[写出含指数项的正态似然函数]
-  G --&gt; H[对似然函数取对数]
-  H --&gt; I[得到对数似然函数]
-  I --&gt; J[求使对数似然最大的参数估计]
-  J --&gt; K([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_6">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">聚类分析概述与数据变换<span class="fc-p">p265</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  E --&gt; F["若 y 服从正态分布 N(μ,σ²)"]
+  F --&gt; G["写出含指数项的正态似然函数"]
+  G --&gt; H["对似然函数取对数"]
+  H --&gt; I["得到对数似然函数"]
+  I --&gt; J["求使对数似然最大的参数估计"]
+  J --&gt; K(["结束"])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_6">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">聚类分析概述与数据变换<span class="fc-p">p265</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
   A([开始]) --&gt; B[进入聚类分析]
   B --&gt; C{按对象类型分类?}
   C --&gt;|样本| D[Q 型聚类]
@@ -432,20 +432,20 @@ html[data-theme="dark"] .fid2{background:#16221b;border-color:#2c4a38}
   K --&gt; L[距离越小表示样品越接近]
   L --&gt; M[将距离近的归为一类]
   M --&gt; N([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_8">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">系统聚类步骤与类间距离<span class="fc-p">p267</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
-  A([开始]) --&gt; B[以 dij 表示样品 xi 与 xj 的距离]
-  B --&gt; C[以 Dij 表示类 Gi 与 Gj 的距离]
-  C --&gt; D[采用最短距离法定义类间距离]
-  D --&gt; E["Dij=min{dab | a∈Gi,b∈Gj}"]
-  E --&gt; F[从距离矩阵 D(0) 开始]
-  F --&gt; G[每个样品自成一类]
-  G --&gt; H[此时 Dij=dij]
-  H --&gt; I[寻找距离最近的两类]
-  I --&gt; J[合并 Gi 与 Gj 为新类 Gr]
-  J --&gt; K["计算任一类 Gk 与 Gr 的距离 Dkr=min{Dki,Dkj}"]
-  K --&gt; L{是否全部样品归为一类?}
+  A(["开始"]) --&gt; B["以 dij 表示样品 xi 与 xj 的距离"]
+  B --&gt; C["以 Dij 表示类 Gi 与 Gj 的距离"]
+  C --&gt; D["采用最短距离法定义类间距离"]
+  D --&gt; E["Dij 等于 min dab，其中 a 属于 Gi，b 属于 Gj"]
+  E --&gt; F["从距离矩阵 D0 开始"]
+  F --&gt; G["每个样品自成一类"]
+  G --&gt; H["此时 Dij 等于 dij"]
+  H --&gt; I["寻找距离最近的两类"]
+  I --&gt; J["合并 Gi 与 Gj 为新类 Gr"]
+  J --&gt; K["计算任一类 Gk 与 Gr 的距离 Dkr 等于 min Dki 与 Dkj"]
+  K --&gt; L{"是否全部样品归为一类？"}
   L --&gt;|否| I
-  L --&gt;|是| M[得到系统聚类结果]
-  M --&gt; N([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_9">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">主成分分析步骤与Fisher判别引入<span class="fc-p">p268</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  L --&gt;|是| M["得到系统聚类结果"]
+  M --&gt; N(["结束"])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_9">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">主成分分析步骤与Fisher判别引入<span class="fc-p">p268</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
   A([开始]) --&gt; B[输入观测样本矩阵 X]
   B --&gt; C["标准化: (xij)'=(xij-x̄j)/sj"]
   C --&gt; D[计算样本相关系数矩阵 R]
@@ -479,38 +479,38 @@ html[data-theme="dark"] .fid2{background:#16221b;border-color:#2c4a38}
   H --&gt; I[托马斯·贝叶斯创立贝叶斯统计理论]
   I --&gt; J[贝叶斯决策核心：在信息不完备下进行概率推理]
   J --&gt; K([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_12">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">朴素贝叶斯分类器与气候训练集示例<span class="fc-p">p271</span><span class="fc-lang">伪代码/自然语言</span></div><pre class="mermaid">flowchart TD
-  A([开始]) --&gt; B[输入训练集与待分类样本X]
-  B --&gt; C[由于P(X)对所有类别相同]
-  C --&gt; D[分类时只需比较P(c)P(X|c)或P(X|c)]
+  A(["开始"]) --&gt; B["输入训练集与待分类样本X"]
+  B --&gt; C["由于P(X)对所有类别相同"]
+  C --&gt; D["分类时只需比较P(c)P(X|c)或P(X|c)"]
   D --&gt; E{"类先验P(c)是否已知?"}
-  E --&gt;|是| F[使用已知类先验]
-  E --&gt;|否| G[假设各类等概率或用类样本比例近似P(c)]
-  F --&gt; H[引入属性条件独立假设]
+  E --&gt;|是| F["使用已知类先验"]
+  E --&gt;|否| G["假设各类等概率或用类样本比例近似P(c)"]
+  F --&gt; H["引入属性条件独立假设"]
   G --&gt; H
   H --&gt; I["P(X|c)=∏P(x_i|c)"]
-  I --&gt; J[对每个类别c_i计算P(c_i)P(X|c_i)]
-  J --&gt; K[选择使P(c_i)P(X|c_i)最大的类]
-  K --&gt; L[输出最佳分类结果]
-  L --&gt; M([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_13">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">朴素贝叶斯分类计算与隐马尔可夫模型引入<span class="fc-p">p272</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
-  A([开始]) --&gt; B["输入测试样本 X=(Sunny,Hot,High,Weak)"]
-  B --&gt; C[计算类别N的后验概率]
-  C --&gt; D["P(N|X)=P(N)P(Sunny|N)P(Hot|N)P(High|N)P(Weak|N)/P(X)"]
-  D --&gt; E["=5/14×3/5×2/5×4/5×2/5/P(X)=0.0274/P(X)"]
-  E --&gt; F[计算类别P的后验概率]
-  F --&gt; G["P(P|X)=P(P)P(Sunny|P)P(Hot|P)P(High|P)P(Weak|P)/P(X)"]
-  G --&gt; H["=9/14×2/9×2/9×3/9×6/9/P(X)=0.007039/P(X)"]
-  H --&gt; I[比较P(N|X)与P(P|X)]
-  I --&gt; J[选择后验概率较大的类别]
-  J --&gt; K[引入隐马尔可夫模型]
-  K --&gt; L([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_14">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">HMM生成观察序列、模型参数与三个基本问题<span class="fc-p">p273</span><span class="fc-lang">伪代码/自然语言</span></div><pre class="mermaid">flowchart TD
-  A([开始]) --&gt; B[根据初始状态概率分布π选择初始状态q1=i]
-  B --&gt; C[置观察时间t=1]
-  C --&gt; D[根据当前状态i的观察符号概率分布bi选择ot=v]
-  D --&gt; E[根据状态转移概率分布A从当前状态qt=i转移到下一状态q(t+1)=j]
-  E --&gt; F[置t=t+1]
-  F --&gt; G{t&lt;T?}
-  G --&gt;|是| D
-  G --&gt;|否| H([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_15">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">海草湿度HMM示例与穷举法评估<span class="fc-p">p274</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  I --&gt; J["对每个类别c_i计算P(c_i)P(X|c_i)"]
+  J --&gt; K["选择使P(c_i)P(X|c_i)最大的类"]
+  K --&gt; L["输出最佳分类结果"]
+  L --&gt; M(["结束"])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_13">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">朴素贝叶斯分类计算与隐马尔可夫模型引入<span class="fc-p">p272</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A(["开始"]) --&gt; B["输入测试样本 X 等于 Sunny,Hot,High,Weak"]
+  B --&gt; C["计算类别N的后验概率"]
+  C --&gt; D["P(N|X) 等于 P(N)P(Sunny|N)P(Hot|N)P(High|N)P(Weak|N)除以P(X)"]
+  D --&gt; E["等于5除以14乘3除以5乘2除以5乘4除以5乘2除以5除以P(X)等于0.0274除以P(X)"]
+  E --&gt; F["计算类别P的后验概率"]
+  F --&gt; G["P(P|X) 等于 P(P)P(Sunny|P)P(Hot|P)P(High|P)P(Weak|P)除以P(X)"]
+  G --&gt; H["等于9除以14乘2除以9乘2除以9乘3除以9乘6除以9除以P(X)等于0.007039除以P(X)"]
+  H --&gt; I["比较P(N|X)与P(P|X)"]
+  I --&gt; J["选择后验概率较大的类别"]
+  J --&gt; K["引入隐马尔可夫模型"]
+  K --&gt; L(["结束"])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_14">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">HMM生成观察序列、模型参数与三个基本问题<span class="fc-p">p273</span><span class="fc-lang">伪代码/自然语言</span></div><pre class="mermaid">flowchart TD
+  A(["开始"]) --&gt; B["根据初始状态概率分布π选择初始状态q1等于i"]
+  B --&gt; C["置观察时间t等于1"]
+  C --&gt; D["根据当前状态i的观察符号概率分布bi选择ot等于v"]
+  D --&gt; E["根据状态转移概率分布A从当前状态qt等于i转移到下一状态q(t+1)等于j"]
+  E --&gt; F["置t等于t+1"]
+  F --&gt; G{"t小于T？"}
+  G --&gt;|"是"| D
+  G --&gt;|"否"| H(["结束"])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_15">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">海草湿度HMM示例与穷举法评估<span class="fc-p">p274</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
   A([开始]) --&gt; B[定义HMM模型]
   B --&gt; C[状态集合: Sunny, Cloudy, Rainy]
   C --&gt; D[观察集合: Dry, Dryish, Damp, Soggy]
@@ -522,25 +522,25 @@ html[data-theme="dark"] .fid2{background:#16221b;border-color:#2c4a38}
   I --&gt; J[计算每个状态序列产生观察序列的概率]
   J --&gt; K[对所有概率求和]
   K --&gt; L([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_16">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">前向算法计算示例与后向算法定义<span class="fc-p">p275</span><span class="fc-lang">伪代码/自然语言</span></div><pre class="mermaid">flowchart TD
-  A([开始]) --&gt; B[分析穷举法计算量]
-  B --&gt; C[乘法次数约N^T(T-1)]
-  C --&gt; D[加法次数约N(N-1)(T-1)]
-  D --&gt; E[引入后向算法]
-  E --&gt; F[定义后向概率βt(i)=P(o(t+1),...,oT|qt=Si,λ)]
-  F --&gt; G[初始化βT(i)=1, 1≤i≤N]
-  G --&gt; H[递推计算βt(i)]
-  H --&gt; I[利用后向概率计算观察序列概率]
-  I --&gt; J([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_17">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">HMM解码问题与Viterbi算法<span class="fc-p">p276</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
-  A([开始]) --&gt; B[给定HMM模型λ=(A,B,π)]
-  B --&gt; C[给定观测序列O=(o1,o2,...,oT)]
-  C --&gt; D[定义解码问题: 求最佳状态序列Q=(q1,q2,...,qT)]
-  D --&gt; E[定义整体最优准则]
-  E --&gt; F[定义δt(i)=max P(q1,...,qt-1, qt=Si, o1,...,ot|λ)]
-  F --&gt; G[初始化δ1(i)=πi bi(o1), ψ1(i)=0]
-  G --&gt; H[递推计算δt(j)和ψt(j)]
-  H --&gt; I[终止: 选择最大δT(i)作为最优路径概率]
-  I --&gt; J[回溯得到最优状态序列]
-  J --&gt; K([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_18">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">Viterbi算法递推计算示例<span class="fc-p">p277</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A(["开始"]) --&gt; B["分析穷举法计算量"]
+  B --&gt; C["乘法次数约 N 的 T 次方乘 T 减 1"]
+  C --&gt; D["加法次数约 N 乘 N 减 1 乘 T 减 1"]
+  D --&gt; E["引入后向算法"]
+  E --&gt; F["定义后向概率 beta t i 等于 P o t 加 1 到 o T 在 q t 等于 S i 和 lambda 条件下"]
+  F --&gt; G["初始化 beta T i 等于 1，1 小于等于 i 小于等于 N"]
+  G --&gt; H["递推计算 beta t i"]
+  H --&gt; I["利用后向概率计算观察序列概率"]
+  I --&gt; J(["结束"])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_17">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">HMM解码问题与Viterbi算法<span class="fc-p">p276</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  A(["开始"]) --&gt; B["给定HMM模型λ等于A、B、π"]
+  B --&gt; C["给定观测序列O等于o1、o2、...、oT"]
+  C --&gt; D["定义解码问题：求最佳状态序列Q等于q1、q2、...、qT"]
+  D --&gt; E["定义整体最优准则"]
+  E --&gt; F["定义δt(i)等于max P(q1、...、qt-1、qt等于Si、o1、...、ot条件λ)"]
+  F --&gt; G["初始化δ1(i)等于πi bi(o1)，ψ1(i)等于0"]
+  G --&gt; H["递推计算δt(j)和ψt(j)"]
+  H --&gt; I["终止：选择最大δT(i)作为最优路径概率"]
+  I --&gt; J["回溯得到最优状态序列"]
+  J --&gt; K(["结束"])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_18">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">Viterbi算法递推计算示例<span class="fc-p">p277</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
   A([开始]) --&gt; B[输入天气-海草湿度HMM模型]
   B --&gt; C[输入观察序列]
   C --&gt; D[第一天: 初始化各状态δ1和ψ1]
@@ -623,19 +623,19 @@ html[data-theme="dark"] .fid2{background:#16221b;border-color:#2c4a38}
   R --&gt; S[训练网络]
   S --&gt; T[识别外显子/内含子]
   T --&gt; U([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_24">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">支持向量分类决策函数与支持向量回归<span class="fc-p">p283</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
-  A([开始]) --&gt; B[输入训练样本集]
-  B --&gt; C{"训练集是否线性可分?"}
-  C --&gt;|是| D[求解约束二次优化]
+  A(["开始"]) --&gt; B["输入训练样本集"]
+  B --&gt; C{"训练集是否线性可分？"}
+  C --&gt;|是| D["求解约束二次优化"]
   D --&gt; E["得到最优 w* 和 b*"]
   E --&gt; F["计算决策函数 M(x)=sgn(w*·x+b*)"]
-  F --&gt; G[输出分类结果]
-  C --&gt;|否| H[引入核函数 K(x_i,x_j)]
-  H --&gt; I[映射到高维特征空间 F]
-  I --&gt; J[在高维空间求解约束二次优化]
+  F --&gt; G["输出分类结果"]
+  C --&gt;|否| H["引入核函数 K(x_i,x_j)"]
+  H --&gt; I["映射到高维特征空间 F"]
+  I --&gt; J["在高维空间求解约束二次优化"]
   J --&gt; K["得到最优 α_i* 和 b*"]
   K --&gt; L["计算决策函数 M(x)=sgn(Σ α_i* y_i K(x_i,x)+b*)"]
   L --&gt; G
-  G --&gt; M([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_25">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">SVM训练算法：块算法与固定工作样本集<span class="fc-p">p284</span><span class="fc-lang">伪代码/自然语言</span></div><pre class="mermaid">flowchart TD
+  G --&gt; M(["结束"])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_25">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">SVM训练算法：块算法与固定工作样本集<span class="fc-p">p284</span><span class="fc-lang">伪代码/自然语言</span></div><pre class="mermaid">flowchart TD
   A([开始]) --&gt; B[分析 SVM 训练慢的原因]
   B --&gt; C[核函数矩阵计算与存储开销大]
   C --&gt; D[二次型寻优中大量矩阵运算耗时]
@@ -648,20 +648,20 @@ html[data-theme="dark"] .fid2{background:#16221b;border-color:#2c4a38}
   J --&gt; I
   I --&gt; K[得到最优解]
   K --&gt; L([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_26">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">SVM主要缺点与LIBSVM简介<span class="fc-p">p285</span><span class="fc-lang">Shell/Linux</span></div><pre class="mermaid">flowchart TD
-  A([开始]) --&gt; B[总结 SVM 主要缺点]
-  B --&gt; C[缺点一 可解释性差]
-  C --&gt; D[SVR 缺乏显式表达式]
-  D --&gt; E[难以对自变量效应与互作做显著性测验]
-  E --&gt; F[多通过均方误差相对评价]
-  F --&gt; G[不同数据集间回归性能不可比]
-  B --&gt; H[缺点二 对大训练样本计算复杂度高]
-  H --&gt; I[优化算法复杂度为 O(n^2) 或更高]
-  I --&gt; J[大样本全部参与训练时开销过大]
-  B --&gt; K[缺点三 参数与核函数选择敏感]
-  K --&gt; L[需要调参和模型选择]
-  L --&gt; M[介绍 LIBSVM 工具]
-  M --&gt; N[LIBSVM 提供高效 SVM 实现]
-  N --&gt; O([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_27">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">LIBSVM子程序与svmtrain选项<span class="fc-p">p286</span><span class="fc-lang">Shell/Linux</span></div><pre class="mermaid">flowchart TD
+  A(["开始"]) --&gt; B["总结 SVM 主要缺点"]
+  B --&gt; C["缺点一 可解释性差"]
+  C --&gt; D["SVR 缺乏显式表达式"]
+  D --&gt; E["难以对自变量效应与互作做显著性测验"]
+  E --&gt; F["多通过均方误差相对评价"]
+  F --&gt; G["不同数据集间回归性能不可比"]
+  B --&gt; H["缺点二 对大训练样本计算复杂度高"]
+  H --&gt; I["优化算法复杂度为 O(n^2) 或更高"]
+  I --&gt; J["大样本全部参与训练时开销过大"]
+  B --&gt; K["缺点三 参数与核函数选择敏感"]
+  K --&gt; L["需要调参和模型选择"]
+  L --&gt; M["介绍 LIBSVM 工具"]
+  M --&gt; N["LIBSVM 提供高效 SVM 实现"]
+  N --&gt; O(["结束"])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_27">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">LIBSVM子程序与svmtrain选项<span class="fc-p">p286</span><span class="fc-lang">Shell/Linux</span></div><pre class="mermaid">flowchart TD
   A([开始]) --&gt; B[介绍 LIBSVM 主要子程序]
   B --&gt; C[svmscale 数据规格化]
   B --&gt; D[svmtrain 训练建模]
@@ -713,16 +713,16 @@ html[data-theme="dark"] .fid2{background:#16221b;border-color:#2c4a38}
   G --&gt; I
   H --&gt; I
   I --&gt; J([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_31">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">MATLAB系统发育树构建与基因芯片数据分析函数<span class="fc-p">p290</span><span class="fc-lang">MATLAB</span></div><pre class="mermaid">flowchart TD
-  A([开始]) --&gt; B[定义 data 元胞数组包含物种名称和登录号]
-  B --&gt; C[初始化循环变量 i = 1]
-  C --&gt; D{是否还有未处理的数据?}
-  D --&gt;|是| E["调用 getgenbank(data{i,2}, sequenceonly, true) 获取序列"]
-  E --&gt; F[将序列存入 seqs(i)]
-  F --&gt; G[i = i + 1]
+  A(["开始"]) --&gt; B["定义 data 元胞数组包含物种名称和登录号"]
+  B --&gt; C["初始化循环变量 i 等于 1"]
+  C --&gt; D{"是否还有未处理的数据？"}
+  D --&gt;|是| E["调用 getgenbank 函数并传入 data 第二列、sequenceonly、true 获取序列"]
+  E --&gt; F["将序列存入 seqs 的第 i 个位置"]
+  F --&gt; G["i 等于 i 加 1"]
   G --&gt; D
-  D --&gt;|否| H[构建系统发育树]
-  H --&gt; I[进行基因芯片数据分析]
-  I --&gt; J([结束])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_32">在章节页查看 →</a></div></div></section><section class="fch2" id="fl_ch13"><h2>第十三章 生物信息学编程基础 <span class="fc-n">35 张</span></h2><div class="fc"><div class="fc-h">Ubuntu发行版与Linux常用命令行操作<span class="fc-p">p293</span><span class="fc-lang">Shell/Linux</span></div><pre class="mermaid">flowchart TD
+  D --&gt;|否| H["构建系统发育树"]
+  H --&gt; I["进行基因芯片数据分析"]
+  I --&gt; J(["结束"])</pre><div class="fc-lk"><a href="ch12.html#s_ch12_s0_32">在章节页查看 →</a></div></div></section><section class="fch2" id="fl_ch13"><h2>第十三章 生物信息学编程基础 <span class="fc-n">35 张</span></h2><div class="fc"><div class="fc-h">Ubuntu发行版与Linux常用命令行操作<span class="fc-p">p293</span><span class="fc-lang">Shell/Linux</span></div><pre class="mermaid">flowchart TD
   A([开始]) --&gt; B[了解Ubuntu发行版]
   B --&gt; C[基于Debian发行版]
   C --&gt; D[保留Debian软件包管理系统]
@@ -733,21 +733,21 @@ html[data-theme="dark"] .fid2{background:#16221b;border-color:#2c4a38}
   H --&gt; I[每6个月发布新版本]
   I --&gt; J[当时最新为Ubuntu 17.04]
   J --&gt; K([结束])</pre><div class="fc-lk"><a href="ch13.html#s_ch13_s0_1">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">Linux命令提示符、目录结构与文件类型<span class="fc-p">p294</span><span class="fc-lang">Shell/Linux</span></div><pre class="mermaid">flowchart TD
-  A([开始]) --&gt; B[查看Linux命令提示符示例]
-  B --&gt; C[示例 root@myhost Test]
-  C --&gt; D[最后是当前所在目录]
-  D --&gt; E[~表示当前用户主目录]
-  E --&gt; F[即/home/Test/]
-  F --&gt; G[了解Linux目录结构]
-  G --&gt; H[与Windows差异很大]
-  H --&gt; I[最开始的/表示根目录]
-  I --&gt; J[所有文件和目录都位于根目录之下]
-  J --&gt; K[类似Windows的我的电脑]
-  K --&gt; L[根目录下有许多目录各司其职]
-  L --&gt; M[/dev用于存放设备文件]
-  M --&gt; N[/home下面是各个用户的文件]
-  N --&gt; O[/lib用于存放库文件]
-  O --&gt; P([结束])</pre><div class="fc-lk"><a href="ch13.html#s_ch13_s0_2">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">Linux命令帮助、文件压缩与打包<span class="fc-p">p295</span><span class="fc-lang">Shell/Linux</span></div><pre class="mermaid">flowchart TD
+  A(["开始"]) --&gt; B["查看Linux命令提示符示例"]
+  B --&gt; C["示例 root@myhost Test"]
+  C --&gt; D["最后是当前所在目录"]
+  D --&gt; E["~表示当前用户主目录"]
+  E --&gt; F["即/home/Test/"]
+  F --&gt; G["了解Linux目录结构"]
+  G --&gt; H["与Windows差异很大"]
+  H --&gt; I["最开始的/表示根目录"]
+  I --&gt; J["所有文件和目录都位于根目录之下"]
+  J --&gt; K["类似Windows的我的电脑"]
+  K --&gt; L["根目录下有许多目录各司其职"]
+  L --&gt; M["/dev用于存放设备文件"]
+  M --&gt; N["/home下面是各个用户的文件"]
+  N --&gt; O["/lib用于存放库文件"]
+  O --&gt; P(["结束"])</pre><div class="fc-lk"><a href="ch13.html#s_ch13_s0_2">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">Linux命令帮助、文件压缩与打包<span class="fc-p">p295</span><span class="fc-lang">Shell/Linux</span></div><pre class="mermaid">flowchart TD
   A([开始]) --&gt; B[了解命令可带参数]
   B --&gt; C[如ls -l是带参数的ls命令]
   C --&gt; D[想知道命令用法和参数设置]
@@ -1006,22 +1006,22 @@ html[data-theme="dark"] .fid2{background:#16221b;border-color:#2c4a38}
   G --&gt; H
   H --&gt; I[配置开发环境]
   I --&gt; J([结束])</pre><div class="fc-lk"><a href="ch13.html#s_ch13_s0_17">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">Python 交互式运行与反转序列示例及集成开发环境<span class="fc-p">p310</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
-  A([开始]) --&gt; B[选择运行方式]
-  B --&gt; C{运行方式?}
-  C --&gt;|IDLE| D[用 Python IDLE 打开脚本]
-  D --&gt; D1[按 F5 运行]
-  C --&gt;|Run 菜单| E[在 Run 菜单选择运行]
-  D1 --&gt; F[进入交互式界面]
+  A(["开始"]) --&gt; B["选择运行方式"]
+  B --&gt; C{"运行方式？"}
+  C --&gt;|"IDLE"| D["用 Python IDLE 打开脚本"]
+  D --&gt; D1["按 F5 运行"]
+  C --&gt;|"Run 菜单"| E["在 Run 菜单选择运行"]
+  D1 --&gt; F["进入交互式界面"]
   E --&gt; F
-  F --&gt; G[建立 DNA 序列]
-  G --&gt; G1[赋值给变量 seq]
-  G1 --&gt; H[输出原序列]
-  H --&gt; I[使用切片 seq[::-1]]
-  I --&gt; I1[得到反转序列]
-  I1 --&gt; J[赋值给变量 seqRev]
-  J --&gt; K[输出反转序列]
-  K --&gt; L[注意 DNA 反向互补问题]
-  L --&gt; M([结束])</pre><div class="fc-lk"><a href="ch13.html#s_ch13_s0_18">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">Python 生物信息常用程序与 R 语言简介<span class="fc-p">p311</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
+  F --&gt; G["建立 DNA 序列"]
+  G --&gt; G1["赋值给变量 seq"]
+  G1 --&gt; H["输出原序列"]
+  H --&gt; I["使用切片 seq 反向取值"]
+  I --&gt; I1["得到反转序列"]
+  I1 --&gt; J["赋值给变量 seqRev"]
+  J --&gt; K["输出反转序列"]
+  K --&gt; L["注意 DNA 反向互补问题"]
+  L --&gt; M(["结束"])</pre><div class="fc-lk"><a href="ch13.html#s_ch13_s0_18">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">Python 生物信息常用程序与 R 语言简介<span class="fc-p">p311</span><span class="fc-lang">Python</span></div><pre class="mermaid">flowchart TD
   A([开始]) --&gt; B[了解 Python 生物信息常用程序]
   B --&gt; C[Matplotlib 二维绘图库]
   C --&gt; C1[输出出版级图表]
@@ -1215,16 +1215,16 @@ html[data-theme="dark"] .fid2{background:#16221b;border-color:#2c4a38}
   F --&gt; G[得到输出：1: This is process 1 out of 2]
   G --&gt; H[说明MPI_Comm_rank和MPI_Comm_size作用]
   H --&gt; I([结束])</pre><div class="fc-lk"><a href="ch13.html#s_ch13_s0_33">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">并行计算性能、Amdahl定律、基本方法与云计算<span class="fc-p">p326</span><span class="fc-lang">伪代码/自然语言</span></div><pre class="mermaid">flowchart TD
-  A([开始]) --&gt; B[定义性能：计算量W，执行时间t，perf=W/t]
-  B --&gt; C[介绍Amdahl定律]
-  C --&gt; D[假设串行百分比为α]
-  D --&gt; E[并行加速比S(q)=1/(α+(1-α)/q)]
-  E --&gt; F[说明q增大时S(q)增大但有上界]
-  F --&gt; G[加速倍数不可能超过1/α]
-  G --&gt; H[介绍基本方法]
-  H --&gt; I[介绍实现应用]
-  I --&gt; J[介绍云计算]
-  J --&gt; K([结束])</pre><div class="fc-lk"><a href="ch13.html#s_ch13_s0_34">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">云计算特点、定义及生物信息学应用<span class="fc-p">p327</span><span class="fc-lang">伪代码/自然语言</span></div><pre class="mermaid">flowchart TD
+  A(["开始"]) --&gt; B["定义性能：计算量W，执行时间t，perf=W/t"]
+  B --&gt; C["介绍Amdahl定律"]
+  C --&gt; D["假设串行百分比为α"]
+  D --&gt; E["并行加速比S(q)=1/(α+(1-α)/q)"]
+  E --&gt; F["说明q增大时S(q)增大但有上界"]
+  F --&gt; G["加速倍数不可能超过1/α"]
+  G --&gt; H["介绍基本方法"]
+  H --&gt; I["介绍实现应用"]
+  I --&gt; J["介绍云计算"]
+  J --&gt; K(["结束"])</pre><div class="fc-lk"><a href="ch13.html#s_ch13_s0_34">在章节页查看 →</a></div></div><div class="fc"><div class="fc-h">云计算特点、定义及生物信息学应用<span class="fc-p">p327</span><span class="fc-lang">伪代码/自然语言</span></div><pre class="mermaid">flowchart TD
   A([开始]) --&gt; B[阐述云计算特点]
   B --&gt; C[高可靠性：数据多副本容错、节点同构可互换]
   C --&gt; D[通用性：不针对特定应用，同一云支撑不同应用]
@@ -1486,7 +1486,7 @@ html[data-theme="dark"] .fid2{background:#16221b;border-color:#2c4a38}
   M --&gt; N
   N --&gt; O([结束])</pre><div class="fc-lk"><a href="ch14.html#s_ch14_s0_19">在章节页查看 →</a></div></div></section>
 <footer>仅供个人学习使用</footer></div>
-<script src="assets/mermaid/mermaid.min.js?v=20261008g"></script>
+<script src="assets/mermaid/mermaid.min.js?v=20261008h"></script>
 <script>
 (function(){
   if(!window.mermaid) return;
