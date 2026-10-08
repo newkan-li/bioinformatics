@@ -883,13 +883,13 @@
         var img = el("img"); img.src = s.img; img.loading = "lazy"; img.alt = s.title;
         img.onclick = function () { document.getElementById("lbimg").src = s.img; document.getElementById("lightbox").classList.add("on"); };
         body.appendChild(img);
-        body.appendChild(el("div", "notes", esc(s.notes).replace(/\n/g, "<br>")));
+        body.appendChild(el("div", "notes", esc(s.notes)));
+        card.appendChild(body);
         if (s.code) {
           var cblk = el("div", "codeblk");
           cblk.innerHTML = '<div class="cb-h">💻 算法 / 代码</div><pre>' + esc(s.code) + "</pre>";
-          body.appendChild(cblk);
+          card.appendChild(cblk);
         }
-        card.appendChild(body);
         if (s.points && s.points.length) {
           var pb = el("div", "points");
           pb.innerHTML = '<div class="pt-h">📌 本页要点</div><ul>' +
