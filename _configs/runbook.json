@@ -1,0 +1,858 @@
+{
+ "ch03": {
+  "40": {
+   "page": 40,
+   "env": "Linux/macOS/Windows + Python 3.8+；依赖 Biopython（pip install biopython）",
+   "steps": "1. 安装依赖：pip install biopython\n2. 新建文件 p40_pairwise.py，粘贴示例代码\n3. 运行：python p40_pairwise.py",
+   "output": "打印若干条全局比对结果，例如：\nACGGTT\n|||| |\nACG-TT\n  Score=3\n（具体条数与格式依 pairwise2 版本略有差异）",
+   "errors": "ModuleNotFoundError: No module named 'Bio' —— 未安装 Biopython\nImportError: cannot import name 'pairwise2' —— Biopython 版本过新已弃用/移除 pairwise2（1.80+ 仍可用但已弃用；若报错可改用 Bio.Align.PairwiseAligner）\nDeprecationWarning —— pairwise2 已弃用，仅警告不影响运行",
+   "debug": "1. python -c \"import Bio; print(Bio.__version__)\" 确认版本\n2. 若 pairwise2 不可用，改用：from Bio.Align import PairwiseAligner; aligner=PairwiseAligner(); print(aligner.align(seq1,seq2)[0])\n3. 打印 seq1/seq2 长度确认输入无误\n4. 用 len(list(pairwise2.align.globalxx(seq1,seq2))) 查看比对条数"
+  },
+  "41": {
+   "page": 41,
+   "env": "Linux/macOS/Windows + Python 3.8+；仅标准库，无第三方依赖",
+   "steps": "1. 新建文件 p41_edit_ops.py，粘贴示例代码\n2. 运行：python p41_edit_ops.py",
+   "output": "('Match', 'A', 'A', 0)\n('Insert', 'A', '-', 1)\n('Replace', 'A', 'G', 1)\n('Delete', '-', 'G', 1)",
+   "errors": "SyntaxError —— 括号/引号不匹配或缩进错误\nTypeError —— 传入非字符串（如 None）导致比较异常\n逻辑混淆：Insert/Delete 方向与 a/b 定义相反 —— 需明确 a 为参考序列、b 为查询序列",
+   "debug": "1. 逐行 print 每个参数确认输入\n2. 对每个分支加断言：assert edit_ops('A','A')[0]=='Match'\n3. 若方向存疑，交换参数再运行对比输出\n4. 用 python -i p41_edit_ops.py 进入交互模式手动调用函数验证"
+  },
+  "42": {
+   "page": 42,
+   "env": "Linux/macOS/Windows + Python 3.8+；仅标准库",
+   "steps": "1. 新建文件 p42_global_align.py，粘贴示例代码\n2. 运行：python p42_global_align.py\n3. （可选）在 return 前加 print(S) 查看打分矩阵",
+   "output": "打印全局比对最优得分，例如：\n-1\n（对 ACGGTT vs ACGTT，match=1/mismatch=-1/gap=-2 时通常为 -1 或相近值，取决于 gap 罚分策略）",
+   "errors": "IndexError —— 循环边界写成 range(m) 而非 range(1,m+1)\n得分异常 —— gap 罚分符号写反（应为负）\n矩阵初始化遗漏首行/首列 —— 导致边界得分错误\nRecursionError —— 若误写成递归实现且序列过长",
+   "debug": "1. 用小序列 a='A', b='A' 验证 S[1][1]==1\n2. 打印完整 S 矩阵，手工核对首行首列是否为 0,-2,-4,...\n3. 与 Biopython pairwise2.align.globalms 结果对比\n4. 检查 max(diag,up,left) 三个候选值是否都正确计算"
+  },
+  "43": {
+   "page": 43,
+   "env": "Linux/macOS/Windows + Python 3.8+；仅标准库",
+   "steps": "1. 新建文件 p43_identity.py，粘贴示例代码\n2. 运行：python p43_identity.py",
+   "output": "83.33333333333334\n（ACGGTT 与 ACGTT 逐位比较，前 5 位相同，5/6≈83.33%）",
+   "errors": "ZeroDivisionError —— 传入空序列\n结果偏差 —— 两序列长度不等时 zip 会截断，导致分母仍用 len(seq1) 但实际比较位数不足\n概念误用 —— 把同一性百分比直接称为“同源性”",
+   "debug": "1. 打印 len(seq1), len(seq2) 确认等长\n2. 若不等长，先做比对再计算同一性，或改用比对后列数作分母\n3. 手工数相同位：sum(x==y for x,y in zip(seq1,seq2))\n4. 加断言：assert 0<=identity_percent(seq1,seq2)<=100"
+  },
+  "44": {
+   "page": 44,
+   "env": "Linux/macOS/Windows + Python 3.8+（仅标准库，无需第三方包）",
+   "steps": "1. 新建文件 p44_score.py，粘贴本页代码。\n2. 打开终端，进入文件所在目录。\n3. 运行：python3 p44_score.py",
+   "output": "-1\n0",
+   "errors": "1. KeyError: 'G' —— blosum62_mini 中缺少对应键，检查字典是否包含 a、b 两个键。\n2. IndentationError —— 函数体缩进不一致。\n3. NameError: name 'blosum62_mini' is not defined —— 字典定义在调用之后或拼写错误。",
+   "debug": "1. 在 print 前加 print(blosum62_mini) 确认矩阵内容。\n2. 用 type(a)、type(b) 确认输入为字符串。\n3. 若 KeyError，先打印 matrix.keys() 检查可用键。\n4. 逐步执行：python3 -i p44_score.py 进入交互模式逐行验证。"
+  },
+  "45": {
+   "page": 45,
+   "env": "Linux/macOS/Windows + Python 3.8+；依赖 numpy、biopython（pip install numpy biopython）",
+   "steps": "1. 安装依赖：pip install numpy biopython\n2. 新建文件 p45_dna_matrix.py，粘贴本页代码。\n3. 运行：python3 p45_dna_matrix.py",
+   "output": "0.006\n0.002\n0",
+   "errors": "1. ModuleNotFoundError: No module named 'numpy' 或 'Bio' —— 未安装依赖，执行 pip install numpy biopython。\n2. ValueError: 'X' is not in list —— dna_score 传入非 A/G/C/T 字符。\n3. IndexError —— bases 与 dna_matrix 维度不一致。\n4. Bio.Align 导入失败 —— biopython 版本过低，升级：pip install -U biopython。",
+   "debug": "1. 打印 bases 与 dna_matrix.shape 确认 4x4 对应。\n2. 打印 dna_matrix 检查行列顺序是否为 A,G,C,T。\n3. 对 Bio 部分单独测试：python3 -c \"from Bio.Align import substitution_matrices; print(substitution_matrices.load('BLOSUM62')['A']['G'])\"。\n4. 若结果与预期不符，检查 bases.index 的映射顺序。"
+  },
+  "46": {
+   "page": 46,
+   "env": "Linux/macOS/Windows + Python 3.8+（仅标准库）",
+   "steps": "1. 新建文件 p46_pam.py，粘贴本页代码。\n2. 运行：python3 p46_pam.py",
+   "output": "PAM100~PAM150\nPAM250",
+   "errors": "1. TypeError: '>=' not supported between instances of 'str' and 'int' —— 传入字符串而非数值，需 float(identity_percent)。\n2. 逻辑分支遗漏 —— 若 identity_percent 为负或 >100，需先校验范围。\n3. IndentationError —— if/elif 缩进错误。",
+   "debug": "1. 在函数首行加 print('input=', identity_percent, type(identity_percent)) 确认类型。\n2. 用边界值测试：choose_pam(85)、choose_pam(60)、choose_pam(40)、choose_pam(39)。\n3. 若返回 None，检查是否所有分支都覆盖。\n4. 交互模式逐条调用验证。"
+  },
+  "47": {
+   "page": 47,
+   "env": "Linux/macOS/Windows + Python 3.8+（仅标准库）",
+   "steps": "1. 新建文件 p47_blosum.py，粘贴本页代码。\n2. 运行：python3 p47_blosum.py",
+   "output": "BLOSUM62\nBLOSUM80",
+   "errors": "1. TypeError —— identity_percent 传入字符串。\n2. 分支顺序错误导致结果不符 —— 例如先判断 >=45 会截获 75。\n3. IndentationError —— 缩进不一致。\n4. 返回 None —— 未覆盖 <45 的分支。",
+   "debug": "1. 打印输入值与类型。\n2. 边界测试：choose_blosum(80)、choose_blosum(62)、choose_blosum(45)、choose_blosum(44)。\n3. 检查 if/elif 顺序是否从高到低。\n4. 用 python3 -i p47_blosum.py 交互调用验证。"
+  },
+  "48": {
+   "page": 48,
+   "env": "Linux/macOS/Windows + Python 3.8+ + Biopython 1.79+（pip install biopython）",
+   "steps": "1. 保存代码为 p48_align.py\n2. 安装依赖：pip install biopython\n3. 运行：python p48_align.py",
+   "output": "--- PAM250 ---\n（打印最优比对，含匹配行、序列行，如 HEAGAWGHEE / --PAW-HEAE 等）\nScore: 某数值（PAM250 下）\n--- BLOSUM62 ---\n（打印最优比对）\nScore: 某数值（BLOSUM62 下）\n两个矩阵得分通常不同，可对比差异",
+   "errors": "ModuleNotFoundError: No module named 'Bio' → 未安装 Biopython\nAttributeError: module 'Bio.Align' has no attribute 'PairwiseAligner' → Biopython 版本过低（需 ≥1.79）\nKeyError/ValueError: 矩阵名错误 → 名称须为 'PAM250'、'BLOSUM62' 等标准名\n比对结果为空 → 序列含非法字符或空串",
+   "debug": "1. 打印 biopython 版本：python -c \"import Bio; print(Bio.__version__)\"\n2. 单独测试 substitution_matrices.load('BLOSUM62') 是否成功\n3. 打印 len(alignments) 确认有比对结果\n4. 打印 aligner 参数（substitution_matrix、open_gap_score、extend_gap_score）确认设置生效\n5. 用短序列（如 'A','A'）验证流程"
+  },
+  "49": {
+   "page": 49,
+   "env": "Linux/macOS/Windows + Python 3.6+（无需第三方库）",
+   "steps": "1. 保存代码为 p49_dotplot.py\n2. 运行：python p49_dotplot.py",
+   "output": "-19\n[[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]\n（dotplot 矩阵，对角线为 1 表示相同碱基）",
+   "errors": "SyntaxError → 缩进或括号不匹配\nTypeError: affine_gap_penalty() missing 1 required positional argument → 未传 k\nIndexError → dotplot 中 s/t 为空或索引越界（本实现不会，但若改动需注意）\n输出全 0 → 两序列无相同字符",
+   "debug": "1. 单独调用 affine_gap_penalty(0)、affine_gap_penalty(1) 验证公式 a+b*k\n2. 打印 len(s)、len(t) 确认矩阵维度\n3. 用 s='A', t='A' 验证 M[0][0]==1\n4. 用 s='A', t='T' 验证 M[0][0]==0\n5. 检查列表推导式索引 i、j 范围"
+  },
+  "50": {
+   "page": 50,
+   "env": "Linux/macOS/Windows + Python 3.6+（无需第三方库）",
+   "steps": "1. 保存代码为 p50_nw.py\n2. 运行：python p50_nw.py",
+   "output": "打印 needleman_wunsch('acgctg','catgt') 的返回值，即全局比对得分（整数，如 1 或 2，取决于参数）",
+   "errors": "SyntaxError → 缩进错误\nIndexError → 序列为空时 M[i-1] 越界（本实现边界已处理，但改动需注意）\n结果与预期不符 → match/mismatch/gap 参数传错\nNameError → 函数名拼写错误",
+   "debug": "1. 打印中间矩阵 M 观察递推是否正确\n2. 用 s='A', t='A' 验证得分 = match\n3. 用 s='A', t='T' 验证得分 = mismatch\n4. 用 s='A', t='' 验证得分 = gap\n5. 对照手算小例子（如 s='AC', t='AC'）核对"
+  },
+  "51": {
+   "page": 51,
+   "env": "Linux/macOS/Windows + Python 3.6+（无需第三方库）",
+   "steps": "1. 保存代码为 p51_dp.py\n2. 运行：python p51_dp.py",
+   "output": "逐行打印 DP 矩阵 M（6+1 行 × 5+1 列），例如：\n[0, -1, -2, -3, -4, -5]\n[-1, -1, 0, -1, -2, -3]\n...\n全局比对得分: 某整数（如 1）",
+   "errors": "SyntaxError → 缩进或括号错误\nIndexError → 序列为空或索引越界\n得分与教材不符 → match/mismatch/gap 参数不一致\n打印矩阵错位 → 未用 for row in M 逐行打印",
+   "debug": "1. 打印 M[0]、M[1] 等首行首列验证初始化\n2. 手动核对 M[1][1] = max(0+(-1), -1+(-1), -1+(-1)) = -1\n3. 用 s='A', t='A' 验证 M[1][1]==match\n4. 用 s='', t='' 验证 M[0][0]==0\n5. 与 p50 的 needleman_wunsch 结果对比，应一致"
+  },
+  "52": {
+   "page": 52,
+   "env": "Linux + Python 3.8+（无需第三方库）",
+   "steps": "1. 新建文件 blast_demo.py，粘贴本页伪代码，并补全 make_words/find_all/extend 的极简实现（见调试栏）。\n2. 在文件末尾加入：\nif __name__ == '__main__':\n    query = 'ACGTACGT'\n    db = ['TTACGTAA']\n    for h in blast(query, db):\n        print(h)\n3. 运行：python3 blast_demo.py",
+   "output": "打印出至少 1 条命中记录（含 score、位置等字段），按 score 从高到低排序。\n例如：Hit(score=..., ...)\n若未实现 extend 返回对象，可先打印 (pos, score) 元组。",
+   "errors": "NameError: make_words/find_all/extend 未定义 → 需自行补全函数。\nTypeError: '>' not supported between 'Hit' and 'int' → hit.score 未定义或类型错误。\nIndexError: 在 find_all 中切片越界 → 检查 pos+len(w) 是否超出序列长度。\n结果为空 → word_len 过大或 T 过高，可先设 word_len=2、T=0 验证流程。",
+   "debug": "1. 先单独测试 make_words('ACGTACGT',3)，应得到 {'ACG','CGT','GTA','TAC'}。\n2. 测试 find_all('TTACGTAA','ACG')，应返回 [2]。\n3. 用 print 在 extend 内输出延伸起止与得分，确认 T/X 生效。\n4. 若结果为空，逐步降低 T 或 word_len，观察 hits 是否出现。\n5. 参考极简实现：\ndef make_words(s,k): return {s[i:i+k] for i in range(len(s)-k+1)}\ndef find_all(s,w): return [i for i in range(len(s)-len(w)+1) if s[i:i+len(w)]==w]\ndef extend(rec,pos,query,T,X):\n    class H: pass\n    h=H(); h.score=len(query); h.pos=pos; return h"
+  },
+  "53": {
+   "page": 53,
+   "env": "Linux + FASTA 套件（fasta36 或 fasta-36.x），可选 Python 3 用于打印对照表",
+   "steps": "1. 安装 FASTA：conda install -c bioconda fasta36 或源码编译。\n2. 准备 query.fa、db.fa（FASTA 格式），并建库：\n   makeblastdb 不适用，FASTA 用：\n   fasta36 可直接读 db.fa，无需建索引。\n3. 运行 DNA vs DNA：fasta36 query.fa db.fa\n4. 运行 DNA 翻译搜索蛋白库：fastx36 query_dna.fa protein_db.fa\n5. 运行蛋白 vs DNA 库：tfastx36 query_protein.fa dna_db.fa\n6. 查看输出文件（默认 stdout 或 -O out.txt）。",
+   "output": "屏幕/输出文件出现 FASTA 比对结果：\n- 程序名、版本、参数\n- 每个 hit 的 E()、bits、identity、alignment 片段\n- 末尾统计信息（如 1>>> 等）",
+   "errors": "command not found: fasta → 未安装或未加入 PATH。\nError: cannot open db.fa → 路径错误或文件不存在。\nSequence format error → FASTA 文件头不是 '>' 开头或含非法字符。\nfastx 报错 'not a DNA sequence' → 输入含非 ACGTN 字符。\ntfastx 库未翻译 → 需确认 dna_db.fa 为核酸序列。",
+   "debug": "1. 用 head query.fa 检查格式。\n2. 用 fasta36 -h 查看可用参数与版本。\n3. 先用极小数据（1 条 query、1 条 db）跑通。\n4. 若 fastx 失败，先用 fasta36 验证 query 本身可被搜索。\n5. 检查是否混淆 fastx 与 fasty（后者允许移码）。\n6. 用 echo $? 确认退出码为 0。"
+  },
+  "54": {
+   "page": 54,
+   "env": "Linux + BLAST+（blastp 等）+ Python 3.8+，依赖 pandas、matplotlib",
+   "steps": "1. 安装：conda install -c bioconda blast pandas matplotlib。\n2. 准备 q.fa 与已建库 db（makeblastdb -in db.fa -dbtype prot）。\n3. 运行 BLAST 生成表格：\n   blastp -query q.fa -db db -outfmt 6 -out hits.tsv\n4. 新建 plot_hits.py，粘贴本页 Python 代码。\n5. 运行：python3 plot_hits.py",
+   "output": "弹出/保存一张图：X 轴为 Query position，Y 轴为 Hit index，每条色带表示一个匹配区域，颜色深浅对应 bitscore 高低。\n控制台无报错。",
+   "errors": "FileNotFoundError: hits.tsv → BLAST 未成功运行或输出路径不对。\nEmptyDataError: No columns to parse → hits.tsv 为空，检查 BLAST 是否命中。\nKeyError: 'qstart' → 列名不匹配，确认 outfmt 6 默认 12 列顺序。\nModuleNotFoundError: pandas/matplotlib → 未安装。\n图形不显示 → 无 GUI 环境，改用 plt.savefig('hits.png')。",
+   "debug": "1. 先 head hits.tsv 确认有 12 列且非空。\n2. 用 wc -l hits.tsv 检查行数。\n3. 在 read_csv 后 print(df.head()) 验证解析。\n4. 若 bitscore 全为 0，检查是否误用 pident 做颜色。\n5. 无显示环境时加：import matplotlib; matplotlib.use('Agg')。\n6. 用 df.describe() 检查 qstart/qend 范围是否合理。"
+  },
+  "55": {
+   "page": 55,
+   "env": "Linux + BLAST+（psiblast、phi-blast 命令）+ 可选 Python 3 用于伪代码演示",
+   "steps": "1. 安装 BLAST+：conda install -c bioconda blast。\n2. 准备 q.fa 与 nr 库（或本地小库）。\n3. PSI-BLAST 迭代 3 次：\n   psiblast -query q.fa -db nr -num_iterations 3 -inclusion_ethresh 0.005 -out psiblast.out\n4. PHI-BLAST 模式搜索：\n   phi-blast -query q.fa -db nr -phi_pattern \"[LIV]-{KRP}-x(2)-[ST]\" -out phi.out\n5. 查看输出：less psiblast.out / less phi.out",
+   "output": "psiblast.out：多轮迭代结果，每轮列出 hits、E-value、PSSM 信息。\nphi.out：仅返回同时匹配模式与显著相似的 hits。\n命令行退出码 0。",
+   "errors": "Command 'phi-blast' not found → 旧版 BLAST 无此命令，需 BLAST+ 2.2.30+。\nError: Pattern syntax error → PHI 模式写法错误，检查 []、{}、x(n) 格式。\nNo hits found → 阈值过严或库太小，可放宽 -inclusion_ethresh。\nDatabase nr not found → 未下载/未建库，改用本地库测试。\npsiblast 迭代中断 → 检查 -num_iterations 与 -inclusion_ethresh 拼写。",
+   "debug": "1. 用 psiblast -version 与 phi-blast -version 确认版本。\n2. 先用 -num_iterations 1 跑通，再增加迭代。\n3. 用 -outfmt 0 查看可读比对，确认命中。\n4. 检查模式字符串：在 PHI-BLAST 中 x 表示任意残基，x(2) 表示两个任意残基。\n5. 若伪代码演示，可打印每轮 sel 数量，确认阈值过滤生效。\n6. 用 grep 'Results from round' psiblast.out 检查迭代轮数。"
+  },
+  "56": {
+   "page": 56,
+   "env": "Linux + Python3（仅用于演示/验证指数复杂度，无需第三方库）",
+   "steps": "1) 新建文件 msa_dp_demo.py\n2) 粘贴以下代码：\n# 演示 N 维 DP 状态数随 N 指数增长\nimport itertools\n\ndef state_count(lengths):\n    # 每个维度可取 0..Li，共 (Li+1) 种\n    total = 1\n    for L in lengths:\n        total *= (L + 1)\n    return total\n\ndef transition_count(N):\n    # 每个状态最多 2^N - 1 种转移\n    return 2**N - 1\n\nfor N in range(2, 6):\n    lengths = [10] * N\n    print(f\"N={N}, L=10 -> states={state_count(lengths)}, transitions/state={transition_count(N)}\")\n3) 运行：python3 msa_dp_demo.py",
+   "output": "N=2, L=10 -> states=121, transitions/state=3\nN=3, L=10 -> states=1331, transitions/state=7\nN=4, L=10 -> states=14641, transitions/state=15\nN=5, L=10 -> states=161051, transitions/state=31",
+   "errors": "IndentationError：Python 缩进不一致\nNameError: name 'itertools' is not defined：未 import（本示例未使用可删除）\nMemoryError：若把 lengths 设得过大，状态数爆炸",
+   "debug": "1) 用 python3 -c \"print(2**N)\" 验证转移数公式\n2) 打印 state_count([10,10]) 应为 121\n3) 逐步增大 N 观察指数增长，确认 O(2^N * L^N) 结论"
+  },
+  "57": {
+   "page": 57,
+   "env": "Linux + ClustalW2（clustalw2 可执行文件）；输入 FASTA 文件",
+   "steps": "1) 准备输入文件 seqs.fa（FASTA 格式，至少 3 条序列）\n2) 运行命令行比对：\nclustalw2 -INFILE=seqs.fa -OUTFILE=aln.aln -OUTPUT=FASTA\n3) 查看结果：\ncat aln.aln\n4) 若使用 ClustalX 图形界面：File -> Load Sequences；Alignment -> Do Complete Alignment；保存结果",
+   "output": "生成 aln.aln，内容为 FASTA 格式的多序列比对结果，序列间插入 '-' 表示空位\n终端显示类似：\nCLUSTAL 2.1 Multiple Sequence Alignments\n\nSequence 1: seq1\n...",
+   "errors": "clustalw2: command not found：未安装或不在 PATH\nCannot open INFILE：文件名/路径错误\nNo sequences found：输入不是合法 FASTA\nOUTPUT=FASTA 与 OUTFILE 扩展名不匹配：输出格式仍按 -OUTPUT 参数",
+   "debug": "1) which clustalw2 检查安装\n2) head seqs.fa 确认 FASTA 以 '>' 开头\n3) 加 -VERBOSE 或查看 .log 文件\n4) 用 grep '>' aln.aln 确认序列条数"
+  },
+  "58": {
+   "page": 58,
+   "env": "Linux（Ubuntu/Debian）+ clustalw + clustalo；bash shell",
+   "steps": "1) 安装：\nsudo apt-get update\nsudo apt-get install clustalw clustalo\n2) 准备 input.fasta\n3) ClustalW 比对：\nclustalw -INFILE=input.fasta -OUTFILE=output.aln -OUTPUT=GDE -TYPE=PROTEIN\n4) Clustal Omega 比对：\nclustalo -i input.fasta -o output.aln --outfmt=clustal --force\n5) 批量比对：\nfor f in *.fasta; do\n  clustalo -i \"$f\" -o \"${f%.fasta}.aln\" --outfmt=clustal --force\ndone",
+   "output": "生成 output.aln（Clustal 格式）\n批量运行后每个 *.fasta 对应一个 *.aln\n终端可能显示：\nUsing 1 thread\nDone.",
+   "errors": "E: Unable to locate package clustalo：软件源未更新或包名不同（可试 clustal-omega）\n--force 缺失导致输出文件已存在时报错\nTYPE=PROTEIN 与核酸序列不符导致比对异常\nfor 循环中文件名含空格导致参数错误",
+   "debug": "1) clustalo --version 与 clustalw -version 验证安装\n2) 用 head -5 input.fasta 确认序列类型\n3) 单文件先跑通再批量\n4) 文件名含空格时用 while IFS= read -r f 替代 for"
+  },
+  "59": {
+   "page": 59,
+   "env": "Linux + clustalo + T-Coffee + Python3 + Biopython（AlignIO）；MATLAB 仅作伪代码参考",
+   "steps": "1) 准备 seqs.fasta\n2) Clustal Omega：\nclustalo -i seqs.fasta -o aln_clustal.aln --outfmt=clustal --force\n3) T-Coffee：\nt_coffee seqs.fasta -output=clustalw -outfile=aln_tcoffee.aln\n4) 新建 gap_stats.py：\nfrom Bio import AlignIO\n\ndef gap_stats(path):\n    aln = AlignIO.read(path, \"clustal\")\n    n = len(aln)\n    L = aln.get_alignment_length()\n    gaps = sum(str(r.seq).count('-') for r in aln)\n    return n, L, gaps, gaps / (n * L)\n\nfor p in [\"aln_clustal.aln\", \"aln_tcoffee.aln\"]:\n    print(p, gap_stats(p))\n5) 运行：python3 gap_stats.py",
+   "output": "aln_clustal.aln (n, L, gaps, gap_ratio)\naln_tcoffee.aln (n, L, gaps, gap_ratio)\n例如：\naln_clustal.aln (5, 120, 37, 0.06166666666666667)\naln_tcoffee.aln (5, 118, 29, 0.049152542372881356)",
+   "errors": "ModuleNotFoundError: No module named 'Bio'：未安装 Biopython，pip install biopython\nFileNotFoundError：比对文件未生成或路径错误\nValueError: No records found：格式与 \"clustal\" 不符\nT-Coffee 未安装：t_coffee: command not found",
+   "debug": "1) pip show biopython 检查版本\n2) head aln_clustal.aln 确认首行含 CLUSTAL\n3) 单独运行 AlignIO.read 定位解析错误\n4) 比较 n 是否等于输入序列条数，L 是否一致"
+  }
+ },
+ "ch12": {
+  "258": {
+   "page": 258,
+   "env": "Linux/macOS/Windows + Python 3.8+，依赖 numpy（建议 1.20+）",
+   "steps": "1. 保存代码为 p258_stat_learning.py\n2. 安装依赖：pip install numpy\n3. 运行：python p258_stat_learning.py",
+   "output": "打印一行形如：(100, 5) (100,)\n说明 X 为 100×5 矩阵，y 为长度 100 的向量",
+   "errors": "ModuleNotFoundError: No module named 'numpy' —— 未安装 numpy，执行 pip install numpy\nSyntaxError: invalid syntax —— Python 版本过低（@ 矩阵乘法需 3.5+）\nValueError: matmul 维度不匹配 —— 检查 X 与 w_true 维度是否一致",
+   "debug": "1. 在 print 前加 print(X.shape, w_true.shape, y.shape) 确认维度\n2. 检查 X @ w_true 结果形状应为 (n,)\n3. 若打乱后结果异常，验证 idx 是否为 0..n-1 的排列：np.all(np.sort(idx)==np.arange(n))"
+  },
+  "259": {
+   "page": 259,
+   "env": "Linux/macOS/Windows + Python 3.8+，依赖 numpy",
+   "steps": "1. 保存代码为 p259_erm.py\n2. 安装依赖：pip install numpy\n3. 运行：python p259_erm.py",
+   "output": "打印一个浮点数，例如：1.0234...\n表示 w=0 时的均方经验风险（约等于 y 的方差）",
+   "errors": "NameError: name 'np' is not defined —— 忘记 import numpy as np\nValueError: operands could not be broadcast —— X @ w 与 y 形状不一致\nRuntimeWarning: invalid value —— 输入含 NaN/Inf",
+   "debug": "1. 打印 X.shape、y.shape、w.shape 确认维度\n2. 手动验证：np.mean((y - X@w)**2) 与函数返回值一致\n3. 若结果为 0，检查是否误将 y 设为 X@w 的精确结果"
+  },
+  "260": {
+   "page": 260,
+   "env": "Linux/macOS/Windows + Python 3.8+，依赖 numpy、scikit-learn（建议 1.0+）",
+   "steps": "1. 保存代码为 p260_ann.py\n2. 安装依赖：pip install numpy scikit-learn\n3. 运行：python p260_ann.py",
+   "output": "打印两行，例如：\ntrain R^2: 0.9x\ntest  R^2: 0.8x\n训练集 R² 通常高于测试集，差距过大提示过拟合",
+   "errors": "ModuleNotFoundError: No module named 'sklearn' —— 未安装 scikit-learn\nConvergenceWarning: Stochastic Optimizer: Maximum iterations reached —— 增大 max_iter 或标准化数据\nR² 为负 —— 模型欠拟合或数据未标准化",
+   "debug": "1. 打印 X_train.shape、y_train.shape 确认划分正确\n2. 尝试不同 hidden_layer_sizes 观察过拟合/欠拟合\n3. 用 train_test_split 的 random_state 固定结果复现\n4. 若 R² 异常，检查 y 是否含 NaN"
+  },
+  "261": {
+   "page": 261,
+   "env": "Linux/macOS/Windows + Python 3.8+，依赖 numpy",
+   "steps": "1. 保存代码为 p261_srm.py\n2. 安装依赖：pip install numpy\n3. 运行：python p261_srm.py",
+   "output": "打印三行，例如：\n5 0.1xxx\n20 0.1xxx\n100 0.1xxx\n随 h 增大，结构风险值增大（置信项变大）",
+   "errors": "ValueError: math domain error —— log 参数非正，检查 h、n、delta 取值\nZeroDivisionError —— h 或 n 为 0\nNameError: np 未定义 —— 忘记 import numpy as np",
+   "debug": "1. 单独打印 confidence_term(h, n) 观察随 h 变化趋势\n2. 验证 h < n，否则置信界公式不适用\n3. 检查 delta 在 (0,1) 区间内\n4. 对比 empirical_risk 固定时，结构风险随 h 单调递增"
+  },
+  "262": {
+   "page": 262,
+   "env": "Linux/macOS/Windows + Python 3.8+；依赖：numpy、scikit-learn（建议 1.0+）",
+   "steps": "1. 安装依赖：pip install numpy scikit-learn\n2. 新建文件 p262_svm_nb.py，粘贴示例代码\n3. 运行：python p262_svm_nb.py",
+   "output": "SVM accuracy: 约 0.9~1.0（因随机数据每次略有不同）\nNB accuracy: 约 0.85~0.98",
+   "errors": "ModuleNotFoundError: No module named 'sklearn' → 未安装 scikit-learn\nImportError: cannot import name 'train_test_split' → sklearn 版本过旧\nValueError: Found array with 0 sample(s) → 数据生成或切分异常",
+   "debug": "1. 在代码开头加 np.random.seed(0) 固定随机数，便于复现\n2. 打印 X.shape、y.shape 确认数据维度\n3. 打印 np.bincount(y_train) 检查类别是否均衡\n4. 若准确率异常低，检查 y 的生成逻辑与标签分布"
+  },
+  "263": {
+   "page": 263,
+   "env": "Linux/macOS/Windows + Python 3.8+；依赖：numpy、scipy",
+   "steps": "1. 安装依赖：pip install numpy scipy\n2. 新建文件 p263_mle_ls.py，粘贴示例代码\n3. 运行：python p263_mle_ls.py",
+   "output": "LS mean: 2.06\nMLE mu, sigma: [2.06 0.2449...]（mu 约 2.06，sigma 约 0.245）",
+   "errors": "ModuleNotFoundError: No module named 'scipy' → 未安装 scipy\nRuntimeWarning: invalid value encountered → sigma 初值或迭代中出现非正数\nOptimization terminated successfully 但结果异常 → 初值 x0 选择不当",
+   "debug": "1. 打印 y.mean() 与 mu_ls 对比\n2. 手动计算 MLE：mu=y.mean()，sigma=np.sqrt(((y-y.mean())**2).mean())，与 res.x 对比\n3. 若 sigma 为负，检查 neg_log_likelihood 中 sigma<=0 分支\n4. 尝试不同 x0，如 [2, 0.5]，观察结果稳定性"
+  },
+  "264": {
+   "page": 264,
+   "env": "Linux/macOS/Windows + Python 3.8+；依赖：numpy（标准库 math 即可）",
+   "steps": "1. 安装依赖：pip install numpy\n2. 新建文件 p264_mle_loglik.py，粘贴示例代码\n3. 运行：python p264_mle_loglik.py",
+   "output": "[0.24, 0.48, 0.28]\n-32.958...（对数似然值，具体数值取决于实现）\n1.85 0.1825（mu_hat 与 sigma2_hat）",
+   "errors": "NameError: name 'pi' is not defined → 列表推导中变量名与 math.pi 混淆\nValueError: math domain error → 概率为 0 或负数时取 log\nZeroDivisionError → 概率和为 0",
+   "debug": "1. 检查 p_hat 是否满足 sum(p_hat)==1\n2. 打印 loglik(p_hat) 与手算结果对比\n3. 对正态样本，验证 mu_hat == y.mean()，sigma2_hat == ((y-y.mean())**2).mean()\n4. 若 loglik 报错，先打印 p 列表确认每个元素 >0"
+  },
+  "265": {
+   "page": 265,
+   "env": "Linux/macOS/Windows + Python 3.8+；依赖：numpy、scikit-learn",
+   "steps": "1. 安装依赖：pip install numpy scikit-learn\n2. 新建文件 p265_cluster_scale.py，粘贴示例代码\n3. 运行：python p265_cluster_scale.py",
+   "output": "K-means 标签：如 [0 0 1 1] 或 [1 1 0 0]（取决于初始化）\n层次聚类标签：如 [0 0 1 1]（distance_threshold=1.5 时通常分成 2 类）",
+   "errors": "ModuleNotFoundError: No module named 'sklearn' → 未安装 scikit-learn\nValueError: n_clusters must be None if distance_threshold is not None → 参数冲突\nConvergenceWarning: Number of distinct clusters found smaller than n_clusters → K-means 未收敛或数据问题",
+   "debug": "1. 打印 Xs 确认标准化后均值约 0、方差约 1\n2. 打印 km.inertia_ 观察聚类紧密度\n3. 调整 distance_threshold（如 0.5、2.0）观察层次聚类类别数变化\n4. 对 K-means 设置 random_state=0 保证可复现"
+  },
+  "266": {
+   "page": 266,
+   "env": "Linux/macOS/Windows + Python 3.8+；依赖 numpy、scipy（如 numpy 1.24、scipy 1.10 均可）",
+   "steps": "1. 保存代码为 p266_distances.py\n2. 安装依赖：pip install numpy scipy\n3. 运行：python p266_distances.py",
+   "output": "输出 3x3 欧氏距离矩阵（对角线为 0，对称）\n输出马氏距离 d_m（标量）\n输出兰氏距离（标量）\n输出夹角余弦距离 1-cosine（标量）",
+   "errors": "ModuleNotFoundError: No module named 'numpy'/'scipy'：未安装依赖\nLinAlgError: Singular matrix：np.cov(X.T) 得到的协方差矩阵不可逆（样本太少或特征线性相关）\nRuntimeWarning: invalid value encountered in divide：兰氏距离中 a+b 出现 0 或负数\nValueError: shapes not aligned：X 维度或切片写错",
+   "debug": "先 print(X.shape) 确认是 (3,2)\nprint(S) 与 print(S_inv) 检查协方差矩阵是否可逆\n对兰氏距离先 print(X[0]+X[1]) 确认分母非 0\n用 np.allclose(D, D.T) 验证欧氏距离矩阵对称\n用 scipy.spatial.distance.euclidean(X[0], X[1]) 与 D[0,1] 对比验证"
+  },
+  "267": {
+   "page": 267,
+   "env": "Linux/macOS/Windows + Python 3.8+；依赖 numpy",
+   "steps": "1. 保存代码为 p267_single_linkage.py\n2. 安装依赖：pip install numpy\n3. 运行：python p267_single_linkage.py",
+   "output": "输出合并后的簇字典，例如 {0: [0, 1, 2]}（具体键值取决于合并顺序）\n表示 A、B、C 最终合并为一个簇",
+   "errors": "IndexError：距离矩阵维度与 labels 长度不一致\nKeyError：active 集合与 clusters 键不同步\n结果簇不完整：while 循环或 active.remove(j) 逻辑写错\nD 被修改影响后续：未使用 D.copy()",
+   "debug": "在 while 循环内 print(active, best) 观察每轮最小距离与合并对象\n检查 D 初始是否对称、对角线是否被设为 inf\n用已知小例子手算最短距离合并顺序，与程序输出对比\n最后 print(clusters) 确认所有样本都出现在某个簇中"
+  },
+  "268": {
+   "page": 268,
+   "env": "Linux/macOS/Windows + Python 3.8+；依赖 numpy",
+   "steps": "1. 保存代码为 p268_pca.py\n2. 安装依赖：pip install numpy\n3. 运行：python p268_pca.py",
+   "output": "输出特征根 vals（降序，2 个值）\n输出特征向量 vecs（2x2，列为主分量方向）\n输出前 1 个主成分得分 scores（5x1）",
+   "errors": "ValueError: zero-size array：X 为空或维度错误\n特征根顺序不对：忘记 np.argsort(vals)[::-1]\n标准化结果异常：ddof 设置与预期不符\n相关系数矩阵非对称：np.corrcoef 参数 rowvar 写错",
+   "debug": "print(X.mean(axis=0)) 与 print(X.std(axis=0, ddof=1)) 检查标准化\nprint(R) 确认相关系数矩阵对角线为 1、对称\nprint(vals) 确认降序且非负\n用 np.allclose(R @ vecs[:,0], vals[0] * vecs[:,0]) 验证特征方程"
+  },
+  "269": {
+   "page": 269,
+   "env": "Linux/macOS/Windows + Python 3.8+；依赖 numpy",
+   "steps": "1. 保存代码为 p269_fisher.py\n2. 安装依赖：pip install numpy\n3. 运行：python p269_fisher.py",
+   "output": "输出 Fisher 判别系数 c（2 维向量）\n输出 A 组判别得分均值与 B 组判别得分均值（两个标量，通常应明显不同）",
+   "errors": "LinAlgError: Singular matrix：Sw 不可逆，可能样本太少或组内方差为 0\nValueError: shapes not aligned：A、B 列数不一致或矩阵乘法维度错误\n判别效果差：两组均值差异小或 Sw 很大\nc 方向反了：muA - muB 写成 muB - muA",
+   "debug": "print(muA, muB) 检查两组中心\nprint(Sw) 与 print(np.linalg.det(Sw)) 检查是否接近奇异\nprint(yA, yB) 查看得分分布是否分离\n用 np.linalg.solve(Sw, muA - muB) 与 np.linalg.inv(Sw) @ (muA - muB) 对比验证"
+  },
+  "270": {
+   "page": 270,
+   "env": "Linux/macOS/Windows + Python 3.8+；依赖 numpy、scipy（pip install numpy scipy）",
+   "steps": "1. 新建文件 p270_f_test.py，粘贴本页代码。\n2. 打开终端，进入文件所在目录。\n3. 运行：python3 p270_f_test.py",
+   "output": "输出一行三个值，形如：\n5.0 3.0983912121404056 True\n（F=12.5/2.5=5.0；df1=3，df2=20+20-3-1=36；F_crit≈3.098；True 表示在 α=0.05 下显著）",
+   "errors": "ModuleNotFoundError: No module named 'numpy'/'scipy' → 未安装依赖，执行 pip install numpy scipy。\nImportError: cannot import name 'f' from 'scipy.stats' → scipy 版本过旧，升级 pip install -U scipy。\nZeroDivisionError → within_var 传了 0，检查输入。\n返回 False 但以为出错 → 只是未达显著，不是程序错误。",
+   "debug": "1. 在函数内 print(F, df1, df2, F_crit) 检查中间量。\n2. 手算验证：F=12.5/2.5=5.0；df1=3；df2=36。\n3. 用 scipy.stats.f.cdf(F, df1, df2) 看 p 值是否 <0.05。\n4. 若 F_crit 为 nan，检查 df1/df2 是否为正整数。"
+  },
+  "271": {
+   "page": 271,
+   "env": "任意平台 + Python 3.8+（本页为伪代码，可用 Python 实现验证）",
+   "steps": "1. 新建文件 p271_nb_pseudo.py。\n2. 将伪代码改写为可运行 Python：定义 count()、P(xi|c) 查表函数，构造小训练集。\n3. 运行：python3 p271_nb_pseudo.py",
+   "output": "打印每个类别的 prior、likelihood、score，最后输出预测类别 y，例如：\n{'N': 0.02742857142857143, 'P': 0.007054673721340388}\ny = N",
+   "errors": "NameError: name 'count' is not defined → 伪代码未实现辅助函数。\nKeyError: 'Sunny' → 属性取值与字典键不一致（大小写/空格）。\nscore 全为 0 → 某条件概率为 0，需拉普拉斯平滑。\nargmax 未定义 → 用 max(score, key=score.get)。",
+   "debug": "1. 先只算 prior，确认各类别计数正确。\n2. 逐个属性打印 P(xi|c)，与手算对照。\n3. 检查 likelihood 是否被错误重置为 1（应在每个 c 循环内重置）。\n4. 用 math.log 累加避免下溢，比较 log score。"
+  },
+  "272": {
+   "page": 272,
+   "env": "Linux/macOS/Windows + Python 3.8+（无需第三方库）",
+   "steps": "1. 新建文件 p272_nb_calc.py，粘贴本页代码。\n2. 终端运行：python3 p272_nb_calc.py",
+   "output": "0.02742857142857143\n0.007054673721340388\nN\n（与注释中 0.0274、0.007039 一致，四舍五入差异正常）",
+   "errors": "结果与注释不一致 → 检查分母：P_Sunny_P 应为 2/9 而非 2/5。\nSyntaxError → 检查乘号 * 与除号 / 是否写错。\npred 输出 P → 比较方向写反，应为 score_N > score_P。\n浮点显示过长 → 用 round(score_N, 4) 格式化。",
+   "debug": "1. 分别 print(P_N, P_Sunny_N, P_Hot_N, P_High_N, P_Weak_N) 核对每个概率。\n2. 手算 score_N = 5/14 × 3/5 × 2/5 × 4/5 × 2/5。\n3. 若 score 为 0，检查是否有分子为 0 的概率。\n4. 用 abs(score_N - 0.0274) < 1e-3 做断言验证。"
+  },
+  "273": {
+   "page": 273,
+   "env": "Linux/macOS/Windows + Python 3.8+；依赖 numpy（pip install numpy）",
+   "steps": "1. 新建文件 p273_hmm_sample.py。\n2. 实现 sample_from(prob_vector)：用 np.random.choice 按概率抽样。\n3. 定义 pi=[0.6,0.4]、A=[[0.7,0.3],[0.4,0.6]]、B=[[0.5,0.5],[0.1,0.9]]、T=5。\n4. 运行：python3 p273_hmm_sample.py",
+   "output": "打印状态序列 Q 和观察序列 O，例如：\nQ = [0, 0, 1, 1, 0]\nO = [0, 1, 1, 1, 0]\n（每次运行结果不同，因随机抽样）",
+   "errors": "IndexError: list index out of range → Q[t-1] 越界，注意 t 从 0 还是 1 开始。\nValueError: probabilities do not sum to 1 → 检查 pi/A/B 每行和是否为 1。\n结果每次不同 → 正常；如需复现，设置 np.random.seed(42)。\nQ 与 O 长度不一致 → 循环边界写错，O 应在每次迭代都 append。",
+   "debug": "1. 先固定 seed：np.random.seed(0)，多次运行结果应一致。\n2. 打印每步行抽样概率与结果，核对是否落在正确区间。\n3. 检查 A 每行和、B 每行和、pi 和是否均为 1。\n4. 用 len(Q)==T 和 len(O)==T 做断言。"
+  },
+  "274": {
+   "page": 274,
+   "env": "Linux/macOS/Windows + Python 3.8+（仅用标准库 itertools）",
+   "steps": "1. 新建文件 hmm_bruteforce.py，粘贴本页代码。\n2. 保存到工作目录。\n3. 终端运行：python3 hmm_bruteforce.py",
+   "output": "打印一个浮点数，即 P(O|lambda) 的穷举求和结果（约 0.0006~0.001 量级，取决于舍入）。\n例如：0.000648...",
+   "errors": "SyntaxError：检查字典/列表括号是否配对。\nKeyError：状态名或观测名拼写不一致（如 'Soggy' vs 'soggy'）。\n结果异常大/小：检查 A、B、pi 是否按行归一化。\nPython 2 运行报错：需用 python3。",
+   "debug": "在循环内打印每个 Q 与对应 p，确认只累加合法路径。\n单独验证 pi 和为 1、A 每行和为 1、B 每行和为 1。\n将 O 改为单观测 ['Dry']，手算 pi['Sunny']*B['Sunny']['Dry']+... 与程序对比。\n用 sum(prob for ...) 与逐步累加对比。"
+  },
+  "275": {
+   "page": 275,
+   "env": "Linux/macOS/Windows + Python 3.8+（标准库）",
+   "steps": "1. 新建文件 hmm_backward.py。\n2. 在代码前补充具体数据：N=3, T=3, A/B/pi/O 用 p274 的数值并转为列表/矩阵形式（A[i][j], B[j][O[t]]）。\n3. 保存后运行：python3 hmm_backward.py",
+   "output": "打印 P(O|lambda)，应与前向算法/穷举法结果一致（约 0.0006~0.001）。\n若只保留极简示例，则输出 beta 初始化与递推的中间值。",
+   "errors": "NameError: N/T/A/B/pi/O 未定义：需先定义输入。\nIndexError：O[t+1] 越界，检查 t 循环范围 T-2..0。\n结果与穷举不一致：检查 A 的索引方向（A[i][j] 表示 i->j）。\nbeta 全 0：初始化 beta[T-1][i]=1.0 是否执行。",
+   "debug": "打印 beta 矩阵每行，检查 t=T-1 全为 1。\n对 T=1 特例：P_O 应等于 sum(pi[i]*B[i][O[0]])。\n与 p274 穷举结果对比，误差应在 1e-12 内。\n将递推改为显式双重循环，避免生成器表达式索引错误。"
+  },
+  "276": {
+   "page": 276,
+   "env": "Linux/macOS/Windows + Python 3.8+（标准库）",
+   "steps": "1. 新建文件 viterbi_demo.py，粘贴本页代码。\n2. 保存后运行：python3 viterbi_demo.py",
+   "output": "打印元组 (Q, best)，例如 ([0, 1, 0], 0.0252) 形式。\nQ 为最优状态序列（整数索引），best 为对应路径概率。",
+   "errors": "IndexError：A/B/pi/O 维度与 N/T 不一致。\n返回 Q 长度不等于 T：回溯循环范围错误。\nbest 为 -1：delta 初始化失败或 pi/B 含 0。\n浮点下溢：长序列概率趋 0，可改用对数域。",
+   "debug": "打印 delta 与 psi 矩阵，逐日核对。\n用暴力枚举所有状态序列，比较最大概率路径是否与 Q 一致。\n将 O 改为单观测，验证 Q=[argmax pi[i]*B[i][O[0]]]。\n检查 psi[t][j] 记录的是 t-1 时刻状态。"
+  },
+  "277": {
+   "page": 277,
+   "env": "Linux/macOS/Windows + Python 3.8+（标准库；math 未使用可删）",
+   "steps": "1. 新建文件 viterbi_trace.py，粘贴本页代码。\n2. 保存后运行：python3 viterbi_trace.py",
+   "output": "打印 Day 2 与 Day 3 的 delta、psi 列表。\nDay 3 预期：Sunny ≈ 7.088e-4，Cloudy ≈ 5.581e-3，Rainy 为另一数值（由递推得出）。\n最终可补打印最优路径与概率。",
+   "errors": "IndexError：O 中 2 对应 'Soggy'，需确认 B 列顺序为 Dry,Dryish,Soggy。\nA 行和不为 1：本页 A 第二行 0.375+0.125+0.5=1.0，第三行 0.125+0.675+0.2=1.0，若手改需保持归一。\ndelta 出现 0：某步 B 值为 0 或 pi 为 0。\n输出与注释不符：检查 B 矩阵是否与 p274 的 B 字典一致。",
+   "debug": "逐日打印 delta[t-1] 与 A[i][j] 乘积，手工核对 argmax。\n用 p276 的 viterbi 函数跑同一数据，比较 Q 与 best。\n将 O 改为 [0,0,0]，验证结果可手算。\n检查 psi[t][j] 是否指向使 delta[t-1][i]*A[i][j] 最大的 i。"
+  },
+  "278": {
+   "page": 278,
+   "env": "Linux + 命令行工具：VEIL、HMMgene、GeneMark.hmm（gmhmme）、Geneie、GENSCAN；需准备 FASTA 序列文件；各工具需单独安装并加入 PATH",
+   "steps": "1) 准备输入序列文件：human_seq.fa、seq.fa（FASTA 格式，含待预测的 DNA 序列）。\n2) 运行 VEIL：veil -i human_seq.fa -o veil.gff\n3) 运行 HMMgene：hmmgene -m human -p 0.99 -i seq.fa > hmmgene.gff\n4) 运行 GeneMark.hmm：gmhmme -m Arabidopsis -f gff -o out.gff seq.fa\n5) 运行 Geneie：geneie -seq seq.fa -org human -out geneie.gff\n6) 运行 GENSCAN：genscan seq.fa > genscan.out\n7) 查看结果：cat veil.gff hmmgene.gff out.gff geneie.gff genscan.out",
+   "output": "各工具生成基因预测结果文件：veil.gff、hmmgene.gff、out.gff、geneie.gff、genscan.out。\nGFF/输出文件包含基因结构注释（外显子、内含子、剪接位点、链方向、得分等）。\n控制台可能打印运行日志、参数信息或警告。",
+   "errors": "command not found：工具未安装或未加入 PATH。\n无法打开输入文件：文件名错误或路径不对。\n参数错误：-m 物种名不被支持，或 -p 概率值超出范围。\n输出为空：序列太短、含非法字符或物种模型不匹配。\n权限错误：输出目录不可写。",
+   "debug": "用 which veil/hmmgene/gmhmme/geneie/genscan 检查是否可执行。\n用 head human_seq.fa 和 head seq.fa 确认 FASTA 格式（以 > 开头）。\n先用极小测试序列运行，确认命令语法。\n查看工具帮助：veil -h、hmmgene -h、gmhmme -h、geneie -h、genscan -h。\n检查输出文件大小：ls -l *.gff *.out。\n若结果异常，换用已知阳性序列验证模型。"
+  },
+  "279": {
+   "page": 279,
+   "env": "Linux/macOS/Windows + Python 3.8+ + PyTorch 1.x/2.x（torch、torch.nn）",
+   "steps": "1) 新建文件 elman_net.py。\n2) 将示例代码粘贴进去（包含 import torch、import torch.nn as nn 和 ElmanNet 类）。\n3) 在文件末尾添加测试代码：\n   model = ElmanNet(in_dim=4, hidden_dim=8, out_dim=2)\n   x = torch.randn(3, 4)\n   y, h = model(x)\n   print(y.shape, h.shape)\n4) 运行：python elman_net.py",
+   "output": "torch.Size([3, 2]) torch.Size([3, 8])\n即输出 y 形状为 (batch, out_dim)，隐藏状态 h 形状为 (batch, hidden_dim)。",
+   "errors": "ModuleNotFoundError: No module named 'torch'：未安装 PyTorch。\nRuntimeError: mat1 and mat2 shapes cannot be multiplied：输入维度与 in_dim 不一致。\nTypeError: forward() missing 1 required positional argument: 'x'：调用时未传输入。\n隐藏状态维度不匹配：h 的维度不是 (batch, hidden_dim)。",
+   "debug": "运行 python -c \"import torch; print(torch.__version__)\" 确认 PyTorch 可用。\n打印 x.shape、h.shape、y.shape 检查维度。\n将 hidden_dim 改为 4 或 16，确认输出形状随之变化。\n用 torch.manual_seed(0) 固定随机输入，便于复现。\n若报维度错误，检查 in_dim 是否等于 x.size(1)。"
+  },
+  "280": {
+   "page": 280,
+   "env": "MATLAB（需 Deep Learning Toolbox / Neural Network Toolbox；newelm、traingdx、learngdm 为旧版函数，新版可能需兼容设置）",
+   "steps": "1) 新建脚本 elman_matlab.m。\n2) 粘贴示例代码：定义 PR、S、TF、BTF、BLF，创建 newelm 网络，设置 epochs 和 goal。\n3) 定义训练数据 P 和 T。\n4) 调用 [net, tr] = train(net, P, T);\n5) 调用 Y = sim(net, P); disp(Y);\n6) 运行：在 MATLAB 命令行输入 elman_matlab 或点击 Run。",
+   "output": "MATLAB 显示训练窗口/进度，最终输出 Y（4 个样本的预测值，接近目标 T）。\nY 为 4x4 或 4x2 矩阵（取决于网络输出维度），disp(Y) 在命令行打印数值。",
+   "errors": "Undefined function 'newelm'：工具箱未安装或版本不支持。\nError using train：输入 P/T 维度不匹配。\n训练不收敛：epochs 太少、goal 太严或学习率不合适。\n警告：traingdx/learngdm 已过时，建议改用 trainlm/learngdm 等。\nPR 范围与数据不匹配导致输出饱和。",
+   "debug": "在命令行输入 help newelm、help traingdx、help learngdm 查看用法。\n检查 size(P) 和 size(T)，确保列数相同。\n先用默认 epochs=100 跑通，再增加到 1000。\n绘制误差曲线：plot(tr.perf) 或查看训练窗口。\n若 newelm 不可用，改用 feedforwardnet 或 layrecnet 替代。"
+  },
+  "281": {
+   "page": 281,
+   "env": "MATLAB（需 Neural Network Toolbox；newff、train、sim、tansig 为旧版函数）",
+   "steps": "1) 新建脚本 train_sim_demo.m。\n2) 粘贴示例代码：newff 创建网络，定义 P、T、Pi、Ai、VV、TV。\n3) 调用 [net, tr, Y, E, Pf, Af] = train(net, P, T, Pi, Ai, VV, TV);\n4) 调用 Y2 = sim(net, P);\n5) 定义 x = -5:0.1:5; y = tansig(x); plot(x, y); grid on;\n6) 运行脚本。",
+   "output": "训练窗口显示误差下降；命令行输出 Y、Y2 的预测值。\n弹出图形窗口，显示 tansig 函数曲线：S 形，范围 (-1, 1)，过原点。",
+   "errors": "Undefined function 'newff'：新版 MATLAB 已移除，需改用 feedforwardnet。\nError using train：Pi/Ai/VV/TV 格式不正确。\ntansig 未定义：旧版函数名，新版可能为 tansig 仍可用或需用 tanh。\nplot 无图形：缺少图形窗口或变量 x/y 未定义。\n维度不匹配：P 为 2x4，T 为 1x4，需确认网络输出维度。",
+   "debug": "输入 help newff、help train、help sim、help tansig 查看文档。\n检查 size(P)、size(T)、size(Pi)、size(Ai)。\n先令 Pi={}、Ai={}、VV=[]、TV=[] 跑通。\n用 y = tansig([-1 0 1]) 验证函数值：约 -0.7616, 0, 0.7616。\n若 newff 报错，改用 net = feedforwardnet([5 1]); 并重新训练。"
+  },
+  "282": {
+   "page": 282,
+   "env": "MATLAB（建议 R2016b 及以上，需 Deep Learning Toolbox / Neural Network Toolbox；newelm 为旧版函数，新版可用 elmannet 或 narxnet 替代）",
+   "steps": "1. 新建脚本文件 elman_demo.m\n2. 在脚本中准备数据：p 为 84×N 输入矩阵，t 为 1×N 目标向量；随机抽取外显子/内含子各 100 个作为测试集 p_test/t_test，其余为训练集 p/t\n3. 写入代码：\nnet = newelm(p, t, 51, {'tansig','purelin'}, 'traingdx');\nnet.trainParam.epochs = 3000;\nnet.trainParam.goal = 0.0001;\nnet = train(net, p, t);\ny = sim(net, p_test);\n4. 在 MATLAB 命令窗口运行：\n>> elman_demo\n5. 若需保存模型：save('elman_model.mat','net')",
+   "output": "训练窗口显示 3000 次迭代内的 MSE 下降曲线；\n命令窗口返回训练后的 net 对象；\ny 为 1×200 的预测输出向量（对应测试集）；\n可用 plot(y) 或 confusion 查看分类效果。",
+   "errors": "错误1：Undefined function 'newelm' —— 未安装 Neural Network Toolbox 或版本过新已移除该函数。\n错误2：Inputs and targets have different numbers of samples —— p 与 t 列数不一致。\n错误3：Index exceeds matrix dimensions —— p_test 列数与 p 特征维数不匹配。\n错误4：训练不收敛/NaN —— 学习率过大或数据未归一化。",
+   "debug": "1. 检查 size(p)、size(t)、size(p_test) 是否匹配。\n2. 用 which newelm 确认函数是否存在；不存在则改用 elmannet 或 feedforwardnet。\n3. 训练前用 mapminmax 归一化 p 和 t。\n4. 若 MSE 不下降，减小学习率或改用 'trainscg'。\n5. 用 y_test = sim(net, p_test) 后与 t_test 比较，计算分类准确率验证。"
+  },
+  "283": {
+   "page": 283,
+   "env": "Linux / Windows + Python 3.7+，依赖 numpy（pip install numpy）",
+   "steps": "1. 新建文件 svm_decision.py\n2. 写入代码：\nimport numpy as np\n\ndef svm_decision(X_sv, y_sv, alpha, b, x, kernel):\n    s = 0.0\n    for xi, yi, ai in zip(X_sv, y_sv, alpha):\n        s += ai * yi * kernel(xi, x)\n    return np.sign(s + b)\n3. 在文件末尾添加测试：\nif __name__ == '__main__':\n    X_sv = np.array([[1,2],[2,3],[3,3]])\n    y_sv = np.array([1,-1,1])\n    alpha = np.array([0.5,0.8,0.3])\n    b = -0.2\n    kernel = lambda a,b: np.dot(a,b)\n    x = np.array([1.5,2.5])\n    print(svm_decision(X_sv, y_sv, alpha, b, x, kernel))\n4. 运行：python svm_decision.py",
+   "output": "输出 1.0 或 -1.0（取决于测试数据），表示预测类别。\n例如上述测试可能输出 1.0。",
+   "errors": "错误1：ModuleNotFoundError: No module named 'numpy' —— 未安装 numpy。\n错误2：ValueError: shapes not aligned —— X_sv 与 x 维数不一致。\n错误3：TypeError: 'function' object is not subscriptable —— kernel 传参错误。\n错误4：zip 长度不一致导致漏算 —— X_sv、y_sv、alpha 长度不同。",
+   "debug": "1. 用 print(X_sv.shape, x.shape) 检查维度。\n2. 确认 len(X_sv)==len(y_sv)==len(alpha)。\n3. 用简单线性核测试：kernel = lambda a,b: np.dot(a,b)。\n4. 手动计算 s 值并打印，验证符号函数结果。\n5. 若结果异常，检查 alpha 是否含负值或 b 是否合理。"
+  },
+  "284": {
+   "page": 284,
+   "env": "伪代码/算法描述，无需特定运行环境；可用 Python 3 + numpy 模拟实现验证",
+   "steps": "1. 新建文件 chunking_demo.py\n2. 用 numpy 构造 5 个二维样本及标签：\nimport numpy as np\nX = np.array([[1,1],[2,2],[3,3],[4,4],[5,5]])\ny = np.array([1,1,-1,-1,-1])\n3. 实现简化块算法：\n- 初始化 W = [0,1]（索引）\n- 用 sklearn.svm.SVC(kernel='linear') 在 W 上训练\n- 检查 KKT 条件，将违反最严重的样本加入 W，移除 alpha=0 的非支持向量\n- 重复直到全部满足或达到最大迭代\n4. 运行：python chunking_demo.py",
+   "output": "打印每轮工作集 W、支持向量索引、alpha 值；\n最终输出支持向量及对应 alpha、b；\n示例：最终支持向量为 x1, x3，alpha=[0.5,0.5]，b=-2。",
+   "errors": "错误1：未安装 sklearn —— pip install scikit-learn。\n错误2：KKT 条件判断错误导致死循环 —— 检查 alpha_i=0 时 y_i*f(x_i)>=1 等条件。\n错误3：工作集为空 —— 初始化 W 至少 2 个样本。\n错误4：数值精度问题 —— 用 1e-6 容差判断 alpha>0。",
+   "debug": "1. 每轮打印 W 和 alpha，观察是否收敛。\n2. 用 sklearn 的 SVC 在全部数据上训练，对比支持向量是否一致。\n3. 检查 KKT 违反量：g_i = y_i * f(x_i) - 1，打印 max(g_i)。\n4. 若死循环，设置最大迭代次数 100 并打印警告。\n5. 用小规模数据手动验证每步计算。"
+  },
+  "285": {
+   "page": 285,
+   "env": "Linux / macOS + LIBSVM（需先编译或安装：make；或 conda install -c conda-forge libsvm）",
+   "steps": "1. 准备数据文件 train.txt 和 test.txt，格式：label index1:value1 index2:value2 ...\n2. 归一化训练集：\nsvm-scale -s range train.txt > train.scale\n3. 用相同范围归一化测试集：\nsvm-scale -r range test.txt > test.scale\n4. 训练 SVM（C-SVC，RBF 核，c=1，gamma=0.1）：\nsvm-train -s 0 -t 2 -c 1 -g 0.1 train.scale model.txt\n5. 预测：\nsvm-predict test.scale model.txt output.txt",
+   "output": "svm-scale 生成 range 和 train.scale；\nsvm-train 输出：\noptimization finished, #iter = ...\nnu = ...\nobj = ...\nnSV = ...\nTotal nSV = ...\n生成 model.txt；\nsvm-predict 输出：\nAccuracy = 95% (19/20) (classification)\n生成 output.txt 含预测标签。",
+   "errors": "错误1：svm-scale: command not found —— 未安装 LIBSVM 或未加入 PATH。\n错误2：Wrong input format —— 数据文件格式错误，需 label index:value。\n错误3：测试集未用相同 range 归一化 —— 预测准确率异常低。\n错误4：gamma 过大导致过拟合 —— 调整 -g 参数。\n错误5：大样本训练内存不足 —— 减少样本或使用线性核 -t 0。",
+   "debug": "1. 用 head train.txt 检查数据格式。\n2. 确认 svm-scale 生成的 range 文件存在且被测试集使用。\n3. 用 svm-train -v 5 做交叉验证选择参数。\n4. 用 grid.py（LIBSVM tools）搜索最优 c 和 g。\n5. 检查 model.txt 中 nSV 数量，若接近样本数说明可能过拟合。\n6. 对比 output.txt 与测试标签计算混淆矩阵。"
+  },
+  "286": {
+   "page": 286,
+   "env": "Linux + Python3（LIBSVM 的 grid.py/gridregression.py 依赖 Python2/3 与 gnuplot；MATLAB 需安装 LIBSVM 的 mex 接口）",
+   "steps": "1. 安装 LIBSVM：下载 libsvm 源码，make 编译，得到 svmscale、svmtrain、svmpredict 可执行文件。\n2. 将 tools/ 目录加入 PATH：export PATH=$PATH:$(pwd)/tools。\n3. 准备训练集 train_set（LIBSVM 格式：label 1:val 2:val ...）。\n4. 运行规格化：svmscale -s range train_set > train_set_scale。\n5. 运行网格搜索：python grid.py -s 1 -t 2 train_set_scale。\n6. MATLAB 中先 mex 编译 svmtrain.c/svmpredict.c，再执行：model = svmtrain(train_label, train_data, '-s 0 -t 2 -c 1 -g 0.1');",
+   "output": "svmscale 生成 train_set_scale 与 range 文件。\ngrid.py 输出最优参数，如：\n[local] 1.0 0.1 98.5 (best c=1.0, g=0.1, rate=98.5)\nMATLAB 返回 model 结构体，包含 SV、sv_coef 等字段。",
+   "errors": "1. svmscale: command not found → 未编译或未加入 PATH。\n2. grid.py 报 gnuplot 错误 → 未安装 gnuplot。\n3. MATLAB 报 Invalid MEX-file → 未编译 mex 或架构不匹配。\n4. 数据格式错误 → 标签或特征索引非整数、含缺失值。",
+   "debug": "1. 用 which svmscale 确认路径。\n2. 用 head train_set 检查数据格式。\n3. 单独运行 svmtrain 验证可执行文件。\n4. MATLAB 中 which svmtrain 确认调用的是 LIBSVM 而非统计工具箱同名函数。\n5. grid.py 加 -v 查看详细过程。"
+  },
+  "287": {
+   "page": 287,
+   "env": "Linux + Python3 + LIBSVM（svmscale/svmtrain/svmpredict/grid.py）；MATLAB + LIBSVM mex 接口",
+   "steps": "1. 保存训练集为 train_set，测试集为 test_set（LIBSVM 格式）。\n2. 规格化训练集：svmscale -s range train_set > train_set_scale。\n3. 用 range 规格化测试集：svmscale -r range test_set > test_set_scale。\n4. 网格搜索：python grid.py -s 1 -t 2 train_set_scale，记录 best_C 与 best_g。\n5. 训练：svmtrain -s 0 -t 2 -c best_C -g best_g train_set_scale model。\n6. 预测：svmpredict test_set_scale model output。\n7. MATLAB：model = svmtrain(train_label, train_data, '-s 0 -t 2 -c 1 -g 0.1'); [pred, acc, dec] = svmpredict(test_label, test_data, model);",
+   "output": "svmscale 生成 train_set_scale、test_set_scale 与 range。\ngrid.py 输出最优参数与交叉验证准确率。\nsvmtrain 输出优化过程（如 optimization finished, #iter = ...）。\nsvmpredict 输出 Accuracy = xx% (n/m) 及预测标签文件 output。\nMATLAB 返回 pred、acc、dec。",
+   "errors": "1. svmscale -r range 报错 → range 文件路径错误或未生成。\n2. grid.py 找不到 best_C/best_g → 未记录输出或参数范围不当。\n3. svmtrain 报 wrong input format → 测试集与训练集特征维度不一致。\n4. svmpredict 准确率异常低 → 规格化不一致或标签顺序错误。",
+   "debug": "1. 检查 range 文件内容：cat range。\n2. 对比 train_set_scale 与 test_set_scale 的特征索引范围。\n3. 用 svmtrain -v 5 做交叉验证验证参数。\n4. MATLAB 中检查 train_label 与 train_data 行数一致。\n5. 用 size(train_data) 与 size(test_data) 确认列数相同。"
+  },
+  "288": {
+   "page": 288,
+   "env": "MATLAB + Bioinformatics Toolbox（需联网访问 NCBI）",
+   "steps": "1. 启动 MATLAB，确认已安装 Bioinformatics Toolbox：ver。\n2. 新建脚本 getgenbank_demo.m，输入：\nacc = 'EF221854';\nfilename = 'EF221854.gb';\ngetgenbank(acc, 'TOFILE', filename);\nseq = getgenbank(acc, 'SEQUENCEONLY', true);\nseqPartial = getgenbank(acc, 'PARTIALSEQ', [1 500]);\nlength(seq)\nseq(1:60)\n3. 运行脚本：getgenbank_demo。",
+   "output": "当前目录生成 EF221854.gb 文件。\nseq 为字符向量，length(seq) 返回序列长度。\nseq(1:60) 显示前 60 个碱基。\nseqPartial 为前 500 bp 子序列。",
+   "errors": "1. Undefined function 'getgenbank' → 未安装 Bioinformatics Toolbox。\n2. 网络超时或无法访问 NCBI → 防火墙/代理问题。\n3.  accession 无效 → 返回空或报错。\n4. 文件写入失败 → 当前目录无写权限。",
+   "debug": "1. 运行 ver 确认工具箱。\n2. 用 webread('https://www.ncbi.nlm.nih.gov') 测试网络。\n3. 检查 acc 拼写。\n4. 用 pwd 确认当前目录可写。\n5. 捕获异常：try ... catch ME, disp(ME.message); end。"
+  },
+  "289": {
+   "page": 289,
+   "env": "MATLAB + Bioinformatics Toolbox",
+   "steps": "1. 新建脚本 seq_analysis_demo.m，输入：\nseq = 'ATGGCCATTGTAATGGGCCGCTGAAAGGGTGCCCGATAG';\nrc = seqrcomplement(seq);\ndimercount(seq, 'chart', 'bar');\ncodoncount(seq);\ncodoncount(seq, 'Frame', 1);\norf = seqshoworfs(seq);\n2. 运行脚本：seq_analysis_demo。",
+   "output": "rc 为反向互补序列。\ndimercount 弹出条形图并返回二聚体计数。\ncodoncount 返回密码子使用计数表。\nseqshoworfs 返回 ORF 结构体，并在图形窗口显示 ORF。",
+   "errors": "1. Undefined function 'seqrcomplement' → 工具箱未安装或函数名拼写错误。\n2. dimercount 图表不显示 → 图形环境问题。\n3. codoncount 报序列长度非 3 的倍数 → 需指定 Frame 或截断。\n4. seqshoworfs 无输出 → 序列过短或未找到 ORF。",
+   "debug": "1. 用 help seqrcomplement 确认函数存在。\n2. 检查 seq 仅含 A/T/C/G。\n3. 用 length(seq) 确认长度。\n4. 对 codoncount 加 'Frame' 参数测试。\n5. 用 orf = seqshoworfs(seq); disp(orf) 查看结构体字段。"
+  },
+  "290": {
+   "page": 290,
+   "env": "MATLAB R2018b 或更高版本 + Bioinformatics Toolbox；需联网访问 NCBI GenBank（getgenbank 函数）",
+   "steps": "1. 打开 MATLAB，将当前文件夹设为脚本所在目录。\n2. 新建脚本文件 p290_tree.m，粘贴示例代码。\n3. 确保 Bioinformatics Toolbox 已安装：在命令行输入 ver 并检查列表中包含 Bioinformatics Toolbox。\n4. 在命令行运行：p290_tree\n5. 若网络受限，可提前用 getgenbank 下载并保存为 .mat 或 FASTA，再改用 fastaread 读取。",
+   "output": "命令行依次显示两条 GenBank 序列的获取信息；\n生成变量 aligned（多序列比对结果）、dist（距离矩阵）、tree（系统发育树对象）；\n弹出图形窗口，显示 UPGMA 树，叶节点标签为 'Mountain Gorilla Rwanda' 和 'Chimp Troglodytes'。",
+   "errors": "错误1：Undefined function 'getgenbank' —— 未安装 Bioinformatics Toolbox 或路径未配置。\n错误2：无法连接 NCBI 或超时 —— 网络问题或防火墙限制。\n错误3：multialign 报错 —— 序列长度差异过大或含非法字符。\n错误4：seqlinkage 报错 —— 距离矩阵格式不正确或名称数量不匹配。\n错误5：plot(tree) 无图形 —— 图形句柄被覆盖或 tree 为空。",
+   "debug": "1. 运行 ver 确认 Bioinformatics Toolbox 存在。\n2. 单独测试 getgenbank('AF089820','sequenceonly',true)，检查网络与返回值。\n3. 检查 seqs 元胞数组：disp(seqs)，确认非空且为字符向量。\n4. 检查 aligned：disp(aligned)，确认比对成功。\n5. 检查 dist 与 tree：whos dist tree，确认变量已生成。\n6. 若绘图失败，改用 view(tree) 或 dendrogram(tree) 查看树结构。"
+  }
+ },
+ "ch14": {
+  "331": {
+   "page": 331,
+   "env": "Linux/macOS/Windows + Python 3.8+（仅标准库，无需额外依赖）",
+   "steps": "1. 新建文件 pyro454.py\n2. 将示例代码粘贴保存\n3. 在终端运行：python3 pyro454.py",
+   "output": "[('A', 2), ('C', 1), ('G', 2), ('T', 2)]",
+   "errors": "SyntaxError：缩进不一致或漏写冒号\nKeyError：flow_order 含非 ACGT 字符（本函数不会报错但结果异常）\nIndexError：一般不会出现，除非修改了 while 条件",
+   "debug": "1. 在函数内 print(pos, base, count) 观察指针推进\n2. 检查 template 与 flow_order 是否只含 A/C/G/T\n3. 用 template='A'、flow_order='A' 做最小测试，应输出 [('A', 1)]\n4. 验证总 count 之和是否等于 len(template)"
+  },
+  "332": {
+   "page": 332,
+   "env": "Linux/macOS/Windows + Python 3.8+（仅标准库 random）",
+   "steps": "1. 新建文件 emulsion_pcr.py\n2. 粘贴代码保存\n3. 运行：python3 emulsion_pcr.py\n4. 如需复现结果，可在 import random 后加 random.seed(42)",
+   "output": "空微滴比例: 约 0.990\n单模板微滴比例: 约 0.0099\n（每次运行略有波动，因随机分配）",
+   "errors": "IndexError：n_droplets 为 0 或负数\nMemoryError：n_droplets 过大（如 1e9）导致列表分配失败\n结果偏差大：n_fragments 远大于 n_droplets，泊松近似失效",
+   "debug": "1. 打印 sum(d) 应等于 n_fragments\n2. 打印 len(d) 应等于 n_droplets\n3. 用 n_fragments=10, n_droplets=10 小规模验证分配逻辑\n4. 多次运行观察比例是否接近理论值 e^{-λ}（λ=n_fragments/n_droplets）"
+  },
+  "333": {
+   "page": 333,
+   "env": "Linux/macOS/Windows + Python 3.8+（仅标准库）",
+   "steps": "1. 新建文件 illumina_seq.py\n2. 粘贴代码保存\n3. 运行：python3 illumina_seq.py",
+   "output": "ACGTACGT",
+   "errors": "TypeError：read 不是字符串（如传入 list）\n结果短于预期：cycles 小于 len(read) 时只输出前 cycles 个碱基\n空输出：read 为空字符串",
+   "debug": "1. 打印 min(cycles, len(read)) 确认循环次数\n2. 测试 cycles=4 应输出 ACGT\n3. 测试 read='NNNN' 观察非 ACGT 字符是否被原样输出\n4. 检查 read 是否含小写字母（本代码区分大小写）"
+  },
+  "334": {
+   "page": 334,
+   "env": "Linux/macOS/Windows + Python 3.8+（仅标准库）",
+   "steps": "1. 新建文件 solid_encode.py\n2. 粘贴代码保存\n3. 运行：python3 solid_encode.py",
+   "output": "132132",
+   "errors": "KeyError：序列含非 ACGT 字符或长度不足 2\n结果长度不符：输出长度应为 len(seq)-1\n空输出：seq 长度小于 2",
+   "debug": "1. 打印 seq[i:i+2] 与对应编码，逐对核对\n2. 用 seq='AC' 测试应输出 '1'\n3. 用 seq='A' 测试应输出空字符串\n4. 检查 encoding 表是否覆盖所有 16 种双碱基组合"
+  },
+  "335": {
+   "page": 335,
+   "env": "无需实际运行环境；伪代码用于理解SOLiD连接测序原理。若需模拟，可用Linux + Python3（任意版本）",
+   "steps": "1. 新建文件 solid_sim.py\n2. 将以下模拟代码粘贴保存：\n# SOLiD连接测序颜色序列模拟\nprobe_colors = {'AC':'R','AA':'R','CC':'R','GG':'R','TT':'R',\n                'CA':'B','CT':'B','GC':'B','TG':'B',\n                'AG':'G','GA':'G','TC':'G','GT':'G',\n                'AT':'Y','TA':'Y','CG':'Y','GC':'Y'}\ntemplate = 'ACGT'\ncolors = []\nfor i in range(len(template)-1):\n    dinuc = template[i:i+2]\n    colors.append(probe_colors.get(dinuc, '?'))\nprint('颜色序列:', ','.join(colors))\n3. 运行：python3 solid_sim.py",
+   "output": "颜色序列: R,B,G,Y",
+   "errors": "KeyError：探针颜色字典缺少某双碱基组合，检查字典是否覆盖16种组合\nIndexError：模板长度不足，确保template长度>=2",
+   "debug": "1. 打印每个dinuc确认提取正确\n2. 检查probe_colors字典键值是否完整\n3. 用已知模板如'AAAA'验证输出应为R,R,R"
+  },
+  "336": {
+   "page": 336,
+   "env": "Linux + Python3（3.6+）",
+   "steps": "1. 新建文件 decode_solid.py\n2. 粘贴页面中的decode_solid函数及示例代码\n3. 保存后运行：python3 decode_solid.py",
+   "output": "AACG",
+   "errors": "KeyError：base_map缺少某组合，检查16种双碱基是否齐全\nIndexError：colors为空或start_base无效\n逻辑错误：若颜色序列无法从prev碱基匹配，会提前break导致输出变短",
+   "debug": "1. 在循环内打印prev和color，观察匹配过程\n2. 验证base_map长度应为16\n3. 用已知示例colors=['R','B','G'], start='A'应输出AACG\n4. 若输出错误，检查base_map中('A','C')是否映射为'B'等"
+  },
+  "337": {
+   "page": 337,
+   "env": "Linux（Ubuntu/CentOS）+ FastQC + cutadapt + bowtie1 + miRDeep2 + R/DESeq2（可选）",
+   "steps": "1. 准备smallRNA.fastq、genome_index（bowtie索引）、genome.fa、mature_miRNA.fa\n2. 质控：fastqc smallRNA.fastq\n3. 去接头：cutadapt -a TGGAATTCTCGGGTGCCAAGG -o trimmed.fastq smallRNA.fastq\n4. 比对：bowtie -f -v 1 -m 1 --best --strata genome_index trimmed.fastq aligned.bam\n5. 鉴定miRNA：miRDeep2.pl trimmed.fastq genome.fa aligned.bam mature_miRNA.fa none 2> report.log\n6. 差异表达（R）：\n   library(DESeq2)\n   dds <- DESeqDataSetFromMatrix(countData, colData, design=~condition)\n   dds <- DESeq(dds)\n   res <- results(dds)",
+   "output": "fastqc生成smallRNA_fastqc.html和.zip\ncutadapt输出trimmed.fastq及统计信息\nbowtie生成aligned.bam（需samtools转换）\nmiRDeep2生成report.log和miRNA表达结果\nDESeq2生成res对象，可导出差异表达表",
+   "errors": "fastqc: command not found → 安装FastQC并加入PATH\ncutadapt: 接头序列错误 → 确认3'接头序列\nbowtie: 索引不存在 → 用bowtie-build构建genome_index\nmiRDeep2: Perl模块缺失 → 安装Perl及依赖模块\nDESeq2: 未安装 → BiocManager::install('DESeq2')",
+   "debug": "1. 每步检查输出文件是否存在且非空\n2. fastqc查看per base quality\n3. cutadapt后检查read长度分布\n4. bowtie用-S输出SAM检查比对率\n5. miRDeep2查看report.log中错误信息\n6. DESeq2检查countData矩阵维度与colData一致"
+  },
+  "338": {
+   "page": 338,
+   "env": "Linux + Python3（3.6+）；align函数需自行实现或使用模拟比对",
+   "steps": "1. 新建文件 bisulfite.py\n2. 粘贴页面中的bisulfite_align和methylation_level函数\n3. 补充一个简单align函数用于演示：\ndef align(reads_T, ref_T):\n    # 简单模拟：假设reads与ref_T完全匹配，返回位置0\n    return [(read, 0) for read in reads_T]\n4. 添加测试：\nref = 'ACGTACGT'\nreads = ['ACGTACGT', 'ATGTACGT']\nalignments = bisulfite_align(reads, ref)\nprint(methylation_level(alignments, ref))\n5. 运行：python3 bisulfite.py",
+   "output": "{0: 1.0, 2: 0.5, 4: 1.0, 6: 1.0}（示例，取决于reads和ref）",
+   "errors": "AttributeError：ref不是字符串，检查输入类型\nKeyError：alignments格式错误，确保每个元素为(read, pos)\nZeroDivisionError：某位点无覆盖，检查v[0]+v[1]是否为0",
+   "debug": "1. 打印ref_T和reads_T确认C->T转换\n2. 打印alignments检查比对位置\n3. 对每个C位点手动统计C和T数量\n4. 用已知甲基化模式验证，如ref='C', read='C'应甲基化水平1.0"
+  },
+  "339": {
+   "page": 339,
+   "env": "Linux + R 4.x（含基础包 stats）；Python 3.8+，依赖 pandas、scipy、matplotlib",
+   "steps": "1. 保存 R 代码为 two_way_anova.R\n2. 运行：Rscript two_way_anova.R\n3. 保存 Python 代码为 rash_cluster.py\n4. 准备表达矩阵文件 expr_matrix.csv（行=基因，列=样品），在脚本中读取：expr_matrix = pd.read_csv('expr_matrix.csv', index_col=0)\n5. 运行：python3 rash_cluster.py",
+   "output": "R 输出：Df Sum Sq Mean Sq F value Pr(>F) 等方差分析表，包含 factorA、factorB 及交互项 factorA:factorB 的统计量与 p 值\nPython 输出：弹出层次聚类树状图窗口，横轴为样品标签，纵轴为聚类距离",
+   "errors": "R：'there are aliased coefficients in the model' 或 'contrasts can be applied only to factors with 2 or more levels'，原因是某因素水平不足或设计不平衡\nPython：ModuleNotFoundError: No module named 'scipy'，缺少依赖\nPython：KeyError 或 ValueError，expr_matrix 未定义或读取失败\nPython：图形窗口不显示，服务器无 GUI",
+   "debug": "R：str(df) 检查因子水平；table(df$factorA, df$factorB) 检查每个组合是否有重复；改用 aov(expr ~ factorA + factorB) 排除交互项\nPython：pip install pandas scipy matplotlib；print(expr_matrix.shape) 确认矩阵非空；print(corr.head()) 检查相关性矩阵；无 GUI 时改用 plt.savefig('dendrogram.png') 保存图片"
+  },
+  "340": {
+   "page": 340,
+   "env": "Linux（64 位）+ 各工具已安装并加入 PATH：Velvet、EULER、MOSAIK、RMAP、SHARCGS、SOAP；测试数据 reads.fastq/reads.fasta、reference.fa",
+   "steps": "1. 准备测试数据：reads.fastq、reads.fasta、reference.fa\n2. Velvet 组装：velveth output_dir 21 -fastq reads.fastq\n3. 继续：velvetg output_dir -cov_cutoff auto\n4. EULER 组装：euler -reads reads.fasta -output assembly\n5. MOSAIK 比对：mosaik align -ref reference.fa -in reads.fastq -out aligned.bam\n6. RMAP 比对：rmap -h reference.fa reads.fastq > output.txt\n7. SHARCGS 组装：sharcgs -reads reads.fasta -o assembly\n8. SOAP 比对：soap -a reads.fastq -d reference.fa -o output.soap -p 4",
+   "output": "Velvet：output_dir/ 下生成 contigs.fa、stats.txt 等\nEULER：生成 assembly 相关输出文件\nMOSAIK：生成 aligned.bam（或比对结果文件）\nRMAP：output.txt 中包含比对位置、错配数等\nSHARCGS：生成 assembly 目录/文件\nSOAP：output.soap 中包含比对结果",
+   "errors": "command not found：工具未安装或未加入 PATH\n参数错误：如 velvet 的 k-mer 必须为奇数；SOAP 的 -p 线程数需为正整数\n文件不存在：reads.fastq/reference.fa 路径错误\n内存不足：组装大基因组时被 kill\n格式不匹配：fastq 与 fasta 混用导致解析失败",
+   "debug": "which velveth/euler/mosaik/rmap/sharcgs/soap 检查是否可执行\n工具加 -h 或 --help 查看正确参数\nls -lh 确认输入文件存在且非空\nhead reads.fastq 检查格式\n小数据测试：先截取前 1000 条 reads 运行\n查看日志/标准错误：命令后加 2> err.log"
+  },
+  "341": {
+   "page": 341,
+   "env": "Linux + 常用 RNA-seq 工具：FastQC、Trimmomatic/Cutadapt、Trinity、CD-HIT、BLAST+、Blast2GO/InterProScan、KEGG 注释工具、Bowtie2、RSEM/Salmon、R（edgeR/DESeq2）",
+   "steps": "1. 保存流程说明为 rnaseq_denovo.sh（或逐步手动执行）\n2. 质量评估：fastqc reads.fq\n3. 去接头/质控：trimmomatic PE reads_1.fq reads_2.fq ... 或 cutadapt -a ADAPTER -o out.fq reads.fq\n4. de novo 组装：trinity --seqType fq --left reads.fq --CPU 8 --output trinity_out\n5. 去冗余：cd-hit-est -i trinity.fasta -o unigene.fasta -c 0.95\n6. 功能注释：blastx unigene.fasta -db nr -out blast.out\n7. GO 分类：blast2go 或 interproscan\n8. KEGG 注释：kegg_annotation unigene.fasta\n9. 表达定量：bowtie2 + RSEM 或 salmon\n10. 差异表达：R 中运行 edgeR 或 DESeq2",
+   "output": "FastQC：reads_fastqc.html 质量报告\nTrinity：trinity_out/Trinity.fasta\nCD-HIT：unigene.fasta 及聚类统计\nBLAST：blast.out 注释结果\nGO/KEGG：注释表\n定量：表达矩阵（counts/TPM）\n差异表达：差异基因列表及 p 值/FDR",
+   "errors": "Trinity 内存不足：--max_memory 设置过小或数据过大\nCD-HIT 相似度阈值 -c 0.95 导致 Unigene 过多/过少\nBLAST 数据库未安装或路径错误：nr 库不存在\nBowtie2 索引未建立：genome_index 缺失\nR 包未安装：edgeR/DESeq2 加载失败\n样本名不匹配：定量矩阵列名与分组文件不一致",
+   "debug": "检查各工具版本：trinity --version、cd-hit-est -h\n查看日志：Trinity 输出 trinity_out/trinity.log\nBLAST：blastx -version，确认 BLASTDB 环境变量\nBowtie2：bowtie2-build 建立索引后检查 .bt2 文件\nR：sessionInfo() 查看包版本；用小型数据集测试\n逐步运行，确认每步输出文件存在且非空"
+  },
+  "342": {
+   "page": 342,
+   "env": "Linux + HISAT2、Samtools、StringTie、Trinity、GMAP、Bowtie2、MACS2、BEDTools；参考基因组索引 genome_index、参考注释 ref.gtf、重复序列 repeats.bed",
+   "steps": "策略A：\n1. hisat2 -x genome_index -1 r1.fq -2 r2.fq -S aln.sam\n2. samtools sort -o aln.bam aln.sam\n3. stringtie aln.bam -G ref.gtf -o merged.gtf\n策略B：\n4. trinity --seqType fq --left r1.fq --right r2.fq --output trinity_out\n5. gmap -d genome_index trinity_out/Trinity.fasta > asm.sam\nChIP-seq：\n6. bowtie2 -x genome_index -U chip.fq -S chip.sam\n7. samtools sort -o chip.bam chip.sam\n8. macs2 callpeak -t chip.bam -c input.bam -g hs -n peak\n9. bedtools intersect -a chip.bam -b repeats.bed -c",
+   "output": "策略A：aln.sam、aln.bam、merged.gtf\n策略B：trinity_out/Trinity.fasta、asm.sam\nChIP-seq：chip.sam、chip.bam、peak_peaks.narrowPeak/peak_summits.bed、bedtools 输出含重复序列计数",
+   "errors": "HISAT2：索引不匹配或 reads 格式错误\nSamtools：sort 时内存不足或 BAM 损坏\nStringTie：-G 注释与 BAM 参考不一致\nGMAP：索引未建立或路径错误\nBowtie2：-U 单端与双端参数混用\nMACS2：-g hs 有效基因组大小错误；input.bam 缺失\nBEDTools：BAM 未排序或格式不支持",
+   "debug": "检查索引：ls genome_index*；hisat2-build 重建\nsamtools quickcheck aln.bam 验证 BAM\nsamtools view -H aln.bam 查看头信息\nstringtie --version；确认 ref.gtf 与基因组版本一致\ngmap -D 建立索引后重试\nmacs2 --version；用 macs2 callpeak -t chip.bam -c input.bam -g 2.7e9 测试\nbedtools --version；bedtools sort -i chip.bam 后再 intersect"
+  },
+  "343": {
+   "page": 343,
+   "env": "Linux (Ubuntu 20.04+) + Bismark v0.22+ + Bowtie2 v2.4+ + Samtools v1.10+ + MACS2 v2.2+ + Python3 (可选)",
+   "steps": "1. 准备参考基因组目录 genome/（含 FASTA 文件）\n2. 运行 Bismark 基因组准备：bismark_genome_preparation --path genome/\n3. 将 BS-seq 双端测序文件 bs_r1.fq 和 bs_r2.fq 放在当前目录\n4. 运行比对：bismark --genome genome/ -1 bs_r1.fq -2 bs_r2.fq\n5. 比对生成 BAM 文件（如 bs.bam），运行甲基化提取：bismark_methylation_extractor -s --comprehensive bs.bam\n6. 准备 ChIP-seq 数据 chip.fq 和 input.bam，以及 bowtie2 索引 genome_index\n7. 运行 ChIP-seq 比对：bowtie2 -x genome_index -U chip.fq -S chip.sam\n8. 排序：samtools sort -o chip.bam chip.sam\n9. 峰值调用：macs2 callpeak -t chip.bam -c input.bam -g hs -n chip_peak",
+   "output": "1. bismark_genome_preparation 生成 Bisulfite_Genome/ 目录\n2. bismark 比对生成 bs.bam 和报告文件\n3. bismark_methylation_extractor 生成 CpG_context_bs.bam.txt 等甲基化调用文件\n4. bowtie2 生成 chip.sam 和比对统计\n5. samtools sort 生成排序后的 chip.bam\n6. macs2 callpeak 生成 chip_peak_peaks.narrowPeak、chip_peak_summits.bed 等",
+   "errors": "1. 找不到 genome/ 目录或 FASTA 文件：检查路径和文件权限\n2. bismark_genome_preparation 报错：确保 genome/ 内只有 FASTA 文件，且已安装 bowtie2\n3. 比对时内存不足：减少线程或使用 --bowtie2 参数调整\n4. samtools sort 报错：检查 chip.sam 是否完整，或使用 -@ 增加线程\n5. macs2 报错：检查 input.bam 是否存在且已排序，或调整 -g 参数",
+   "debug": "1. 检查工具版本：bismark --version、bowtie2 --version、samtools --version、macs2 --version\n2. 验证 genome/ 目录内容：ls genome/\n3. 检查 FASTQ 文件格式：head bs_r1.fq\n4. 查看比对日志：bismark 输出到屏幕或日志文件\n5. 检查 BAM 文件：samtools quickcheck bs.bam\n6. 验证 MACS2 输入：samtools view -H chip.bam | head"
+  },
+  "344": {
+   "page": 344,
+   "env": "Linux + Python3 (3.8+) + 伪代码依赖（需自行实现或使用 Biopython、scikit-learn 等）",
+   "steps": "1. 创建 Python 文件 ngs_analysis.py\n2. 将伪代码复制到文件中，并实现 de_novo_assemble、call_cnv、call_snp、call_indel、assemble、detect_splicing、detect_fusion、integrate 等函数（或使用模拟数据）\n3. 准备输入数据（reads、dna_data、rna_data、pathway_db）\n4. 运行：python3 ngs_analysis.py",
+   "output": "1. dna_seq_analysis 返回 contigs、cnv、snp、indel 结果\n2. rna_seq_analysis 返回 transcripts、splicing、fusion 结果\n3. network 为整合后的网络对象\n4. 无报错则输出结果或保存文件",
+   "errors": "1. NameError: 函数未定义：需实现或导入相应函数\n2. TypeError: 输入数据类型错误：检查 reads 是否为列表或字符串\n3. ImportError: 缺少依赖库：安装所需包\n4. 内存不足：处理大数据时需优化算法",
+   "debug": "1. 使用 print 输出中间变量\n2. 使用 pdb 调试：import pdb; pdb.set_trace()\n3. 检查函数定义：dir() 或 help()\n4. 单元测试每个函数\n5. 使用小规模模拟数据验证流程"
+  },
+  "345": {
+   "page": 345,
+   "env": "Linux + Python3 (3.8+) + Scanpy (1.8+) + 依赖 (numpy, pandas, scikit-learn, umap-learn, leidenalg)",
+   "steps": "1. 安装 Scanpy：pip install scanpy\n2. 准备 10x Genomics 输出目录 filtered_feature_bc_matrix/\n3. 创建 Python 文件 scanpy_analysis.py，复制代码\n4. 运行：python3 scanpy_analysis.py",
+   "output": "1. adata 为 AnnData 对象，包含表达矩阵和注释\n2. 过滤后细胞数减少\n3. 归一化、log1p、高变基因选择后 adata 更新\n4. PCA、neighbors、UMAP、leiden 结果存储在 adata.obsm、adata.obs 中\n5. 可生成 UMAP 图（需额外绘图代码）",
+   "errors": "1. FileNotFoundError: 目录不存在：检查路径\n2. ImportError: 缺少 leidenalg：pip install leidenalg\n3. ValueError: 数据格式错误：确保 10x 矩阵文件完整\n4. 内存不足：减少细胞数或使用稀疏矩阵\n5. 运行时间过长：调整 n_top_genes 或使用 subsample",
+   "debug": "1. 检查 adata：print(adata)\n2. 查看细胞和基因数：adata.shape\n3. 检查是否有 NaN：adata.X.min()\n4. 使用 sc.pl.pca、sc.pl.umap 可视化\n5. 保存结果：adata.write('output.h5ad')"
+  },
+  "346": {
+   "page": 346,
+   "env": "Linux (Ubuntu 20.04+) + wget + FastQC + Trimmomatic + Bowtie2 + Kraken2 + HUMAnN2 + HiCUP + 参考数据库",
+   "steps": "1. 下载数据：wget http://www.hmpdacc.org/data/...（替换为实际 URL）\n2. 质量控制：fastqc sample.fq\n3. 修剪：trimmomatic PE sample_1.fq sample_2.fq out_1.fq out_2.fq\n4. 去宿主：bowtie2 -x human_genome -1 out_1.fq -2 out_2.fq --un nonhuman.fq\n5. 物种注释：kraken2 --db minikraken nonhuman.fq --output kraken.out\n6. 功能注释：humann2 --input nonhuman.fq --output humann2_out\n7. Hi-C 分析：hicup --index genome_index --digest genome_digest reads.fq",
+   "output": "1. fastqc 生成 sample_fastqc.html 和 .zip\n2. trimmomatic 生成 out_1.fq、out_2.fq 和未配对文件\n3. bowtie2 生成 nonhuman.fq（非人类序列）\n4. kraken2 生成 kraken.out 和报告\n5. humann2 生成 humann2_out 目录，包含功能表\n6. hicup 生成 Hi-C 比对和质控报告",
+   "errors": "1. wget 失败：URL 错误或网络问题\n2. fastqc 报错：文件格式错误\n3. trimmomatic 参数错误：检查接头文件\n4. bowtie2 索引缺失：需先构建 human_genome 索引\n5. kraken2 数据库缺失：下载 minikraken 数据库\n6. humann2 依赖缺失：安装 humann2 和依赖\n7. hicup 报错：检查 genome_index 和 genome_digest 文件",
+   "debug": "1. 检查工具版本：fastqc --version 等\n2. 验证输入文件：ls -lh sample.fq\n3. 查看日志：fastqc 输出到 stderr\n4. 检查数据库路径：kraken2 --db minikraken --help\n5. 使用小样本测试\n6. 检查 HiCUP 配置文件"
+  },
+  "347": {
+   "page": 347,
+   "env": "Linux + Python3（建议 3.8+）；依赖 numpy（用于矩阵运算）；bowtie2 仅作概念示意，实际需安装 bowtie2 并准备参考基因组索引；本页为伪代码，可运行简化版矩阵构建与归一化。",
+   "steps": "1) 新建文件 hic_demo.py。\n2) 写入简化可运行代码：\nimport numpy as np\n\ndef build_contact_matrix(pairs, n_bins):\n    m = np.zeros((n_bins, n_bins), dtype=float)\n    for i, j, c in pairs:\n        m[i, j] += c\n        if i != j:\n            m[j, i] += c\n    return m\n\ndef ice_normalize(matrix, iterations=50, tol=1e-6):\n    m = matrix.astype(float).copy()\n    mask = m.sum(axis=1) > 0\n    for _ in range(iterations):\n        row_sum = m.sum(axis=1)\n        scale = np.ones_like(row_sum)\n        scale[mask] = row_sum[mask].mean() / row_sum[mask]\n        new_m = m * scale[:, None] * scale[None, :]\n        if np.max(np.abs(new_m - m)) < tol:\n            m = new_m\n            break\n        m = new_m\n    return m\n\npairs = [(0,0,10),(0,1,3),(0,2,1),(1,1,8),(1,2,2),(2,2,5)]\nmat = build_contact_matrix(pairs, 3)\nprint('raw matrix:')\nprint(mat)\nnorm = ice_normalize(mat)\nprint('ICE normalized:')\nprint(np.round(norm, 4))\nprint('row sums after ICE:', np.round(norm.sum(axis=1), 4))\n\n3) 运行：python3 hic_demo.py",
+   "output": "raw matrix:\n[[10.  3.  1.]\n [ 3.  8.  2.]\n [ 1.  2.  5.]]\nICE normalized:\n[[... ... ...]\n [... ... ...]\n [... ... ...]]\nrow sums after ICE: [近似相等，如 15.0 15.0 15.0]",
+   "errors": "ModuleNotFoundError: No module named 'numpy' → 未安装 numpy，执行 pip install numpy。\nIndexError: index 3 is out of bounds for axis 0 with size 3 → pairs 中 bin 编号超出 n_bins-1。\nRuntimeWarning: invalid value encountered in divide → 某行和为 0，ICE 中需用 mask 避免除零。\n矩阵不对称 → 构建时只累加了上三角，需同时填充 m[j,i]。",
+   "debug": "先单独打印 pairs 与 n_bins，确认 bin 编号范围。\n检查 build_contact_matrix 输出是否对称：np.allclose(mat, mat.T)。\n检查每行和是否大于 0：mat.sum(axis=1)。\nICE 不收敛时增大 iterations 或检查是否存在全零行/列。\n用 np.round(norm.sum(axis=1), 4) 验证归一化后行和是否近似相等。"
+  },
+  "348": {
+   "page": 348,
+   "env": "Linux + Python3（建议 3.8+）；依赖 numpy、scikit-learn；可选 samtools、zstd 用于 CRAM 压缩与 zstd 压缩示例。",
+   "steps": "1) 新建文件 hic_cluster_demo.py。\n2) 写入代码：\nimport numpy as np\nfrom sklearn.cluster import SpectralClustering\n\ndef cluster_contigs_by_hic(contact_matrix, n_clusters):\n    norm = contact_matrix / contact_matrix.sum(axis=1, keepdims=True)\n    sc = SpectralClustering(n_clusters=n_clusters, affinity='precomputed', random_state=0)\n    labels = sc.fit_predict(norm)\n    return labels\n\ncontact = np.array([\n    [50, 45, 2, 1],\n    [45, 50, 1, 2],\n    [2, 1, 40, 38],\n    [1, 2, 38, 40]\n], dtype=float)\nlabels = cluster_contigs_by_hic(contact, n_clusters=2)\nprint('labels:', labels)\n\n3) 运行：python3 hic_cluster_demo.py\n4) 可选压缩命令：\n   samtools view -C -T ref.fa input.bam > output.cram\n   zstd -19 reads.fastq -o reads.fastq.zst",
+   "output": "labels: [0 0 1 1] 或 [1 1 0 0]（前两个 contig 聚为一类，后两个聚为另一类）",
+   "errors": "ModuleNotFoundError: No module named 'sklearn' → 执行 pip install scikit-learn。\nValueError: Input contains NaN, infinity or a value too large → contact_matrix 含 NaN/Inf，需先清洗。\n行和为 0 导致除零 → 归一化前检查 contact_matrix.sum(axis=1)，删除或修正全零行。\nSpectralClustering 报错 affinity='precomputed' 要求方阵 → 确认 contact_matrix 为 C×C 对称矩阵。\nsamtools: command not found → 安装 samtools（conda install -c bioconda samtools）。\nzstd: command not found → 安装 zstd（conda install -c conda-forge zstd）。",
+   "debug": "打印 contact_matrix.shape，确认是方阵。\n打印 contact_matrix.sum(axis=1)，确认无全零行。\n检查对称性：np.allclose(contact, contact.T)。\n若聚类结果不稳定，固定 random_state 并尝试不同 n_clusters。\n压缩命令调试：先运行 samtools view -H input.bam 确认 BAM 可读；zstd 可先用小文件测试。"
+  }
+ },
+ "ch13": {
+  "293": {
+   "page": 293,
+   "env": "Linux（Ubuntu 16.04/18.04/20.04 等）+ Bash；需 sudo 权限；apt 包管理器",
+   "steps": "1) 打开终端（Ctrl+Alt+T）。\n2) 查看系统版本：lsb_release -a\n3) 更新软件包索引：sudo apt update\n4) 安装 samtools：sudo apt install -y samtools\n5) 验证安装：samtools --version\n6) 卸载（可选）：sudo apt remove -y samtools",
+   "output": "lsb_release -a 输出 Distributor ID: Ubuntu、Description、Release、Codename。\napt update 输出 Hit/Get/Reading package lists... Done。\napt install 输出 Setting up samtools ...。\nsamtools --version 输出 samtools 1.x 及 htslib 版本。",
+   "errors": "lsb_release: command not found → 未安装 lsb-release，执行 sudo apt install lsb-release。\nE: Could not open lock /var/lib/dpkg/lock → 另一个 apt 进程在运行或权限不足，等待或使用 sudo。\nE: Unable to locate package samtools → 未执行 apt update 或源未配置。\n卸载时提示 Package 'samtools' is not installed → 包名或已卸载。",
+   "debug": "确认网络：ping -c 2 archive.ubuntu.com。\n确认权限：id 查看是否在 sudo 组。\n查看 apt 源：cat /etc/apt/sources.list。\n查看已安装包：dpkg -l | grep samtools。\n查看命令路径：which samtools。"
+  },
+  "294": {
+   "page": 294,
+   "env": "Linux（任意发行版）+ Bash；示例以 root 用户登录",
+   "steps": "1) 打开终端。\n2) 查看当前目录：pwd\n3) 列出根目录：ls /\n4) 进入 /home 并查看：cd /home && ls\n5) 查看主目录：echo $HOME 或 cd ~ && pwd\n6) 查看设备文件：ls /dev | head",
+   "output": "pwd 输出 /home/Test（或当前目录）。\nls / 输出 bin boot dev etc home lib media mnt opt proc root sbin srv sys tmp usr var。\necho $HOME 输出 /root 或 /home/用户名。\nls /dev | head 输出 null、tty、random 等设备文件。",
+   "errors": "pwd 输出与预期不同 → 当前目录不是 /home/Test，用 cd 切换。\nls / 提示 Permission denied → 普通用户对某些目录无权限，使用 sudo 或忽略。\ncd /home 失败 → 路径不存在或权限不足。\n命令提示符不是 [root@myhost Test]# → 当前用户/主机名/目录不同，不影响命令执行。",
+   "debug": "whoami 查看当前用户。\nhostname 查看主机名。\nls -ld /home/Test 查看目录权限。\nmount | grep /dev 查看设备挂载。\nman hier 查看文件系统层次说明。"
+  },
+  "295": {
+   "page": 295,
+   "env": "Linux + Bash；需安装 man、gzip、bzip2、tar（通常默认安装）",
+   "steps": "1) 查看 ls 手册：man ls（按 q 退出）。\n2) 查看 cd 帮助：help cd。\n3) 查看当前目录详细列表：ls -l。\n4) 创建测试文件：echo hello > file.txt。\n5) gzip 压缩：gzip file.txt（生成 file.txt.gz）。\n6) 解压：gunzip file.txt.gz。\n7) bzip2 压缩：bzip2 file.txt（生成 file.txt.bz2）。\n8) 解压：bunzip2 file.txt.bz2。\n9) 创建目录：mkdir -p dir。\n10) 打包压缩：tar -czvf archive.tar.gz dir/。\n11) 解包解压：tar -xzvf archive.tar.gz。",
+   "output": "man ls 显示手册页。\nhelp cd 显示 cd 内置命令帮助。\nls -l 显示文件权限、链接数、所有者、大小、时间、名称。\ngzip 后 file.txt 消失，出现 file.txt.gz。\nbzip2 后出现 file.txt.bz2。\ntar -czvf 输出 dir/ 及文件列表。\ntar -xzvf 输出解压的文件列表。",
+   "errors": "man: command not found → 安装 man-db：sudo apt install man-db。\nhelp cd 报错 → 在非 bash shell 中执行，改用 bash 或 man cd。\ngzip: file.txt: No such file or directory → 文件不存在或路径错误。\ntar: dir/: Cannot stat: No such file or directory → 目录不存在。\ntar: archive.tar.gz: Cannot open: No such file or directory → 压缩包不存在。",
+   "debug": "ls -l file.txt 确认文件存在。\nfile file.txt.gz 查看压缩格式。\ntar -tzvf archive.tar.gz 列出压缩包内容而不解压。\nwhich gzip bzip2 tar 确认命令路径。\necho $SHELL 确认 shell 类型。"
+  },
+  "296": {
+   "page": 296,
+   "env": "Linux + Bash；需 wget、tar、bzip2；网络可访问 SourceForge",
+   "steps": "1) 创建并进入工作目录：mkdir -p ~/samtools_build && cd ~/samtools_build。\n2) 下载 samtools 源码：wget https://nchc.dl.sourceforge.net/project/samtools/samtools/1.9/samtools-1.9.tar.bz2\n3) 下载 htslib 源码：wget https://nchc.dl.sourceforge.net/project/htslib/htslib/1.9/htslib-1.9.tar.bz2\n4) 解压 samtools：tar -xjvf samtools-1.9.tar.bz2\n5) 解压 htslib：tar -xjvf htslib-1.9.tar.bz2\n6) 查看 README：cat samtools-1.9/README",
+   "output": "wget 输出 Resolving... Connecting... HTTP request sent... 100% 保存文件名。\ntar -xjvf 输出解压的文件列表（如 samtools-1.9/README）。\ncat README 显示 samtools 安装说明、依赖、编译步骤。",
+   "errors": "wget: command not found → 安装 wget：sudo apt install wget。\nwget 下载失败（404/连接超时）→ URL 失效或网络受限，可换镜像或使用 curl -O。\ntar: samtools-1.9.tar.bz2: Cannot open: No such file or directory → 下载未完成或文件名错误。\ntar: bzip2: Cannot exec: No such file or directory → 未安装 bzip2，执行 sudo apt install bzip2。\ncat: samtools-1.9/README: No such file or directory → 解压失败或路径错误。",
+   "debug": "ls -lh 查看下载文件大小是否完整。\nfile samtools-1.9.tar.bz2 确认是 bzip2 压缩数据。\ntar -tjvf samtools-1.9.tar.bz2 | head 测试压缩包完整性。\nwget --spider URL 检查链接可达性。\nmd5sum 对比官方校验值（如有）。"
+  },
+  "297": {
+   "page": 297,
+   "env": "Linux (Ubuntu/CentOS) + GCC/Make + Perl 5.x；需 root 或 sudo 权限写入 /usr/local",
+   "steps": "1. 下载源码：wget https://github.com/samtools/samtools/releases/download/1.9/samtools-1.9.tar.bz2\n2. 解压：tar -xjf samtools-1.9.tar.bz2\n3. 进入目录：cd samtools-1.9\n4. 配置：./configure --prefix=/usr/local\n5. 编译：make\n6. 安装：sudo make install\n7. 验证：samtools\n8. 查看 Perl 版本：perl -v\n9. 运行一行 Perl：perl -e 'print \"Hello, Perl!\\n\";'",
+   "output": "samtools 显示版本与可用子命令列表（如 view, sort, index 等）\nperl -v 输出 Perl 版本信息（如 This is perl 5, version 30...）\nperl -e 输出 Hello, Perl!",
+   "errors": "configure: error: C compiler cannot create executables → 缺少 gcc/make，安装 build-essential\nmake: *** No targets specified and no makefile found → 未成功执行 ./configure\nPermission denied → 安装时未加 sudo\nsamtools: command not found → /usr/local/bin 不在 PATH 或未安装成功\nperl: command not found → 未安装 Perl",
+   "debug": "检查编译器：gcc --version\n检查 configure 日志：cat config.log\n确认安装路径：ls /usr/local/bin/samtools\n确认 PATH：echo $PATH\n重新安装：make clean && ./configure --prefix=/usr/local && make && sudo make install\n验证 Perl：which perl && perl -e 'print \"ok\\n\";'"
+  },
+  "298": {
+   "page": 298,
+   "env": "Linux/macOS + Perl 5.x；脚本需以 use strict; use warnings; 开头并保存为 .pl 文件",
+   "steps": "1. 保存代码为 p298.pl（在开头加 #!/usr/bin/perl、use strict; use warnings;）\n2. 运行：perl p298.pl\n3. 若需交互调试：perl -d p298.pl",
+   "output": "字符串比较输出：0、1、-1、1（注意 print 无换行会连在一起）\n数组操作无直接输出，除非添加 print\n哈希输出：Alice",
+   "errors": "Global symbol \"$a\" requires explicit package name → 未声明 my $a 或未加 use strict 兼容\nCan't use string as an ARRAY ref → 数组与标量混用\nprint 无换行导致输出粘连 → 加 \\n\nqw 中元素含空格 → 用引号包裹",
+   "debug": "在关键行后加 print Dumper(\\@arr1);（需 use Data::Dumper;）\n检查数组长度：print scalar @arr1;\n检查哈希键：print join(\",\", keys %hash);\n用 perl -c p298.pl 做语法检查"
+  },
+  "299": {
+   "page": 299,
+   "env": "Linux/macOS + Perl 5.x；脚本保存为 p299.pl",
+   "steps": "1. 保存代码为 p299.pl（加 use strict; use warnings;）\n2. 运行：perl p299.pl\n3. 观察排序、删除、哈希循环输出",
+   "output": "排序后数组：1 1 3 4 5\n哈希循环输出键值对（顺序可能不同）：a=1、b=2、c=3、d=4 等\n排序哈希输出：a => 1、b => 2、c => 3、d => 4\n删除 b 后不再输出 b",
+   "errors": "delete $arr[2] 后数组长度不变但元素为 undef → 用 @arr = grep { defined } @arr; 清理\n$#arr = -1 与 @arr = () 效果相同但语义不同\neach %h 在循环中修改哈希可能导致迭代异常\nsort { $a <=> $b } 中 $a/$b 被 my 遮蔽 → 不要用 my $a",
+   "debug": "打印数组：print join(\",\", @arr), \"\\n\";\n打印哈希：print Dumper(\\%h);\n检查 each 状态：scalar keys %h 与循环次数对比\n用 perl -c p299.pl 检查语法"
+  },
+  "300": {
+   "page": 300,
+   "env": "Linux/macOS + Perl 5.x；脚本保存为 p300.pl",
+   "steps": "1. 保存代码为 p300.pl（加 use strict; use warnings;）\n2. 运行：perl p300.pl\n3. 观察 tr/// 各修饰符效果、引用解引用输出、子程序调用",
+   "output": "tr/a-z/A-Z/ 后：HELLO WORLD\n后续 tr 操作会改变字符串，需分步打印观察\nprint @$aref 输出：123\nprint %$href 输出：a1（顺序可能不同）\n子程序输出：hi",
+   "errors": "tr/// 修饰符 c/d/s 同时使用需注意顺序与语义\nCan't use string as a HASH ref → 引用类型不匹配\nUndefined subroutine &hello → 子程序定义在调用之后且未预声明\nprint %$href 输出无分隔符 → 用 join 或 Data::Dumper",
+   "debug": "每步 tr 后加 print \"$s\\n\";\n检查引用类型：print ref $aref;\n用 Data::Dumper 打印引用内容\n子程序前加 sub hello; 预声明\n用 perl -c p300.pl 检查语法"
+  },
+  "301": {
+   "page": 301,
+   "env": "Linux/macOS + Perl 5（建议 5.30+，POSIX 为核心模块）",
+   "steps": "1) 新建文件 p301.pl，粘贴本页代码。\n2) 保存为 UTF-8 文本。\n3) 运行：perl p301.pl",
+   "output": "0.500000000000000\n0.866025403784439\n0.785398163397448\n（哈希 each 输出顺序可能不同，例如：a=1\\nb=2\\nc=3 或 b=2\\na=1\\nc=3 等）\n随后输出 keys 与 values 两行，顺序与 each 可能不同，例如：\na b c\n1 2 3\n最后输出偶数用逗号连接：\n2,4,6,8,10",
+   "errors": "Can't locate POSIX.pm：Perl 安装不完整或 @INC 异常，检查 perl -MPOSIX -e 1。\nUseless use of private variable in void context：未使用 @squares，可忽略或打印。\n哈希输出顺序与预期不同：Perl 哈希无序，属正常现象。\n中文/符号乱码：终端编码与文件编码不一致，统一 UTF-8。",
+   "debug": "运行 perl -v 确认版本。\n运行 perl -c p301.pl 做语法检查。\n在 each 循环前后加 print scalar(keys %h) 验证哈希元素数。\n分别打印 @even 与 @squares：print \"@even\\n@squares\\n\"。\n若 POSIX 报错，改用内置 cos/sin 与 atan2（atan2 为内置），或安装 perl-modules。"
+  },
+  "302": {
+   "page": 302,
+   "env": "Linux/macOS + Perl 5（核心模块，无需额外安装）",
+   "steps": "1) 新建 data.txt，写入若干行，例如：\nline1\nline2\n2) 新建 p302.pl，粘贴本页代码。\n3) 运行：perl p302.pl\n4) 查看 out.txt：cat out.txt",
+   "output": "data.txt 每行原样输出（chomp 后重新加换行）：\nline1\nline2\nout.txt 内容为：\nHello\nWorld\n（先 > 重写写入 Hello，再 >> 追加 World）",
+   "errors": "Cannot open data.txt: No such file or directory：当前目录无 data.txt，需先创建或改路径。\nPermission denied：对 out.txt 无写权限，换目录或改权限。\nWide character in print：输出含宽字符，可 binmode STDOUT, ':encoding(UTF-8)'。\nrand 结果看似固定：未调用 srand，Perl 会自动播种，但若需可复现可 srand(42)。",
+   "debug": "运行 perl -c p302.pl 语法检查。\n打印当前目录：pwd；确认 data.txt 存在：ls -l data.txt。\n在 open 后加 print \"opened\\n\" 验证打开成功。\n检查 out.txt：cat -A out.txt 查看换行与隐藏字符。\n若排序结果异常，确认比较符为 <=>（数值）而非 cmp（字符串）。"
+  },
+  "303": {
+   "page": 303,
+   "env": "Linux/macOS + Perl 5（核心模块）",
+   "steps": "1) 新建 data.txt，内容为制表符分隔，例如：\nAlice\\t95\nBob\\t88\n2) 新建 p303.pl，粘贴本页代码。\n3) 运行：perl p303.pl",
+   "output": "Alice|95\nBob|88\n随后格式化输出（format STDOUT）类似：\nAlice                    95\n（字段宽度按 @<<<<<<<<<<<<<<< 与 @>>>>>>>>> 对齐）",
+   "errors": "format 未生效或报错：format 定义需在 write 之前，且格式行与参数行成对出现。\nsplit 结果为空：data.txt 未用制表符分隔，检查是否用了空格。\nCannot open data.txt：文件不存在或路径不对。\n格式化输出错位：字段宽度与变量长度不匹配，调整 @< 与 @> 数量。",
+   "debug": "perl -c p303.pl 语法检查。\n用 cat -A data.txt 确认分隔符为 ^I（制表符）。\n在 split 后打印字段数：print scalar(@fields), \"\\n\"。\n单独测试 format：先赋值 $name/$score 再 write。\n若中文对齐异常，考虑使用 sprintf 替代 format。"
+  },
+  "304": {
+   "page": 304,
+   "env": "Linux/macOS + Perl 5；LWP::Simple 与 LWP::UserAgent 需安装（cpanm LWP::Simple LWP::UserAgent 或系统包 libwww-perl）；联网访问 example.com",
+   "steps": "1) 新建 input.txt，写入若干行文本。\n2) 新建 p304.pl，粘贴本页代码。\n3) 运行：perl p304.pl\n4) 若未安装 LWP，可先注释第 6、7 部分，或安装：cpanm LWP::Simple LWP::UserAgent",
+   "output": "前 5 部分会多次输出 input.txt 内容（read 逐字节、readline 逐行、getc 逐字符、eof 循环、行数统计）。\n最后输出：Lines: N（N 为 input.txt 行数）。\n若联网成功，第 6、7 部分会输出 example.com 的 HTML 内容。",
+   "errors": "Can't locate LWP/Simple.pm：未安装 LWP，需 cpanm LWP::Simple 或 apt install libwww-perl。\nCannot open input.txt：文件不存在或路径不对。\n500 Can't connect to www.example.com:80：无网络或代理问题。\nread 返回 0 导致循环结束：正常，表示读到文件尾。\ngetc 返回 undef：文件结束，已用 defined 判断。",
+   "debug": "perl -c p304.pl 语法检查。\n分段注释测试，先确认 input.txt 读取正常。\n检查 LWP：perl -MLWP::Simple -e 'print \"ok\\n\"'。\n网络测试：perl -MLWP::Simple -e 'print get(\"http://www.example.com/\") ? \"ok\\n\" : \"fail\\n\"'。\n统计行数可用 wc -l input.txt 对照。\n若中文乱码，对文件句柄加 binmode 或使用 Encode。"
+  },
+  "305": {
+   "page": 305,
+   "env": "Linux/macOS + Perl 5（建议 5.30+）+ DBI 模块 + DBD::mysql + MySQL 8（或 MariaDB 10+）",
+   "steps": "1. 安装依赖：cpanm DBI DBD::mysql（或 apt install libdbi-perl libdbd-mysql-perl）\n2. 启动 MySQL 并创建库表：\n   mysql -u root -p -e \"CREATE DATABASE bio;\"\n   mysql -u root -p bio -e \"CREATE TABLE sequences(id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(50), seq TEXT);\"\n3. 插入测试数据：\n   mysql -u root -p bio -e \"INSERT INTO sequences(name,seq) VALUES('s1',REPEAT('A',150)),('s2','ATGC');\"\n4. 将示例代码保存为 dbi_demo.pl，并把 user/password 改为实际账号\n5. 运行：perl dbi_demo.pl",
+   "output": "s1\t<150 个 A>\n（fetchrow_arrayref 与 fetchall_arrayref 段输出 id 与 name，如 1\ts1、2\ts2）\n脚本无报错正常退出；do 段返回受影响行数 1、1、1",
+   "errors": "Can't locate DBI.pm：未安装 DBI，用 cpanm DBI 安装\nDBI connect('database=bio;host=localhost',...) failed: Access denied：用户名/密码错误\nUnknown database 'bio'：未创建数据库\nTable 'bio.sequences' doesn't exist：未建表\nCan't locate DBD/mysql.pm：未安装 DBD::mysql\nPlaceholder '?' used with undef：do 方法第二个参数必须传 undef 占位",
+   "debug": "1. 先单独测试连接：perl -MDBI -e 'print DBI->connect(\"dbi:mysql:database=bio;host=localhost\",\"user\",\"password\")?\"ok\\n\":$DBI::errstr'\n2. 用 mysql 客户端执行同一条 SQL 验证语法与数据\n3. 在 connect 后加 print $dbh->{mysql_serverinfo} 确认版本\n4. 对 prepare 失败打印 $dbh->errstr，对 execute 失败打印 $sth->errstr\n5. 用 $sth->rows 检查受影响行数是否符合预期"
+  },
+  "306": {
+   "page": 306,
+   "env": "Linux/macOS + Perl 5 + BioPerl（建议 1.7.x）+ 可访问 NCBI 的网络（GenBank/GenPept 部分）",
+   "steps": "1. 安装：cpanm BioPerl（或 apt install bioperl）\n2. 准备输入文件 input.gb（GenBank 格式，可从 NCBI 下载，如 AB000425）\n3. 将代码保存为 seqio_demo.pl\n4. 运行：perl seqio_demo.pl\n5. 检查生成的 output.fasta",
+   "output": "output.fasta 中为 FASTA 格式序列（>AB000425.2 ...）\n终端打印每条序列的 id 与 seq\n打印 AB000425 的 desc 与 NP_000546 的蛋白序列",
+   "errors": "Can't locate Bio/SeqIO.pm：BioPerl 未安装或 PERL5LIB 未设置\nCould not open input.gb：文件路径错误或文件不存在\n格式解析失败（如 not a GenBank stream）：输入文件格式与 -format 不匹配\nGenBank 网络请求超时/403：无网络或被 NCBI 限流\nget_Seq_by_id 返回 undef：ID 不存在或网络失败",
+   "debug": "1. 用 perl -MBio::SeqIO -e 'print $Bio::SeqIO::VERSION' 验证模块\n2. 用 head input.gb 确认首行为 LOCUS（GenBank 格式）\n3. 对网络读取加 eval{} 捕获异常并打印 $@\n4. 先用本地文件测试，再测试网络读取，隔离问题\n5. 用 Bio::SeqIO->new(-file=>'input.gb',-format=>'genbank')->next_seq->id 单步验证"
+  },
+  "307": {
+   "page": 307,
+   "env": "Linux/macOS + Perl 5 + BioPerl 1.7.x",
+   "steps": "1. 安装 BioPerl：cpanm BioPerl\n2. 准备含注释特征的 GenBank 文件 input.gb（如 AB000425）\n3. 保存代码为 feature_demo.pl\n4. 运行：perl feature_demo.pl",
+   "output": "Feature count: <特征数>\ngene\t1..100\n  gene = ...\n  primary_tag: gene\nCDS\t200..300\n  ...\n（每个特征打印 primary_tag、start..end 及所有 tag 值）",
+   "errors": "Can't locate Bio/SeqIO.pm：BioPerl 未安装\nCan't call method \"feature_count\" on an undefined value：next_seq 返回 undef，文件为空或格式错误\n特征数为 0：GenBank 文件无 FEATURES 段\nstart/end 为 undef：特征为 join/complement 等复杂位置，需用 location 对象处理",
+   "debug": "1. 先打印 $seq->id 与 $seq->length 确认序列读取成功\n2. 用 grep -c '^     ' input.gb 粗略确认有特征行\n3. 对复杂位置用 $feat->location->to_FTstring 查看原始位置串\n4. 用 Data::Dumper 打印 \\@features 结构\n5. 若特征为 join，用 $feat->location->each_Location 遍历子位置"
+  },
+  "308": {
+   "page": 308,
+   "env": "Linux/macOS + Perl 5 + BioPerl 1.7.x + 网络（RemoteBlast 需要）+ BLAST+（可选本地）",
+   "steps": "1. 安装 BioPerl：cpanm BioPerl\n2. 准备 query.fasta（蛋白序列，FASTA 格式）\n3. 保存代码为 modules_demo.pl\n4. 运行：perl modules_demo.pl\n5. RemoteBlast 部分需联网，等待轮询返回结果",
+   "output": "A: 5\nC: 4\nG: 6\nT: 4（按实际序列统计）\nEcoRI sites: 0\n...（各限制酶位点数）\nBLAST 命中：<hit name>\t<score>",
+   "errors": "Can't locate Bio/Tools/SeqStats.pm：BioPerl 未完整安装\nCan't locate Bio/Tools/Run/RemoteBlast.pm：需安装 BioPerl 完整版\nRemoteBlast 提交失败：网络不通或 NCBI 服务不可用\nquery.fasta 不存在：文件路径错误\nBio::Restriction::Analysis 报错：序列对象未正确构造",
+   "debug": "1. 分模块测试：先只运行 SeqStats 段，再运行 Restriction 段，最后运行 RemoteBlast 段\n2. 用 perl -MBio::Tools::SeqStats -e 'print \"ok\\n\"' 验证模块加载\n3. RemoteBlast 加 eval{} 捕获异常并打印 $@\n4. 用 $factory->each_rid 前先确认 submit_blast 返回非空\n5. 检查 BioPerl 版本：perl -MBio::Root::Version -e 'print $Bio::Root::Version::VERSION'"
+  },
+  "309": {
+   "page": 309,
+   "env": "Linux/Windows + Python 3.x（示例中历史版本为 Python 2.5，建议用 Python 3 复现）；需 threading、gc 标准库",
+   "steps": "1. 打开终端（Windows 用 cmd/PowerShell，Linux 用 bash）。\n2. 查看版本：运行 `python --version` 或 `python3 --version`。\n3. 新建文件 hello.py，写入：print(\"Hello, Bioinformatics!\")。\n4. 运行：`python hello.py` 或 `python3 hello.py`。\n5. 新建文件 thread_gc.py，写入多线程与 gc 示例代码。\n6. 运行：`python thread_gc.py`。\n7. 验证解释器：`python -c \"import sys; print(sys.version)\"`。",
+   "output": "python --version 输出类似：Python 3.10.12\nhello.py 输出：Hello, Bioinformatics!\nthread_gc.py 输出：\nThread A running\nGarbage collection done\npython -c 输出：3.10.12 (main, ...) [GCC ...]",
+   "errors": "1. `python: command not found`：未安装 Python 或 PATH 未配置。\n2. `python3: command not found`：系统只有 python 命令，改用 `python`。\n3. 运行 hello.py 报 SyntaxError：Python 2 中 print 是语句，若用 Python 2 应写 `print \"Hello, Bioinformatics!\"`。\n4. 源码编译安装失败：缺少 gcc/make/zlib 等依赖，或 --prefix 目录无写权限。\n5. 多线程示例无输出：线程未 start 或 join 前程序退出。",
+   "debug": "1. 用 `which python` / `which python3` 确认解释器路径。\n2. 用 `echo $PATH`（Linux）或 `echo %PATH%`（Windows）检查 PATH 是否包含 Python 目录。\n3. 在脚本首行加 `import sys; print(sys.executable)` 确认实际使用的解释器。\n4. 若编译安装，检查 `./configure` 输出末尾是否有错误，`make` 是否成功。\n5. 多线程问题：在 worker 内加 print 确认线程是否执行；确保 t.start() 和 t.join() 均被调用。"
+  },
+  "310": {
+   "page": 310,
+   "env": "Python 3.x + IDLE 或其他编辑器；无需额外第三方库",
+   "steps": "1. 打开 IDLE（或任意文本编辑器）。\n2. 新建文件 reverse_seq.py，写入：\nseq = \"ATGCGTACGTTAGC\"\nprint(seq)\nseqRev = seq[::-1]\nprint(seqRev)\n3. 保存文件。\n4. 在 IDLE 中按 F5 或 Run -> Run Module；命令行则运行 `python reverse_seq.py`。",
+   "output": "ATGCGTACGTTAGC\nCGATTGCATGCGTA",
+   "errors": "1. `NameError: name 'seq' is not defined`：变量名拼写错误或未先赋值。\n2. 输出顺序不对：检查是否先 print(seq) 再 print(seqRev)。\n3. 中文引号导致 SyntaxError：确保使用英文双引号。\n4. 在 IDLE 中未保存就运行：先保存为 .py 文件再按 F5。",
+   "debug": "1. 在 print 前加 `print(type(seq), len(seq))` 确认 seq 是字符串且长度为 14。\n2. 手动验证反转：`print(seq[::-1])` 应得到 CGATTGCATGCGTA。\n3. 若结果为空，检查是否误用 `seq.reverse()`（字符串无此方法）。\n4. 用 `python -i reverse_seq.py` 进入交互模式检查变量。"
+  },
+  "311": {
+   "page": 311,
+   "env": "Python 3.x + matplotlib（建议 3.x）；PyMOL 需单独安装（可选）",
+   "steps": "1. 安装 matplotlib：`pip install matplotlib`。\n2. 新建文件 plot_demo.py，写入给定 Matplotlib 示例代码。\n3. 运行：`python plot_demo.py`。\n4. 若使用 PyMOL：安装 PyMOL 后，准备 protein.pdb 文件。\n5. 命令行运行：`pymol protein.pdb`。\n6. 在 PyMOL 命令行依次输入：show cartoon；color blue, chain A；png structure.png, width=800, height=600, dpi=300。",
+   "output": "plot_demo.py 运行后生成 plot.png（300 dpi），并弹出图形窗口显示折线图。\nPyMOL 生成 structure.png，显示蓝色 cartoon 结构。",
+   "errors": "1. `ModuleNotFoundError: No module named 'matplotlib'`：未安装 matplotlib，运行 pip install matplotlib。\n2. 无图形界面时报错：在无显示环境（如服务器）使用 `plt.savefig` 前加 `import matplotlib; matplotlib.use('Agg')`。\n3. `pymol: command not found`：PyMOL 未安装或未加入 PATH。\n4. PyMOL 中 `png` 命令报错：文件路径无写权限或参数格式错误。\n5. protein.pdb 不存在：确认当前目录下有该文件。",
+   "debug": "1. 检查 matplotlib 版本：`python -c \"import matplotlib; print(matplotlib.__version__)\"`。\n2. 确认 plot.png 是否生成：`ls -l plot.png`。\n3. 若 plt.show() 阻塞，可先注释掉或使用非交互后端。\n4. PyMOL 中用 `pwd` 查看当前目录，`ls` 查看文件。\n5. 用 `help png` 查看 png 命令参数。"
+  },
+  "312": {
+   "page": 312,
+   "env": "MySQL 8.x（或 5.7+）；需有创建数据库权限的账号",
+   "steps": "1. 登录 MySQL：`mysql -u root -p`。\n2. 在 MySQL 提示符下依次执行：\nCREATE DATABASE bioinfo;\nUSE bioinfo;\nCREATE TABLE genes (...);\nINSERT INTO genes VALUES (...);\nSELECT * FROM genes WHERE chromosome = '17';\n3. 也可将上述 SQL 保存为 genes.sql，然后运行：`mysql -u root -p < genes.sql`。",
+   "output": "Query OK, 1 row affected ...\n+---------+-----------+------------+-----------+----------+\n| gene_id | gene_name | chromosome | start_pos | end_pos  |\n+---------+-----------+------------+-----------+----------+\n| G001    | TP53      | 17         |   7661779 |  7687550 |\n| G002    | BRCA1     | 17         |  43044295 | 43125483 |\n+---------+-----------+------------+-----------+----------+\n2 rows in set (0.00 sec)",
+   "errors": "1. `ERROR 1045 (28000): Access denied`：用户名/密码错误，检查 -u 和 -p。\n2. `ERROR 1007 (HY000): Can't create database 'bioinfo'; database exists`：数据库已存在，可先 DROP DATABASE bioinfo; 或改用其他名。\n3. `ERROR 1064 (42000): You have an error in your SQL syntax`：SQL 语法错误，检查括号、逗号、引号。\n4. `ERROR 1146 (42S02): Table 'bioinfo.genes' doesn't exist`：未 USE bioinfo 或建表失败。\n5. `ERROR 1366 (HY000): Incorrect integer value`：INT 列插入了非数字或超范围值。\n6. 中文乱码：连接字符集不是 utf8mb4，可在连接时加 `--default-character-set=utf8mb4`。",
+   "debug": "1. 用 `SHOW DATABASES;` 确认 bioinfo 是否存在。\n2. 用 `USE bioinfo; SHOW TABLES;` 确认 genes 表存在。\n3. 用 `DESCRIBE genes;` 查看表结构。\n4. 用 `SELECT COUNT(*) FROM genes;` 确认插入行数。\n5. 若导入 .sql 文件失败，用 `mysql -u root -p --verbose < genes.sql` 查看详细错误。\n6. 检查 MySQL 服务是否运行：`systemctl status mysql` 或 `service mysql status`。"
+  },
+  "313": {
+   "page": 313,
+   "env": "Linux + PHP 7/8 + MySQL 5.7/8 + Apache/Nginx（或 XAMPP/LAMP 集成环境）",
+   "steps": "1. 启动 MySQL 服务：sudo service mysql start\n2. 登录 MySQL 创建数据库与表：mysql -u root -p\n   CREATE DATABASE bioinfo;\n   USE bioinfo;\n   CREATE TABLE genes(gene_id VARCHAR(20), gene_name VARCHAR(50));\n   INSERT INTO genes VALUES('G001','TP53'),('G002','BRCA1');\n3. 将 PHP 代码保存为 genes.php（放在 Web 根目录，如 /var/www/html/）\n4. 修改代码中 user/password 为本机 MySQL 账号密码\n5. 浏览器访问 http://localhost/genes.php\n6. 将 HTML 表格代码保存为 table.html，浏览器打开查看样式",
+   "output": "Gene: G001 - TP53<br>Gene: G002 - BRCA1<br>\nHTML 页面显示两列表格：Gene ID / Gene Name，含 G001 / TP53 一行",
+   "errors": "1. Connection failed: Access denied —— 用户名或密码错误\n2. Connection failed: Unknown database 'bioinfo' —— 未创建数据库\n3. 页面空白或显示 PHP 源码 —— Web 服务器未安装 PHP 或未通过 http:// 访问\n4. Call to undefined function mysqli —— 未启用 mysqli 扩展\n5. 中文乱码 —— 未设置字符集 utf8mb4",
+   "debug": "1. 命令行验证 MySQL：mysql -u user -p -e 'SHOW DATABASES;'\n2. 检查 PHP 扩展：php -m | grep mysqli\n3. 查看 Web 服务器错误日志：tail -f /var/log/apache2/error.log\n4. 在 PHP 中临时加入 phpinfo(); 确认环境\n5. 用 mysqli_connect_error() 打印具体错误信息"
+  },
+  "314": {
+   "page": 314,
+   "env": "Linux + MySQL 5.7/8 + phpMyAdmin 5.x（或命令行 mysql 客户端）",
+   "steps": "1. 启动 MySQL：sudo service mysql start\n2. 浏览器访问 http://localhost/phpmyadmin，用 root 账号登录\n3. 点击顶部 SQL 标签页，依次执行：\n   SHOW DATABASES;\n   USE bioinfo;\n   SHOW TABLES;\n   DESCRIBE genes;\n4. 命令行导出：mysqldump -u root -p bioinfo > bioinfo_backup.sql\n5. 命令行导入：mysql -u root -p bioinfo < bioinfo_backup.sql\n6. 查看状态：SHOW STATUS; SHOW VARIABLES LIKE 'version';",
+   "output": "SHOW DATABASES 列出所有库（含 bioinfo）\nSHOW TABLES 列出 genes 等表\nDESCRIBE genes 显示字段名、类型、Key、Default\nmysqldump 生成 bioinfo_backup.sql 文件\nSHOW VARIABLES LIKE 'version' 返回如 8.0.32",
+   "errors": "1. #1045 Access denied —— 密码错误\n2. Unknown database 'bioinfo' —— 库不存在\n3. mysqldump: command not found —— 未安装 mysql-client\n4. 导入时报 Table already exists —— 目标库已有同名表\n5. phpMyAdmin 无法登录 —— config.inc.php 中 host/user 配置错误",
+   "debug": "1. 命令行直接测试：mysql -u root -p -e 'SHOW DATABASES;'\n2. 检查备份文件：head bioinfo_backup.sql\n3. 查看 MySQL 错误日志：tail -f /var/log/mysql/error.log\n4. 确认服务状态：sudo service mysql status\n5. 用 SELECT USER(), CURRENT_USER(); 确认当前登录身份"
+  },
+  "315": {
+   "page": 315,
+   "env": "Linux + MySQL 5.7/8（命令行 mysql 客户端或 phpMyAdmin）",
+   "steps": "1. 登录 MySQL：mysql -u root -p\n2. 选择数据库：USE bioinfo;\n3. 将 CREATE TABLE 与 INSERT 语句保存为 journal.sql\n4. 执行：mysql -u root -p bioinfo < journal.sql\n5. 或在 mysql 交互界面中直接粘贴执行\n6. 运行 SELECT 查询验证排序结果",
+   "output": "Query OK, 0 rows affected（建表）\nQuery OK, 3 rows affected（插入）\n查询结果按影响因子降序：\nCANCER CELL  26.925\nMOL CELL     14.194\nANNU REV     10.500",
+   "errors": "1. Table 'journal_impact' already exists —— 表已存在，需先 DROP TABLE\n2. Data too long for column 'abbrev_title' —— 字符串超过 VARCHAR(100)\n3. Out of range value for column 'impact_factor' —— 数值超出 DECIMAL(6,3) 范围\n4. 中文乱码 —— 未设置 utf8mb4\n5. 排序结果不符 —— 未加 DESC 或字段名拼写错误",
+   "debug": "1. 查看表结构：DESCRIBE journal_impact;\n2. 查看全部数据：SELECT * FROM journal_impact;\n3. 检查字符集：SHOW CREATE TABLE journal_impact;\n4. 用 SELECT COUNT(*) 确认插入行数\n5. 若报错，用 SHOW WARNINGS; 查看详细警告"
+  },
+  "316": {
+   "page": 316,
+   "env": "Linux + MySQL 5.7/8（命令行 mysql 客户端）",
+   "steps": "1. 登录 MySQL：mysql -u root -p\n2. 选择数据库：USE bioinfo;\n3. 先创建被引用表 journal：\n   CREATE TABLE journal(id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(100));\n4. 将示例代码保存为 schema.sql\n5. 执行：mysql -u root -p bioinfo < schema.sql\n6. 验证：SHOW TABLES; DESCRIBE example; DESCRIBE paper;",
+   "output": "Query OK（example 表创建成功）\nQuery OK（paper 表创建成功，含外键约束）\nDESCRIBE example 显示 id/created_at/updated_at/duration/status/tags 字段\nDESCRIBE paper 显示 id/journal_id 及 MUL 键标记",
+   "errors": "1. Cannot add foreign key constraint —— 被引用表 journal 不存在或类型不匹配\n2. Table 'example' already exists —— 表已存在\n3. Invalid default value for 'updated_at' —— MySQL 版本或 sql_mode 限制\n4. Incorrect enum value —— status 只能取 active/inactive/pending\n5. 外键字段类型与 journal.id 不一致 —— 必须同为 INT",
+   "debug": "1. 先建被引用表：SHOW TABLES LIKE 'journal';\n2. 查看外键：SHOW CREATE TABLE paper;\n3. 检查引擎：SHOW TABLE STATUS LIKE 'paper';（需 InnoDB）\n4. 查看 sql_mode：SELECT @@sql_mode;\n5. 用 EXPLAIN SELECT * FROM paper WHERE journal_id=1; 验证索引使用"
+  },
+  "317": {
+   "page": 317,
+   "env": "Linux + Python3（仅用于演示规范化步骤，无需数据库）",
+   "steps": "1) 保存文件：normalize_demo.py\n2) 写入示例代码：定义函数 check_1nf/check_2nf/check_3nf，用字典/列表模拟表结构，打印拆分结果\n3) 运行：python3 normalize_demo.py",
+   "output": "1NF: student(id, name, course)\n2NF: student(id, name), course(id, course_name), student_course(student_id, course_id)\n3NF: 消除 student 中 zip -> city 的传递依赖",
+   "errors": "缩进错误 IndentationError：Python 对缩进敏感\nKeyError：访问不存在的列名\n逻辑错误：把部分依赖误判为传递依赖",
+   "debug": "用 print() 打印每一步的表结构\n对每个函数单独传入最小样例测试\n检查主键/外键关系是否闭合"
+  },
+  "318": {
+   "page": 318,
+   "env": "Linux + MySQL 8.0（mysql 客户端）",
+   "steps": "1) 保存文件：p318.sql\n2) 登录：mysql -u root -p\n3) 选择数据库：CREATE DATABASE bioinfo; USE bioinfo;\n4) 执行：source /path/p318.sql\n5) 或命令行直接执行：mysql -u root -p bioinfo < p318.sql",
+   "output": "Query OK, 0 rows affected\nTables_in_bioinfo\njournal\npaper\nDESCRIBE journal 显示 id/journal_title/issn/total_cites 字段\nSHOW CREATE TABLE paper 显示外键约束",
+   "errors": "ERROR 1046 No database selected：未 USE 数据库\nERROR 1215 Cannot add foreign key constraint：journal 表未先创建或类型不一致\nERROR 1064 语法错误：分号或括号缺失",
+   "debug": "先执行 SELECT DATABASE(); 确认当前库\n用 SHOW TABLES; 检查表是否创建成功\n用 SHOW ENGINE INNODB STATUS; 查看外键失败原因"
+  },
+  "319": {
+   "page": 319,
+   "env": "Linux + MySQL 8.0（mysql 客户端，需 FILE 权限）",
+   "steps": "1) 准备数据文件：/path/journal.txt，制表符分隔，每行一条记录\n2) 保存 SQL：p319.sql\n3) 登录 MySQL 并选择数据库：USE bioinfo;\n4) 执行：source /path/p319.sql\n5) 若 LOAD DATA 报权限错误，改用：LOAD DATA LOCAL INFILE ...",
+   "output": "Query OK, 1 row affected\nSELECT * FROM journal 返回插入记录\nWHERE journal_title='cell' 可能返回空（大小写/排序规则影响）\nORDER BY total_cites DESC LIMIT 10 返回引用数最高的前 10 条",
+   "errors": "ERROR 1290 secure_file_priv 限制：文件路径不在允许目录\nERROR 13 Can't get stat：文件权限不足\nERROR 1148 The used command is not allowed：未启用 LOCAL INFILE\n字段数不匹配：ERROR 1261",
+   "debug": "执行 SHOW VARIABLES LIKE 'secure_file_priv'; 查看允许目录\n用 SELECT COUNT(*) FROM journal; 验证插入行数\n先用 SELECT * FROM journal LIMIT 5; 检查字段是否错位"
+  },
+  "320": {
+   "page": 320,
+   "env": "Linux + MySQL 8.0（mysql 客户端）",
+   "steps": "1) 保存文件：p320.sql\n2) 登录：mysql -u root -p\n3) 选择数据库：USE bioinfo;\n4) 执行：source /path/p320.sql\n5) 注意 DROP DATABASE 会删除整个库，建议先备份",
+   "output": "Query OK, 0 rows affected\nQuery OK, 1 row affected（DELETE/UPDATE）\nALTER TABLE 后 DESCRIBE 显示新列或列已删除",
+   "errors": "ERROR 1046 No database selected：未选择数据库\nERROR 1051 Unknown table：表名拼写错误\nERROR 1146 Table doesn't exist：表不存在\nERROR 1091 Can't DROP：列不存在\n外键约束导致 DROP/TRUNCATE 失败：ERROR 1701",
+   "debug": "执行前用 SHOW TABLES; 确认表存在\n用 SELECT * FROM table_name LIMIT 5; 确认数据\n删除前先备份：mysqldump -u root -p db_name > backup.sql\n外键问题先 SET FOREIGN_KEY_CHECKS=0; 再操作"
+  },
+  "321": {
+   "page": 321,
+   "env": "Linux（Ubuntu/Debian 推荐）+ PHP 7.x/8.x + php-mysql 扩展 + MySQL 5.7/8.0；需有可访问的 MySQL 服务与账号 user/password，数据库 bio_db 及表 journal(journal_title, total_cites)",
+   "steps": "1) 安装 PHP 与 MySQL 扩展：sudo apt-get update && sudo apt-get install -y php php-mysql mysql-server\n2) 启动 MySQL：sudo service mysql start（或 sudo systemctl start mysql）\n3) 验证 PHP：php -v\n4) 准备数据库与表（在 MySQL 中执行）：CREATE DATABASE bio_db; USE bio_db; CREATE TABLE journal(journal_title VARCHAR(255), total_cites INT); INSERT INTO journal VALUES('Nature',50000),('Science',45000),('Small Journal',500);\n5) 创建 MySQL 用户并授权（或改用 root）：CREATE USER 'user'@'localhost' IDENTIFIED BY 'password'; GRANT ALL ON bio_db.* TO 'user'@'localhost'; FLUSH PRIVILEGES;\n6) 保存代码为 p321.php（与示例一致）\n7) 运行：php p321.php",
+   "output": "期刊: Nature 引用: 50000<br>期刊: Science 引用: 45000<br>\n（若表中无 total_cites>1000 的记录，则输出：无结果）",
+   "errors": "连接失败: Access denied for user 'user'@'localhost' → 用户名/密码错误或未授权\n连接失败: Unknown database 'bio_db' → 未创建数据库\nCall to a member function query() on null / 未定义方法 → mysqli 扩展未安装或未启用\nTable 'bio_db.journal' doesn't exist → 未建表或表名错误\n中文乱码 → 未设置字符集（可在连接后执行 set_charset('utf8mb4')）",
+   "debug": "1) 先确认 PHP 与扩展：php -m | grep mysqli\n2) 用 mysql -uuser -ppassword -e 'SHOW DATABASES;' 验证账号与库\n3) 在 PHP 中临时打印连接错误：var_dump($mysqli->connect_error);\n4) 直接执行 SQL 验证：mysql -uuser -ppassword bio_db -e 'SELECT journal_title,total_cites FROM journal WHERE total_cites>1000;'\n5) 若查询失败，打印 $mysqli->error 定位 SQL 问题\n6) 确认表结构与字段名大小写一致"
+  },
+  "322": {
+   "page": 322,
+   "env": "任意可运行 Python3 的环境（Linux/Windows/macOS）；无需额外库；仅用于演示串行/并行时间与加速比计算",
+   "steps": "1) 新建文件 p322.py\n2) 写入代码：\nW = 1000\nv_serial = 10\nq = 4\nv_core = 10\nserial_time = W / v_serial\nparallel_time = W / (q * v_core)\nspeedup = serial_time / parallel_time\nprint('serial_time=', serial_time)\nprint('parallel_time=', parallel_time)\nprint('speedup=', speedup)\n3) 运行：python3 p322.py",
+   "output": "serial_time= 100.0\nparallel_time= 25.0\nspeedup= 4.0",
+   "errors": "NameError: name 'W' is not defined → 变量未定义或拼写错误\nZeroDivisionError: division by zero → q 或 v_core 为 0\nTypeError: unsupported operand type(s) → 变量被赋值为字符串\n结果不符合预期 → 参数含义混淆（q 为并行单元数，v_core 为单核速度）",
+   "debug": "1) 在计算前打印所有输入变量：print(W, v_serial, q, v_core)\n2) 检查 q>0 且 v_core>0\n3) 手动验算：serial_time=W/v_serial，parallel_time=W/(q*v_core)，speedup=q*v_core/v_serial\n4) 若 speedup 大于 q，说明模型或参数设置不合理（理想上限为 q）"
+  },
+  "323": {
+   "page": 323,
+   "env": "任意可运行 Python3 的环境；无需额外库；用于演示集群结构的数据建模（伪代码可执行化）",
+   "steps": "1) 新建文件 p323.py\n2) 写入代码：\nclass Node:\n    def __init__(self, cpu, mem):\n        self.cpu = cpu\n        self.mem = mem\n\nN = 4\ncluster = {\n    'nodes': [Node(cpu=8, mem=32) for i in range(N)],\n    'network': 'Ethernet / InfiniBand',\n    'storage': 'shared FS (NFS/Lustre)',\n    'ups': True,\n    'cooling': True\n}\nprint('nodes=', len(cluster['nodes']))\nprint('network=', cluster['network'])\nprint('storage=', cluster['storage'])\nprint('ups=', cluster['ups'], 'cooling=', cluster['cooling'])\n3) 运行：python3 p323.py",
+   "output": "nodes= 4\nnetwork= Ethernet / InfiniBand\nstorage= shared FS (NFS/Lustre)\nups= True cooling= True",
+   "errors": "NameError: name 'Node' is not defined → 类定义缺失或顺序错误\nTypeError: 'list' object is not callable → 列表推导式写法错误\nKeyError: 'nodes' → 字典键拼写错误\nIndentationError → Python 缩进不一致",
+   "debug": "1) 确认 class Node 定义在 cluster 之前\n2) 打印 cluster.keys() 检查键名\n3) 打印 cluster['nodes'][0].cpu 验证节点对象属性\n4) 若需扩展，修改 N 后重新运行并观察 nodes 数量变化"
+  },
+  "324": {
+   "page": 324,
+   "env": "Linux + MPI 实现（OpenMPI 或 MPICH）+ C/C++ 编译器（gcc/g++）；需安装 mpi 开发包；示例为伪代码，可映射为 C+MPI 程序",
+   "steps": "1) 安装 MPI：sudo apt-get install -y openmpi-bin libopenmpi-dev\n2) 新建文件 p324.c，写入可运行示例：\n#include <mpi.h>\n#include <stdio.h>\nint main(int argc, char** argv){\n  MPI_Init(&argc,&argv);\n  int rank,size;\n  MPI_Comm_rank(MPI_COMM_WORLD,&rank);\n  MPI_Comm_size(MPI_COMM_WORLD,&size);\n  int buf[1];\n  if(rank==0){ buf[0]=123; MPI_Send(buf,1,MPI_INT,1,0,MPI_COMM_WORLD); }\n  if(rank==1){ MPI_Recv(buf,1,MPI_INT,0,0,MPI_COMM_WORLD,MPI_STATUS_IGNORE); printf(\"rank1 recv %d\\n\",buf[0]); }\n  MPI_Finalize();\n  return 0;\n}\n3) 编译：mpicc p324.c -o p324\n4) 运行（至少2进程）：mpirun -np 2 ./p324",
+   "output": "rank1 recv 123",
+   "errors": "mpicc: command not found → 未安装 MPI 开发包\nmpirun: command not found → 未安装 openmpi-bin\n程序挂起/死锁 → Send/Recv 的 source/dest/tag 不匹配，或进程数不足\nMPI_ERR_BUFFER → 缓冲区大小/类型不匹配\n运行时报 ORTE_ERROR → 环境变量或主机配置问题（单机可用 --allow-run-as-root 或 --oversubscribe）",
+   "debug": "1) 检查安装：mpicc --version、mpirun --version\n2) 打印 rank/size：printf(\"rank=%d size=%d\\n\",rank,size);\n3) 确保 -np 2 且 rank 0 与 rank 1 都存在\n4) 检查 Send/Recv 参数：count、datatype、source/dest、tag 完全对应\n5) 若挂起，用 timeout 10 mpirun -np 2 ./p324 观察是否死锁\n6) 单机调试可加 --oversubscribe 允许超配进程"
+  },
+  "325": {
+   "page": 325,
+   "env": "Linux + MPI（OpenMPI 或 MPICH）+ C 编译器（mpicc，如 gcc 9+）",
+   "steps": "1. 新建文件 example.c，粘贴本页 C 代码。\n2. 编译：mpicc -O3 example.c -o example\n3. 运行（2 进程）：mpirun -np 2 ./example\n4. 若本页命令写作 ./a.out -procs 2，可先编译为默认 a.out：mpicc -O3 example.c，再运行：mpirun -np 2 ./a.out",
+   "output": "0: This is process 0 out of 2\n1: This is process 1 out of 2\n（两行顺序可能交换）",
+   "errors": "mpicc: command not found：未安装 MPI 或未加载环境。\nmpirun: command not found：未安装 MPI 运行时。\n运行时报 MPI_Init 相关错误：未用 mpirun/mpiexec 启动。\n进程数不是 2：-np/-procs 参数未生效或写错。\n权限不足：./a.out 无执行权限，需 chmod +x a.out。",
+   "debug": "检查安装：mpicc --version、mpirun --version。\n确认可执行文件：ls -l example a.out。\n单进程验证：mpirun -np 1 ./example。\n查看进程数：mpirun -np 2 ./example | wc -l 应为 2。\n若输出异常，重新编译并保留警告：mpicc -Wall -O0 example.c -o example。"
+  },
+  "326": {
+   "page": 326,
+   "env": "Linux + Python 3（无需额外库；可选 numpy）",
+   "steps": "1. 新建文件 amdahl.py，粘贴本页伪代码并补全为可运行脚本，例如：\nW = 1e9\nt = 10.0\nperf = W / t\nalpha = 0.1\nq = 8\nS = 1 / (alpha + (1 - alpha) / q)\nprint('perf=', perf)\nprint('S=', S)\nprint('upper=', 1/alpha)\n2. 运行：python3 amdahl.py",
+   "output": "perf= 100000000.0\nS= 4.705882352941177\nupper= 10.0",
+   "errors": "NameError: name 'workload' is not defined：伪代码变量未赋值。\nZeroDivisionError：alpha 或 q 为 0。\nTypeError：整数/浮点混用或字符串参与运算。\n结果不符合预期：alpha 不在 [0,1] 或 q 非正整数。",
+   "debug": "打印中间变量：print(alpha, q, 1-alpha)。\n检查边界：alpha=0 时 S=q；alpha=1 时 S=1。\n用不同 q 验证 S 单调递增且不超过 1/alpha。\n将脚本改为函数并单元测试：def speedup(alpha,q): return 1/(alpha+(1-alpha)/q)。"
+  },
+  "327": {
+   "page": 327,
+   "env": "Linux + Python 3（仅标准库；本页为概念性伪代码）",
+   "steps": "1. 新建文件 cloud.py，粘贴本页字典代码。\n2. 运行：python3 cloud.py\n3. 如需查看内容，在文件末尾添加：print(cloud)",
+   "output": "无输出（仅定义字典）\n若添加 print(cloud)，输出：\n{'reliability': 'multi-replica + homogeneous nodes', 'generality': 'multi-tenant, general purpose', 'scalability': 'dynamic scale in/out', 'on_demand': 'pay-as-you-go (water/electricity model)'}",
+   "errors": "SyntaxError：中文引号或缺少逗号/冒号。\nIndentationError：字典项缩进不一致。\nKeyError：访问不存在的键，如 cloud['security']。\n无输出：未调用 print。",
+   "debug": "语法检查：python3 -m py_compile cloud.py。\n交互验证：python3 -c \"import cloud; print(cloud)\"。\n逐项检查键：print(cloud.keys())。\n确认概念性注释不影响执行。"
+  }
+ }
+}
