@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark"><link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1f5c8b"><title>Python 环境搭建手册 · 生物信息学</title>
+<link rel="stylesheet" href="assets/style.css?v=20261007a"><script src="assets/theme.js?v=20261007a"></script>
+<style>
+.man h2{margin-top:1.2em}
+.man code{background:#eef4fb;padding:1px 5px;border-radius:4px}
+.man pre{background:#0f1720;color:#d7e3f0;border-radius:8px;padding:12px;overflow:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.6px;line-height:1.6}
+.man details{border:1px solid var(--line);border-radius:9px;background:#fff;padding:4px 12px;margin:8px 0}
+.man summary{cursor:pointer;font-weight:600;color:var(--blue);padding:8px 0}
+html[data-theme="dark"] .man details{background:#1b2531;border-color:#2c3a4a}
+html[data-theme="dark"] .man code{background:#22303d}
+</style></head>
+<body data-page="pyenv"><div class="wrap" style="max-width:1000px">
+<header class="top"><h1>🐍 Python 生物信息环境搭建手册</h1><p>从零装好可运行环境 ｜ Anaconda/venv ｜ 常用包 ｜ 常见报错速查</p></header>
+<p><a href="index.html">← 返回首页</a> ｜ <a href="scripts.html">💾 示例脚本合集</a> ｜ <a href="algexam.html">🧮 算法/编程专项卷</a></p>
+<div class="man">
+
+<h2>0. 先下载示例代码</h2>
+<p>示例合集里每段都可展开「🐍 Python 学习版」。也可打包下载全部可运行脚本：<a href="assets/py/bioinfo-python-examples.zip" download>⬇ bioinfo-python-examples.zip</a></p>
+
+<h2>1. 安装 Python（三条路线，任选其一）</h2>
+<details open><summary>A. 推荐：Anaconda / Miniconda（自带科学计算包，适合生物信息）</summary>
+<pre># 下载安装 Miniconda（Linux x86_64）
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+bash Miniconda3-latest-Linux-x86_64.sh    # 一路回车/yes，最后 source ~/.bashrc
+conda --version</pre>
+<p>图形界面用户可直接装 Anaconda（Windows/macOS 有安装包），自带 conda 与常用库。</p>
+</details>
+<details><summary>B. venv（系统已有 Python3 时，最轻量）</summary>
+<pre>python3 --version          # 建议 3.8+
+python3 -m venv bioinfo    # 建虚拟环境
+source bioinfo/bin/activate  # Windows: bioinfo\Scripts\activate
+python -m pip install --upgrade pip</pre>
+</details>
+<details><summary>C. 直接用系统 Python（不推荐，容易污染环境）</summary>
+<pre>sudo apt update && sudo apt install -y python3 python3-pip</pre>
+</details>
+
+<h2>2. 创建并使用环境（conda）</h2>
+<pre>conda create -n bioinfo python=3.10 -y
+conda activate bioinfo        # 退出：conda deactivate
+python --version</pre>
+
+<h2>3. 安装生物信息常用包</h2>
+<pre># 基础科学计算 + 生物信息
+pip install numpy scipy pandas matplotlib scikit-learn
+pip install biopython              # 序列/比对/Phylo
+pip install hmmlearn               # 隐马尔可夫模型（HMM）
+pip install pysam                  # 读取 SAM/BAM（测序比对结果）
+pip install statsmodels            # 统计模型
+# 可选：序列比对与系统发生常用命令行工具
+conda install -c bioconda -y blast mafft iqtree samtools bcftools</pre>
+<p class="hint">国内加速：<code>pip install -i https://pypi.tuna.tsinghua.edu.cn/simple 包名</code></p>
+
+<h2>4. 编辑器与运行</h2>
+<ul>
+<li>轻量：VS Code + Python 扩展（可设断点单步调试）。</li>
+<li>交互/教学：<code>jupyter notebook</code> 或 <code>jupyter lab</code>；或 <code>ipython</code>。</li>
+<li>运行脚本：<code>python demo.py</code>；参数：<code>python demo.py input.fa</code>。</li>
+</ul>
+
+<h2>5. 单步调试（pdb / VS Code）</h2>
+<pre># 方式一：命令行 pdb
+python -m pdb demo.py
+(Pdb) b demo.py:20      # 在第20行设断点
+(Pdb) r                 # 运行到断点
+(Pdb) n                 # 单步(不进入函数) / s 进入函数
+(Pdb) p var             # 查看变量 var
+(Pdb) l                 # 查看当前代码
+(Pdb) c                 # 继续到下一个断点 / q 退出</pre>
+<pre># 方式二：代码内断点
+def gc(seq):
+    breakpoint()        # Python3.7+，运行到这里暂停进入 pdb
+    return (seq.count("G")+seq.count("C"))/len(seq)</pre>
+<p>VS Code：行号左侧点一下设红点 → F5 启动调试 → F10 单步跳过、F11 单步进入、左侧“变量/监视”看中间值。</p>
+
+<h2>6. 常见报错速查</h2>
+<details><summary>ModuleNotFoundError: No module named 'Bio'</summary><p>没装包或装错环境。确认已 <code>conda activate bioinfo</code>，再 <code>pip install biopython</code>；注意包名是 <code>biopython</code>，导入名是 <code>Bio</code>。</p></details>
+<details><summary>pip 安装很慢 / 超时</summary><p>换源：<code>pip install -i https://pypi.tuna.tsinghua.edu.cn/simple 包名</code>；或设置 <code>pip config set global.index-url ...</code>。</p></details>
+<details><summary>SSL: CERTIFICATE_VERIFY_FAILED</summary><p>更新 pip/证书：<code>python -m pip install --upgrade pip</code>；或临时加 <code>--trusted-host pypi.org --trusted-host files.pythonhosted.org</code>（仅应急）。</p></details>
+<details><summary>Permission denied</summary><p>别用 sudo pip；在虚拟环境里装，或加 <code>--user</code>。<code>sudo chown -R $USER ~/miniconda3</code> 修复权限。</p></details>
+<details><summary>SyntaxError / IndentationError</summary><p>Python 用缩进（4 空格）而非花括号；检查中英文标点、冒号、括号是否配对；<code>python -m py_compile demo.py</code> 可快速定位语法错误。</p></details>
+<details><summary>'python' 不是命令（Windows）</summary><p>用 <code>py</code> 或把 Python 加入 PATH；conda 用户先 <code>conda activate bioinfo</code>。</p></details>
+<details><summary>conda 命令找不到</summary><p>重新打开终端或 <code>source ~/.bashrc</code>；检查安装路径是否加进 PATH。</p></details>
+
+<h2>7. 常用包对照（教学示例用）</h2>
+<ul>
+<li><b>Biopython</b>：序列读写（SeqIO）、双序列比对（pairwise2）、系统发育（Phylo）、Entrez 检索。</li>
+<li><b>hmmlearn</b>：HMM 前向/后向/Viterbi（对应教材第十二章）。</li>
+<li><b>scikit-learn</b>：聚类、PCA、SVM、朴素贝叶斯（第十二章）。</li>
+<li><b>numpy/pandas/matplotlib</b>：数值、表格、绘图。</li>
+<li><b>pysam</b>：SAM/BAM/VCF（第十四章测序数据处理）。</li>
+</ul>
+<hr>
+<p class="hint">提示：示例合集每段的「🐍 Python 学习版」都给出了该段所需的 <b>依赖安装命令</b>、<b>逐行讲解</b>与<b>单步调试</b>步骤，配合本手册即可从零跑通。</p>
+
+</div>
+<footer>仅供个人学习使用</footer></div></body></html>
